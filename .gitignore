@@ -1,0 +1,16 @@
+
+
+# IntelliJ
+
+.idea/
+*.iml
+
+# Build
+
+target/
+out/
+
+# Swap files
+
+~*
+*.swp
