@@ -1,0 +1,62 @@
+package ksu.rgn.computation;
+
+import ksu.rgn.scenario.*;
+import ksu.rgn.utils.Collections;
+
+/**
+ *
+ */
+public class RandomC implements ScenarioComputation {
+
+    @Override
+    public Journey[] computeScenario(Scenario s) {
+
+        if (s.getTrucks().isEmpty()) {
+            System.out.println("Add some trucks. It is hard to move stuff without any trucks...");
+            return null;
+        } else if (s.getNodes().size() <= 1) {
+            System.out.println("Add few more nodes. This not really a graph problem...");
+            return null;
+        }
+
+        Node supplyNode = null;
+        Truck truck = s.getTrucks().get(0);
+        for (Node n : s.getNodes()) {
+            if (n.demand < 0) { // Assume it is infinite, for now
+                supplyNode = n;
+                break;
+            }
+        }
+
+        if (supplyNode == null) {
+            System.out.println("No supply node. We don't have stuff to move");
+            return null;
+        }
+
+        final Journey j = new Journey(truck);
+        if (truck.startingNode != null && truck.startingNode != supplyNode) {
+            j.addLeg(new DirectRoute(truck.startingNode, supplyNode), 0);
+        }
+
+        final Node[] nodes = s.getNodes().toArray(new Node[0]);
+        Collections.shuffleArray(nodes);
+
+        for(Node n : nodes) {
+            if (n.demand <= 0) continue;
+
+            int toDeliver = n.demand;
+            while (toDeliver > 0) {
+                j.addLeg(new DirectRoute(supplyNode, n), Math.min(toDeliver, truck.capacity));
+                j.addLeg(new DirectRoute(n, supplyNode), 0);
+                toDeliver -= Math.min(toDeliver, truck.capacity);
+            }
+        }
+
+        if (truck.endingNode != null && truck.endingNode != supplyNode) {
+            j.addLeg(new DirectRoute(supplyNode, truck.endingNode), 0);
+        }
+
+        return new Journey[] { j };
+    }
+
+}
