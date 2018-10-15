@@ -13,8 +13,8 @@ public class Collections {
         final Random r = new Random();
         for (int i = array.length - 1; i > 0; i--) {
             int index = r.nextInt(i + 1);
-            // Simple swap
-            Object a = array[index];
+
+            final Object a = array[index];
             array[index] = array[i];
             array[i] = a;
         }

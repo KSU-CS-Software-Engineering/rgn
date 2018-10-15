@@ -55,10 +55,6 @@ public class Main {
         }
 
         LOG.info("Optimal journey of trucks: {} truck(s){}{}", truckJourneys.length, System.lineSeparator(), journeyStr.toString());
-
-
-
-        // sout truckJourneys
     }
 
 }

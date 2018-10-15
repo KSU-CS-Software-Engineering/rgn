@@ -12,15 +12,15 @@ public class GPS {
     // Based on https://stackoverflow.com/a/365853
     public static double distanceInKmBetween(MapLocation from, MapLocation to) {
 
-        double dLat = Math.toRadians(to.lat - from.lat);
-        double dLon = Math.toRadians(to.lon - from.lon);
+        final double dLat = Math.toRadians(to.lat - from.lat);
+        final double dLon = Math.toRadians(to.lon - from.lon);
 
-        double lat1 = Math.toRadians(from.lat);
-        double lat2 = Math.toRadians(to.lat);
+        final double lat1 = Math.toRadians(from.lat);
+        final double lat2 = Math.toRadians(to.lat);
 
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        final double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        final double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         return EARTH_RADIUS_KM * c;
     }
