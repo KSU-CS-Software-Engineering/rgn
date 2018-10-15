@@ -33,7 +33,7 @@ public class Main {
 
         LOG.debug("Generating scenario");
 
-        final Scenario scenario = new Scenario("Random places", null);
+        final Scenario scenario = new Scenario("Random places", "Randomly generated scenario, somewhere in Gulf of Guinea (around gps 0N 0E)");
 
         final Node warehouse = new Node(new MapLocation(0, 0), Integer.MIN_VALUE);
         scenario.add(warehouse);
