@@ -1,11 +1,15 @@
 package ksu.rgn.scenario;
 
 import ksu.rgn.utils.GPS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class DirectRoute {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DirectRoute.class);
 
     public final Node from, to;
 
@@ -23,6 +27,7 @@ public class DirectRoute {
     private double actualCost = Double.NaN;
     public double actualCost() {
         if (Double.isNaN(actualCost)) {
+            LOG.warn("Query of actual cost is not implemented yet");
             // TODO: Ask google for route and save it, not just its cost
             actualCost = heuristics() * (Math.random() + 1);
             return actualCost;

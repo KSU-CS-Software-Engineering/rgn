@@ -14,4 +14,8 @@ public class MapLocation {
         this.lon = lon;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Location { lat = %f, lon = %f }", lat, lon);
+    }
 }

@@ -15,4 +15,8 @@ public final class Truck {
         this.capacity = capacity;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Truck { capacity = %d }", capacity);
+    }
 }

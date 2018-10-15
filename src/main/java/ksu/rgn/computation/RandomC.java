@@ -2,20 +2,26 @@ package ksu.rgn.computation;
 
 import ksu.rgn.scenario.*;
 import ksu.rgn.utils.Collections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class RandomC implements ScenarioComputation {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RandomC.class);
+
     @Override
     public Journey[] computeScenario(Scenario s) {
 
+        LOG.debug("Preparing for scenario computation");
+
         if (s.getTrucks().isEmpty()) {
-            System.out.println("Add some trucks. It is hard to move stuff without any trucks...");
+            LOG.error("Add some trucks. It is hard to move stuff without any trucks...");
             return null;
         } else if (s.getNodes().size() <= 1) {
-            System.out.println("Add few more nodes. This not really a graph problem...");
+            LOG.error("Add few more nodes. This not really a graph problem...");
             return null;
         }
 
@@ -29,9 +35,11 @@ public class RandomC implements ScenarioComputation {
         }
 
         if (supplyNode == null) {
-            System.out.println("No supply node. We don't have stuff to move");
+            LOG.error("No supply node. We don't have stuff to move");
             return null;
         }
+
+        LOG.debug("Starting actual computation");
 
         final Journey j = new Journey(truck);
         if (truck.startingNode != null && truck.startingNode != supplyNode) {
