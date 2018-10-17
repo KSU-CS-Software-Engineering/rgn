@@ -4,7 +4,9 @@ import com.darkyen.tproll.LogFunction;
 import com.darkyen.tproll.TPLogger;
 import com.darkyen.tproll.logfunctions.FileLogFunction;
 import com.darkyen.tproll.logfunctions.LogFunctionMultiplexer;
+import javafx.application.Application;
 import ksu.rgn.computation.RandomC;
+import ksu.rgn.gui.Window;
 import ksu.rgn.scenario.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +57,10 @@ public class Main {
         }
 
         LOG.info("Optimal journey of trucks: {} truck(s){}{}", truckJourneys.length, System.lineSeparator(), journeyStr.toString());
+
+
+
+        Application.launch(Window.class);
     }
 
 }
