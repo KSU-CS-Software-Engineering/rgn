@@ -5,9 +5,7 @@ import com.darkyen.tproll.TPLogger;
 import com.darkyen.tproll.logfunctions.FileLogFunction;
 import com.darkyen.tproll.logfunctions.LogFunctionMultiplexer;
 import javafx.application.Application;
-import ksu.rgn.computation.RandomC;
 import ksu.rgn.gui.Window;
-import ksu.rgn.scenario.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

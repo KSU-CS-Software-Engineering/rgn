@@ -1,6 +1,8 @@
 package ksu.rgn.gui;
 
 import javafx.scene.image.Image;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -9,6 +11,10 @@ import java.util.HashMap;
  *
  */
 public class Icons {
+
+    private static final String STYLE = "office"; // color, office, dusk, ultraviolet
+
+    private static final Logger LOG = LoggerFactory.getLogger(Icons.class);
 
     public static final Icons _24 = new Icons(24);
     public static final Icons _32 = new Icons(32);
@@ -30,10 +36,12 @@ public class Icons {
 
 
     private final String basePath;
+    private final int size;
     private final HashMap<String, Image> images = new HashMap<>();
 
     private Icons(int size) {
-        this.basePath = "/icons" + Integer.toString(size);
+        this.size = size;
+        this.basePath = "/icons/" + STYLE + "/_" + Integer.toString(size);
 
         CONNECTED = get("connected");
         DISCONNECTED = get("disconnected");
@@ -58,6 +66,7 @@ public class Icons {
             images.put(name, i);
             return i;
         } else {
+            LOG.warn("Icon '{}' does not exist in {}px size", name, size);
             return null;
         }
     }
