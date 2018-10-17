@@ -33,7 +33,9 @@ public class Main {
 
 
 
+        /*
         LOG.debug("Generating scenario");
+
 
         final Scenario scenario = new Scenario("Random places", "Randomly generated scenario, somewhere in Gulf of Guinea (around gps 0N 0E)");
 
@@ -58,6 +60,7 @@ public class Main {
 
         LOG.info("Optimal journey of trucks: {} truck(s){}{}", truckJourneys.length, System.lineSeparator(), journeyStr.toString());
 
+        */
 
 
         Application.launch(Window.class);
