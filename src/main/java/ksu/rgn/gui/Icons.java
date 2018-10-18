@@ -32,6 +32,8 @@ public class Icons {
     public final Image GROCERY_STORE;
     public final Image TRUCK;
     public final Image ROUTE;
+    public final Image GO_RIGHT;
+    public final Image GO_LEFT;
 
 
 
@@ -55,6 +57,8 @@ public class Icons {
         GROCERY_STORE = get("grocery-store");
         TRUCK = get("truck");
         ROUTE = get("route");
+        GO_RIGHT = get("go-right");
+        GO_LEFT= get("go-left");
     }
 
     public Image get(String name) {

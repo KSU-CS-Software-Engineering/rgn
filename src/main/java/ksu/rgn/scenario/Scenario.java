@@ -16,7 +16,7 @@ public class Scenario {
     private final ArrayList<Node> nodes = new ArrayList<>();
     private final ArrayList<Truck> trucks = new ArrayList<>();
 
-    private final String name, description;
+    public final String name, description;
 
     public Scenario(String name, String description) {
         if (name == null || name.isEmpty()) throw new NullPointerException("'name' argument cannot be null or empty");
