@@ -17,6 +17,7 @@ import ksu.rgn.Main;
 import ksu.rgn.scenario.Scenario;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  *
@@ -282,9 +283,20 @@ public class Window extends Application {
     }
 
     private Scenario addNewScenario() {
-        final Scenario s = new Scenario("New #" + Integer.toString((int)(Math.random() * 899999 + 100000)), null);
-        Main.getDBQueries().persistScenario(s);
-        return s;
+        final TextInputDialog input = new TextInputDialog("New #" + Integer.toString((int)(Math.random() * 899999 + 100000)));
+        input.setTitle("New scenario");
+        input.setContentText("Name:");
+        input.setHeaderText("");
+
+        final Optional<String> name = input.showAndWait();
+
+        if (name.isPresent()) {
+            final Scenario s = new Scenario(name.get(), null);
+            Main.getDBQueries().persistScenario(s);
+            return s;
+        } else {
+            return null;
+        }
     }
 
     private Node createConnectToDBBody() {
