@@ -19,6 +19,8 @@ import ksu.rgn.scenario.Scenario;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import static ksu.rgn.gui.Toolboxes.*;
+
 /**
  *
  */
@@ -93,6 +95,7 @@ public class Window extends Application {
         reconnectB.setOnAction(e -> onConnectedToDB("user@mockdb:1234"));
 
         border.setCenter(createConnectToDBBody());
+        border.setLeft(null);
 
         connectionP.getChildren().clear();
         connectionP.getChildren().addAll(reconnectB);
@@ -144,12 +147,18 @@ public class Window extends Application {
         trucksB.setToggleGroup(group);
         routesB.setToggleGroup(group);
 
-        scenarioB.setSelected(true);
-
         scenarioB.setStyle("-fx-background-radius: 3 0 0 3");
         nodesB.setStyle("-fx-background-radius: 0");
         trucksB.setStyle("-fx-background-radius: 0");
         routesB.setStyle("-fx-background-radius: 0 3 3 0");
+
+        scenarioB.setOnAction(e -> border.setLeft(scenarioB.isSelected() ? createScenarioToolbox(selectedScenario) : null));
+        nodesB.setOnAction(e -> border.setLeft(nodesB.isSelected() ? createNodesToolbox(selectedScenario) : null));
+        trucksB.setOnAction(e -> border.setLeft(trucksB.isSelected() ? createTrucksToolbox(selectedScenario) : null));
+        routesB.setOnAction(e -> border.setLeft(routesB.isSelected() ? createRoutesToolbox(selectedScenario) : null));
+
+        scenarioB.setSelected(true);
+        border.setLeft(createScenarioToolbox(selectedScenario));
 
         HBox hBox = new HBox(0);
         hBox.getChildren().addAll(scenarioB, nodesB, trucksB, routesB);
@@ -158,7 +167,7 @@ public class Window extends Application {
         }
         topBarP.getChildren().add(0, hBox);
 
-        border.setCenter(createMapView());
+        border.setCenter(createMapView(selectedScenario));
     }
 
     private void showScenarioList() {
@@ -313,16 +322,6 @@ public class Window extends Application {
         p.setStyle("-fx-background-color:" + STYLE_BACKGROUND_COLOR + ";");
         Label l = new Label("Connect to database and select scenario");
         l.setStyle("-fx-text-fill:" + STYLE_LOW_CONTRAST_TEXT_COLOR + ";");
-        p.setCenter(l);
-
-        return p;
-    }
-
-    private Node createMapView() {
-        BorderPane p = new BorderPane();
-        p.setStyle("-fx-background-color:white;");
-        Label l = new Label("This is a map");
-        l.setStyle("-fx-text-fill:black;");
         p.setCenter(l);
 
         return p;
