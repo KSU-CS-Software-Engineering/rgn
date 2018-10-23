@@ -180,7 +180,7 @@ public class Window extends Application {
         cancelB.setOnAction(e -> stage.close());
         addNewB.setOnAction(e -> {
             final Scenario sc = addNewScenario();
-            if (sc != null) refreshScenarioList(stage, layout);
+            if (sc != null) refreshScenarioList(stage, layout, sc);
         });
 
         Pane hGrow = new Pane();
@@ -195,9 +195,9 @@ public class Window extends Application {
         stage.initOwner(topBarP.getScene().getWindow());
         stage.show();
 
-        refreshScenarioList(stage, layout);
+        refreshScenarioList(stage, layout, null);
     }
-    private void refreshScenarioList(Stage stage, BorderPane layout) {
+    private void refreshScenarioList(Stage stage, BorderPane layout, Scenario ss) {
         final ArrayList<Scenario> scenarios = Main.getDBQueries().getAllScenarios();
 
         if (!scenarios.isEmpty()) {
@@ -247,12 +247,21 @@ public class Window extends Application {
             list.setEditable(false);
             list.setFixedCellSize(34 + 2 * 5 + 1);
             Platform.runLater(() -> {
-                if (selectedScenario != null) {
-                    int i = scenarios.indexOf(selectedScenario);
+                if (ss != null) {
+                    final int i = scenarios.indexOf(ss);
 
                     if (i != -1) {
                         list.getSelectionModel().select(i);
                         list.scrollTo(i);
+                    }
+                } else {
+                    if (selectedScenario != null) {
+                        final int i = scenarios.indexOf(selectedScenario);
+
+                        if (i != -1) {
+                            list.getSelectionModel().select(i);
+                            list.scrollTo(i);
+                        }
                     }
                 }
             });
