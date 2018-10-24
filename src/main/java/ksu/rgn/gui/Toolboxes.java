@@ -3,6 +3,7 @@ package ksu.rgn.gui;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -43,6 +44,15 @@ public class Toolboxes {
             tf.textProperty().addListener(ae -> onChange.accept(tf.getText()));
         }
         to.getChildren().addAll(l, tf);
+    }
+
+    private static void addCheckboxF(Pane to, String name, boolean initialValue, Consumer<Boolean> onChange) {
+        final CheckBox c = new CheckBox(name);
+        c.setSelected(initialValue);
+        if (onChange != null) {
+            c.selectedProperty().addListener(ae -> onChange.accept(c.isSelected()));
+        }
+        to.getChildren().add(c);
     }
 
     private static void addButton(Pane to, String name, Runnable onClick) {
@@ -93,8 +103,12 @@ public class Toolboxes {
     public static Node createTrucksToolbox(Scenario s) {
         final VBox list = createList("Trucks");
 
-        addButton(list, "Add truck", null);
-        addButton(list, "Remove truck", null);
+        final Pane addNodeForm = addForm(list);
+        addTextF(addNodeForm, "Capacity", "", null);
+        addCheckboxF(addNodeForm, "Refrigerated", false, null);
+        addButton(addNodeForm, "Add truck", null);
+
+        addButton(list, "Remove all trucks", null);
 
         return list;
     }
