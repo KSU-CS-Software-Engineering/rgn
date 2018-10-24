@@ -3,25 +3,38 @@ package ksu.rgn.scenario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 
 /**
  *
  */
+
+@Entity
+@Table(name="scenario")
 public class Scenario {
 
     private static final Logger LOG = LoggerFactory.getLogger(Scenario.class);
 
 
-    private final ArrayList<Node> nodes = new ArrayList<>();
-    private final ArrayList<Truck> trucks = new ArrayList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int ID;
 
-    public final String name;
+    @Column(nullable = false)
+    public String name;
     public String description;
 
-    public Scenario(String name, String description) {
-        if (name == null || name.isEmpty()) throw new NullPointerException("'name' argument cannot be null or empty");
 
+    @OneToMany
+    private final ArrayList<Node> nodes = new ArrayList<>();
+
+    @OneToMany
+    private final ArrayList<Truck> trucks = new ArrayList<>();
+
+
+
+    public Scenario(String name, String description) {
         this.name = name;
         this.description = description;
 

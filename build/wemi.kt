@@ -16,7 +16,9 @@ val rgn by project {
 
     libraryDependencies add { dependency("org.java-websocket:Java-WebSocket:1.3.8") } // Websockets
     libraryDependencies add { dependency("com.github.Darkyenus:DaveWebb:v1.2") } // Rest API
-    
+
+    libraryDependencies add { dependency("org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.1")} // eclipse JPA
+
     extend(testing) {
         libraryDependencies add { JUnitAPI }
         libraryDependencies add { JUnitEngine }

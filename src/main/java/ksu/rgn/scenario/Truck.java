@@ -1,26 +1,30 @@
 package ksu.rgn.scenario;
 
+import javax.persistence.*;
+
 /**
  *
  */
+@Entity
+@Table(name="truck")
 public final class Truck {
 
-    private static int counter = 0; // TODO not thread safe
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int ID;
 
-    public final Node startingNode, endingNode;
-    public final int capacity; // in kg
-    public final int id;
 
-    // If starting/ending node is null, it means it can start/end where ever it wants
-    public Truck(Node startingNode, Node endingNode, int capacity) {
-        this.startingNode = startingNode;
-        this.endingNode = endingNode;
-        this.capacity = capacity;
-        this.id = counter++;
-    }
+    public Node startingNode, endingNode;
+
+    @Column(nullable = false)
+    public int capacity; // in kg
+
+    @Column(nullable = false)
+    public boolean refrigerated;
+
 
     @Override
     public String toString() {
-        return String.format("Truck #%d { capacity = %d }", id, capacity);
+        return String.format("Truck #%d { capacity = %d }", ID, capacity);
     }
 }

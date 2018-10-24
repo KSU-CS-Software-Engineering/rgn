@@ -1,32 +1,31 @@
 package ksu.rgn.scenario;
 
-import java.util.HashMap;
+import javax.persistence.*;
 
 /**
  *
  */
 
 
+@Entity
+@Table(name="node")
 public final class Node {
 
-    private static int counter = 0; // TODO not thread safe!
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int ID;
 
-    public final MapLocation location;
-    public final int demand; // In kg
-    public final int id;
+    public MapLocation location;
 
-    public Node(MapLocation location, int demand) {
-        this.location = location;
-        this.demand = demand;
-        this.id = counter++;
-    }
-
-    private final HashMap<Node, DirectRoute> edges = new HashMap<>();
+    @Column(nullable = false)
+    public int demand; // In kg
+    @Column(nullable = false)
+    public int supply; // In kg
 
 
     @Override
     public String toString() {
-        return String.format("Node #%d { demand = %d, location = %s }", id, demand, location.toString());
+        return String.format("Node #%d { demand = %d, location = %s }", ID, demand, location.toString());
     }
 }
 

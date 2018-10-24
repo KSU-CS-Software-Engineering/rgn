@@ -80,7 +80,7 @@ public class Toolboxes {
         addTextF(list, "Name", s.name, null);
         addTextAreaF(list, "Description", s.description, t -> {
             s.description = t;
-            Main.getDBQueries().persistScenario(s);
+            Main.db.persistScenario(s);
         });
 
         return list;

@@ -1,11 +1,22 @@
 package ksu.rgn.scenario;
 
+import javax.persistence.*;
+
 /**
  *
  */
+
+@Entity
+@Table(name="location")
 public class MapLocation {
 
-    public final double lat, lon;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int ID;
+
+    @Column(nullable = false)
+    public double lat, lon;
 
     // TODO store address and stuff
 

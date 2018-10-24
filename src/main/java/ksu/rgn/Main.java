@@ -66,10 +66,6 @@ public class Main {
         Application.launch(Window.class);
     }
 
-    private static DBQueries dbQueries;
-    public static DBQueries getDBQueries() {
-        if (dbQueries == null) dbQueries = new MockDatabase();
-        return dbQueries;
-    }
+    public static DBQueries db;
 
 }

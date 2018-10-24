@@ -33,9 +33,9 @@ public class Journey {
         for (Tuple2<DirectRoute, Integer> leg : legs) {
             sb
                     .append(ind).append("* ")
-                    .append("#").append(leg._1.from.id)
+                    .append("#").append(leg._1.from.ID)
                     .append(" -> ")
-                    .append("#").append(leg._1.to.id)
+                    .append("#").append(leg._1.to.ID)
                     .append(", load = ").append(leg._2)
                     .append(", from = ").append(leg._1.from)
                     .append(", to = ").append(leg._1.from)

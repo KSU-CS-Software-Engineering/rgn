@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import ksu.rgn.Main;
+import ksu.rgn.db.MockDatabase;
 import ksu.rgn.scenario.Scenario;
 
 import java.util.ArrayList;
@@ -59,16 +60,7 @@ public class Window extends Application {
         topBarP.setStyle("-fx-background-color:" +  STYLE_BACKGROUND_COLOR + ";");
 
         connectionP = new HBox(15);
-        Button connectB = new Button("Connect to database", new ImageView(Icons._24.DISCONNECTED));
-        connectB.setOnAction(e -> onConnectedToDB("user@mockdb:1234"));
-
-        Pane hGrow = new Pane();
-        HBox.setHgrow(hGrow, Priority.ALWAYS);
-
-        connectionP.getChildren().addAll(connectB);
-
-        topBarP.getChildren().addAll(hGrow, connectionP);
-
+        onDisconnectedFromDB();
         return topBarP;
     }
 
@@ -81,7 +73,10 @@ public class Window extends Application {
         ls.getChildren().addAll(connectedL, dbL);
         Button disconnectB = new Button("", new ImageView(Icons._24.CROSS));
 
-        disconnectB.setOnAction(e -> onDisconnectedFromDB());
+        disconnectB.setOnAction(e -> {
+            Main.db.close();
+            onDisconnectedFromDB();
+        });
 
         connectionP.getChildren().clear();
         connectionP.getChildren().addAll(iv, ls, disconnectB);
@@ -92,7 +87,14 @@ public class Window extends Application {
     }
     public void onDisconnectedFromDB() {
         Button reconnectB = new Button("Connect to database", new ImageView(Icons._24.DISCONNECTED));
-        reconnectB.setOnAction(e -> onConnectedToDB("user@mockdb:1234"));
+        reconnectB.setOnAction(e -> {
+            if (Main.db != null) {
+                Main.db.close();
+            }
+            Main.db = new MockDatabase();
+            Main.db.open("", "", "");
+            onConnectedToDB("user@mockdb:1234");
+        });
 
         border.setCenter(createConnectToDBBody());
         border.setLeft(null);
@@ -207,7 +209,7 @@ public class Window extends Application {
         refreshScenarioList(stage, layout, null);
     }
     private void refreshScenarioList(Stage stage, BorderPane layout, Scenario ss) {
-        final ArrayList<Scenario> scenarios = Main.getDBQueries().getAllScenarios();
+        final ArrayList<Scenario> scenarios = Main.db.getAllScenarios();
 
         if (!scenarios.isEmpty()) {
             final ListView<Scenario> list = new ListView<>();
@@ -310,7 +312,7 @@ public class Window extends Application {
 
         if (name.isPresent()) {
             final Scenario s = new Scenario(name.get(), null);
-            Main.getDBQueries().persistScenario(s);
+            Main.db.persistScenario(s);
             return s;
         } else {
             return null;
