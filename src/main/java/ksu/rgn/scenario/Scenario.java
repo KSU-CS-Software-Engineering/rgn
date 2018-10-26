@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -27,12 +28,12 @@ public class Scenario {
 
 
     @OneToMany
-    private final ArrayList<Node> nodes = new ArrayList<>();
+    private final List<Node> nodes = new ArrayList<>();
 
     @OneToMany
-    private final ArrayList<Truck> trucks = new ArrayList<>();
+    private final List<Truck> trucks = new ArrayList<>();
 
-
+    public Scenario() {}
 
     public Scenario(String name, String description) {
         this.name = name;
@@ -52,11 +53,11 @@ public class Scenario {
     }
 
     public ArrayList<Node> getNodes() {
-        return nodes;
+        return (ArrayList<Node>) nodes;
     }
 
     public ArrayList<Truck> getTrucks() {
-        return trucks;
+        return (ArrayList<Truck>) trucks;
     }
 
 }
