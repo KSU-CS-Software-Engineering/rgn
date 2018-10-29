@@ -17,7 +17,8 @@ val rgn by project {
     libraryDependencies add { dependency("org.java-websocket:Java-WebSocket:1.3.8") } // Websockets
     libraryDependencies add { dependency("com.github.Darkyenus:DaveWebb:v1.2") } // Rest API
 
-    libraryDependencies add { dependency("org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.1")} // eclipse JPA
+    libraryDependencies add { dependency("org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.1")} // Eclipse JPA
+    libraryDependencies add { dependency("mysql:mysql-connector-java:8.0.13")} // MySQL Connector
 
     extend(testing) {
         libraryDependencies add { JUnitAPI }

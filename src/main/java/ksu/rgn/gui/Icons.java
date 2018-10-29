@@ -27,6 +27,8 @@ public class Icons {
     public final Image MAP;
     public final Image WAYPOINT_MAP;
     public final Image CROSS;
+    public final Image CHECK;
+    public final Image ERROR;
     public final Image PROGRESS_INDICATOR;
     public final Image OPEN_FOLDER;
     public final Image GROCERY_STORE;
@@ -52,6 +54,8 @@ public class Icons {
         MAP = get("map");
         WAYPOINT_MAP = get("waypoint-map");
         CROSS = get("cross");
+        CHECK = get("check");
+        ERROR = get("error");
         PROGRESS_INDICATOR = get("progress-indicator");
         OPEN_FOLDER = get("open-folder");
         GROCERY_STORE = get("grocery-store");

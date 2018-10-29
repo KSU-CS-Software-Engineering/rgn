@@ -1,6 +1,9 @@
 package ksu.rgn.gui;
 
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,10 +16,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import ksu.rgn.Main;
 import ksu.rgn.db.MockDatabase;
+import ksu.rgn.db.MySQLDatabase;
 import ksu.rgn.scenario.Scenario;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -91,9 +98,7 @@ public class Window extends Application {
             if (Main.db != null) {
                 Main.db.close();
             }
-            Main.db = new MockDatabase();
-            Main.db.open("", "", "");
-            onConnectedToDB("user@mockdb:1234");
+            showDbInfoWindow();
         });
 
         border.setCenter(createConnectToDBBody());
@@ -300,6 +305,122 @@ public class Window extends Application {
         } else {
             layout.setCenter(new Label("No scenarios found"));
         }
+    }
+
+    private void showDbInfoWindow() {
+        Stage stage = new Stage();
+
+        BorderPane root = new BorderPane();
+
+        stage.setScene(new Scene(root));
+        stage.setTitle("Database connection");
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(border.getScene().getWindow());
+
+        VBox vbox = new VBox(5);
+        vbox.setPadding(new Insets(10));
+
+        Label title = new Label("Database login credentials");
+        title.setStyle("-fx-font-weight: bold; -fx-font-size: 1.2em; -fx-padding: 0 0 25px 0;");
+        vbox.getChildren().add(title);
+
+        final TextField usernameF = new TextField();
+        final TextField passwordF = new PasswordField();
+        final TextField databaseF = new TextField();
+        final TextField urlF = new TextField();
+
+        try {
+
+            BufferedReader br = new BufferedReader(new FileReader(new File("dbcredentials.last")));
+            usernameF.setText(br.readLine());
+            passwordF.setText(br.readLine());
+            databaseF.setText(br.readLine());
+            urlF.setText(br.readLine());
+            br.close();
+        } catch (IOException ignored) {}
+
+
+        vbox.getChildren().add(new Label("Username:"));
+        vbox.getChildren().add(usernameF);
+        vbox.getChildren().add(new Label("Password:"));
+        vbox.getChildren().add(passwordF);
+        vbox.getChildren().add(new Label("Database name:"));
+        vbox.getChildren().add(databaseF);
+        vbox.getChildren().add(new Label("Server url:"));
+        vbox.getChildren().add(urlF);
+
+        HBox hbox = new HBox(5);
+        hbox.setPadding(new Insets(10));
+
+        Pane stretch = new Pane();
+        HBox.setHgrow(stretch, Priority.ALWAYS);
+        Button connectB = new Button("Connect", new ImageView(Icons._24.CHECK));
+        connectB.setDefaultButton(true);
+
+        Button cancelB = new Button("Cancel", new ImageView(Icons._24.CROSS));
+        cancelB.setOnAction(ae -> stage.close());
+
+        HBox statusBox = new HBox(5);
+        statusBox.setPadding(new Insets(10));
+
+        connectB.setOnAction(ae -> {
+            String url = urlF.getText();
+            String dbName = databaseF.getText();
+            String user = usernameF.getText();
+            String password = passwordF.getText();
+
+            try {
+                FileOutputStream fos = new FileOutputStream(new File("dbcredentials.last"));
+                String s = user + System.lineSeparator() +
+                        password + System.lineSeparator() +
+                        dbName + System.lineSeparator() +
+                        url + System.lineSeparator();
+                fos.write(s.getBytes(StandardCharsets.UTF_8));
+                fos.close();
+            } catch (IOException ignored) {}
+
+            ImageView iv = new ImageView(Icons._24.PROGRESS_INDICATOR);
+            final Timeline timeLine = new Timeline(
+                    new KeyFrame(Duration.ZERO, new KeyValue(iv.rotateProperty(), 0.0)),
+                    new KeyFrame(new Duration(2500), new KeyValue(iv.rotateProperty(), 360.0))
+            );
+            timeLine.setCycleCount(Timeline.INDEFINITE);
+            timeLine.play();
+
+            statusBox.getChildren().clear();
+            statusBox.getChildren().add(new Label(" Connecting...", iv));
+
+            if (url.equals("!mock")) {
+                Main.db = new MockDatabase();
+                stage.close();
+                onConnectedToDB("!mock: " + user + "@" + dbName);
+            } else {
+                MySQLDatabase db = new MySQLDatabase();
+                Main.db = db;
+
+                db.onOpenSuccess(() -> Platform.runLater(() -> {
+                    stage.close();
+                    onConnectedToDB(user + "@" + url + "/" + dbName);
+                }));
+                db.onOpenFail(() -> Platform.runLater(() -> {
+                    statusBox.getChildren().clear();
+                    statusBox.getChildren().add(new Label(" Connection failed", new ImageView(Icons._24.ERROR)));
+                }));
+            }
+
+            Main.db.open(url, dbName, user, password);
+        });
+
+        hbox.getChildren().addAll(stretch, connectB, cancelB);
+
+        VBox bottomBox = new VBox(5);
+        bottomBox.getChildren().addAll(statusBox, hbox);
+        root.setBottom(bottomBox);
+        root.setCenter(vbox);
+
+        root.setPrefSize(300, 500);
+        stage.show();
+
     }
 
     private Scenario addNewScenario() {

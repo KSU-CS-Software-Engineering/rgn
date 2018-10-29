@@ -16,7 +16,7 @@ public interface DBQueries {
     void persistNode(Node n);
     void persistTruck(Truck t);
 
-    void open(String uri, String user, String password);
+    void open(String url, String dbName, String user, String password);
     default void close() {}
 
 }

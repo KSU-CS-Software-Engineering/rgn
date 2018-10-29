@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class MockDatabase implements DBQueries {
 
     @Override
-    public void open(String uri, String user, String password) {}
+    public void open(String url, String dbName, String user, String password) {}
 
     private final ArrayList<Scenario> scenarios = new ArrayList<>();
 

@@ -20,6 +20,8 @@ public class MapLocation {
 
     // TODO store address and stuff
 
+    public MapLocation() {}
+
     public MapLocation(double lat, double lon) {
         this.lat = lat;
         this.lon = lon;
