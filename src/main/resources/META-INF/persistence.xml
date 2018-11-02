@@ -13,6 +13,8 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
         <class>ksu.rgn.scenario.MapLocation</class>
         <class>ksu.rgn.scenario.Scenario</class>
         <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="create"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
         </properties>
     </persistence-unit>
 </persistence>

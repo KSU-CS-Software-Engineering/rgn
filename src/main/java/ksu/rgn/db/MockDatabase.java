@@ -5,6 +5,8 @@ import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.Truck;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  *
@@ -17,8 +19,8 @@ public class MockDatabase implements DBQueries {
     private final ArrayList<Scenario> scenarios = new ArrayList<>();
 
     @Override
-    public ArrayList<Scenario> getAllScenarios() {
-        return scenarios;
+    public void getAllScenarios(Consumer<List<Scenario>> cb) {
+        if (cb != null) cb.accept(scenarios);
     }
 
     @Override

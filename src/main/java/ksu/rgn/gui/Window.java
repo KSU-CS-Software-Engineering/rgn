@@ -25,6 +25,7 @@ import ksu.rgn.scenario.Scenario;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static ksu.rgn.gui.Toolboxes.*;
@@ -214,97 +215,98 @@ public class Window extends Application {
         refreshScenarioList(stage, layout, null);
     }
     private void refreshScenarioList(Stage stage, BorderPane layout, Scenario ss) {
-        final ArrayList<Scenario> scenarios = Main.db.getAllScenarios();
+        layout.setCenter(createSpinner());
+        Main.db.getAllScenarios(scenarios -> Platform.runLater(() -> {
+            if (!scenarios.isEmpty()) {
+                final ListView<Scenario> list = new ListView<>();
 
-        if (!scenarios.isEmpty()) {
-            final ListView<Scenario> list = new ListView<>();
+                list.setCellFactory(l -> new ListCell<Scenario>() {
+                    @Override
+                    public void updateItem(Scenario s, boolean empty) {
+                        super.updateItem(s, empty);
+                        final HBox row = new HBox(5);
 
-            list.setCellFactory(l -> new ListCell<Scenario>() {
-                @Override
-                public void updateItem(Scenario s, boolean empty) {
-                    super.updateItem(s, empty);
-                    final HBox row = new HBox(5);
+                        if (s != null) {
+                            final Button goB = new Button("", new ImageView(Icons._24.GO_RIGHT));
+                            goB.setPadding(new Insets(5, 8, 5, 8));
+                            goB.setOnAction(e -> {
+                                reloadScenario(s);
+                                stage.close();
+                            });
 
-                    if (s != null) {
-                        final Button goB = new Button("", new ImageView(Icons._24.GO_RIGHT));
-                        goB.setPadding(new Insets(5, 8, 5, 8));
-                        goB.setOnAction(e -> {
-                            reloadScenario(s);
-                            stage.close();
-                        });
+                            final Pane hGrow = new Pane();
+                            HBox.setHgrow(hGrow, Priority.ALWAYS);
 
-                        final Pane hGrow = new Pane();
-                        HBox.setHgrow(hGrow, Priority.ALWAYS);
+                            final Label nameL = new Label(s.name);
+                            nameL.setStyle("-fx-font-weight: bold;");
 
-                        final Label nameL = new Label(s.name);
-                        nameL.setStyle("-fx-font-weight: bold;");
+                            final Label descL = new Label("No description");
+                            if (s.description != null && !s.description.isEmpty()) {
+                                descL.setText(s.description);
+                            } else {
+                                descL.setStyle("-fx-font-style: italic;");
+                            }
 
-                        final Label descL = new Label("No description");
-                        if (s.description != null && !s.description.isEmpty()) {
-                            descL.setText(s.description);
-                        } else {
-                            descL.setStyle("-fx-font-style: italic;");
+                            final VBox labelsG = new VBox(0);
+                            labelsG.getChildren().addAll(nameL, descL);
+
+                            row.getChildren().addAll(
+                                    labelsG,
+                                    hGrow,
+                                    goB
+                            );
+                            setGraphic(row);
                         }
-
-                        final VBox labelsG = new VBox(0);
-                        labelsG.getChildren().addAll(nameL, descL);
-
-                        row.getChildren().addAll(
-                                labelsG,
-                                hGrow,
-                                goB
-                        );
-                        setGraphic(row);
                     }
-                }
-            });
+                });
 
-            list.setItems(FXCollections.observableList(scenarios));
-            list.setEditable(false);
-            list.setFixedCellSize(34 + 2 * 5 + 1);
-            Platform.runLater(() -> {
-                if (ss != null) {
-                    final int i = scenarios.indexOf(ss);
-
-                    if (i != -1) {
-                        list.getSelectionModel().select(i);
-                        list.scrollTo(i);
-                    }
-                } else {
-                    if (selectedScenario != null) {
-                        final int i = scenarios.indexOf(selectedScenario);
+                list.setItems(FXCollections.observableList(scenarios));
+                list.setEditable(false);
+                list.setFixedCellSize(34 + 2 * 5 + 1);
+                Platform.runLater(() -> {
+                    if (ss != null) {
+                        final int i = scenarios.indexOf(ss);
 
                         if (i != -1) {
                             list.getSelectionModel().select(i);
                             list.scrollTo(i);
                         }
-                    }
-                }
-            });
+                    } else {
+                        if (selectedScenario != null) {
+                            final int i = scenarios.indexOf(selectedScenario);
 
-            list.setOnMouseClicked(e -> {
-                if (e.getClickCount() == 2) {
-                    final Scenario s = list.getSelectionModel().getSelectedItem();
-                    if (s != null) {
-                        reloadScenario(s);
-                        stage.close();
+                            if (i != -1) {
+                                list.getSelectionModel().select(i);
+                                list.scrollTo(i);
+                            }
+                        }
                     }
-                }
-            });
-            list.setOnKeyPressed(e -> {
-                if (e.getCode() == KeyCode.ENTER) {
-                    final Scenario s = list.getSelectionModel().getSelectedItem();
-                    if (s != null) {
-                        reloadScenario(s);
-                        stage.close();
-                    }
-                }
-            });
+                });
 
-            layout.setCenter(list);
-        } else {
-            layout.setCenter(new Label("No scenarios found"));
-        }
+                list.setOnMouseClicked(e -> {
+                    if (e.getClickCount() == 2) {
+                        final Scenario s = list.getSelectionModel().getSelectedItem();
+                        if (s != null) {
+                            reloadScenario(s);
+                            stage.close();
+                        }
+                    }
+                });
+                list.setOnKeyPressed(e -> {
+                    if (e.getCode() == KeyCode.ENTER) {
+                        final Scenario s = list.getSelectionModel().getSelectedItem();
+                        if (s != null) {
+                            reloadScenario(s);
+                            stage.close();
+                        }
+                    }
+                });
+
+                layout.setCenter(list);
+            } else {
+                layout.setCenter(new Label("No scenarios found"));
+            }
+        }));
     }
 
     private void showDbInfoWindow() {
@@ -379,16 +381,8 @@ public class Window extends Application {
                 fos.close();
             } catch (IOException ignored) {}
 
-            ImageView iv = new ImageView(Icons._24.PROGRESS_INDICATOR);
-            final Timeline timeLine = new Timeline(
-                    new KeyFrame(Duration.ZERO, new KeyValue(iv.rotateProperty(), 0.0)),
-                    new KeyFrame(new Duration(2500), new KeyValue(iv.rotateProperty(), 360.0))
-            );
-            timeLine.setCycleCount(Timeline.INDEFINITE);
-            timeLine.play();
-
             statusBox.getChildren().clear();
-            statusBox.getChildren().add(new Label(" Connecting...", iv));
+            statusBox.getChildren().add(new Label(" Connecting...", createSpinner()));
 
             if (url.equals("!mock")) {
                 Main.db = new MockDatabase();
@@ -405,6 +399,14 @@ public class Window extends Application {
                 db.onOpenFail(() -> Platform.runLater(() -> {
                     statusBox.getChildren().clear();
                     statusBox.getChildren().add(new Label(" Connection failed", new ImageView(Icons._24.ERROR)));
+                }));
+                db.onSyncStarted(() -> Platform.runLater(() -> {
+                    connectionP.getChildren().remove(0);
+                    connectionP.getChildren().add(0, new ImageView(Icons._32.get("connected-sync")));
+                }));
+                db.onSyncFinished(() -> Platform.runLater(() -> {
+                    connectionP.getChildren().remove(0);
+                    connectionP.getChildren().add(0, new ImageView(Icons._32.get("connected-ready")));
                 }));
             }
 
@@ -448,6 +450,17 @@ public class Window extends Application {
         p.setCenter(l);
 
         return p;
+    }
+
+    private ImageView createSpinner() {
+        ImageView iv = new ImageView(Icons._24.PROGRESS_INDICATOR);
+        final Timeline timeLine = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(iv.rotateProperty(), 0.0)),
+                new KeyFrame(new Duration(2500), new KeyValue(iv.rotateProperty(), 360.0))
+        );
+        timeLine.setCycleCount(Timeline.INDEFINITE);
+        timeLine.play();
+        return iv;
     }
 
 }

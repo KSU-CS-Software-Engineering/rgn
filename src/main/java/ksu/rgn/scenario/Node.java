@@ -9,12 +9,13 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="node")
-public final class Node {
+public class Node {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int ID;
 
+    @ManyToOne
     public MapLocation location;
 
     @Column(nullable = false)

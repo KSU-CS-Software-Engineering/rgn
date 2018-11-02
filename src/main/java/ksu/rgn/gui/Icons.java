@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class Icons {
 
-    private static final String STYLE = "office"; // color, office, dusk, ultraviolet
+    private static final String STYLE = "office";
 
     private static final Logger LOG = LoggerFactory.getLogger(Icons.class);
 
