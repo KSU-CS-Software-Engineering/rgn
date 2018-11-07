@@ -24,8 +24,6 @@ import ksu.rgn.scenario.Scenario;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static ksu.rgn.gui.Toolboxes.*;

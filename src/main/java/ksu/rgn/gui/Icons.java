@@ -16,6 +16,7 @@ public class Icons {
 
     private static final Logger LOG = LoggerFactory.getLogger(Icons.class);
 
+    public static final Icons _16 = new Icons(16);
     public static final Icons _24 = new Icons(24);
     public static final Icons _32 = new Icons(32);
 
@@ -36,6 +37,7 @@ public class Icons {
     public final Image ROUTE;
     public final Image GO_RIGHT;
     public final Image GO_LEFT;
+    public final Image LOCATION;
 
 
 
@@ -62,7 +64,8 @@ public class Icons {
         TRUCK = get("truck");
         ROUTE = get("route");
         GO_RIGHT = get("go-right");
-        GO_LEFT= get("go-left");
+        GO_LEFT = get("go-left");
+        LOCATION = get("location");
     }
 
     public Image get(String name) {
