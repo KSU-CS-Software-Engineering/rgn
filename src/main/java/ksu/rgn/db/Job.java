@@ -31,6 +31,7 @@ abstract class Job {
             final EntityTransaction et = em.getTransaction();
             et.begin();
             em.persist(o);
+            em.flush();
             et.commit();
         }
 
@@ -41,6 +42,22 @@ abstract class Job {
             }
             return false;
         }
+    }
+
+    static class SimpleDrop extends Job {
+        private final Object o;
+        public SimpleDrop(Object o) {
+            this.o = o;
+        }
+
+        @Override
+        public void run(EntityManager em) {
+            final EntityTransaction et = em.getTransaction();
+            et.begin();
+            em.remove(o);
+            et.commit();
+        }
+
     }
 
     static class Query extends Job {

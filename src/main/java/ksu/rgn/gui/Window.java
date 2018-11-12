@@ -80,8 +80,20 @@ public class Window extends Application {
         Button disconnectB = new Button("", new ImageView(Icons._24.CROSS));
 
         disconnectB.setOnAction(e -> {
-            Main.db.close();
-            onDisconnectedFromDB();
+            Main.db.close(() -> Platform.runLater(() -> {
+                Main.db = null;
+                onDisconnectedFromDB();
+            }));
+
+            border.setCenter(createConnectToDBBody());
+            border.setLeft(null);
+
+            connectionP.getChildren().clear();
+            connectionP.getChildren().addAll(new Label("Finishing up "), createSpinner());
+            Pane hGrow = new Pane();
+            HBox.setHgrow(hGrow, Priority.ALWAYS);
+            topBarP.getChildren().clear();
+            topBarP.getChildren().addAll(hGrow, connectionP);
         });
 
         connectionP.getChildren().clear();
@@ -95,9 +107,13 @@ public class Window extends Application {
         Button reconnectB = new Button("Connect to database", new ImageView(Icons._24.DISCONNECTED));
         reconnectB.setOnAction(e -> {
             if (Main.db != null) {
-                Main.db.close();
+                Main.db.close(() -> Platform.runLater(() -> {
+                    Main.db = null;
+                    showDbInfoWindow();
+                }));
+            } else {
+                showDbInfoWindow();
             }
-            showDbInfoWindow();
         });
 
         border.setCenter(createConnectToDBBody());

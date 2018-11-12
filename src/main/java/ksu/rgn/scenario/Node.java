@@ -15,7 +15,7 @@ public class Node {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int ID;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     public MapLocation location;
 
     @Column(nullable = false)

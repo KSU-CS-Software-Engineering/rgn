@@ -27,10 +27,10 @@ public class Scenario {
     public String description;
 
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private final List<Node> nodes = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private final List<Truck> trucks = new ArrayList<>();
 
     public Scenario() {}
@@ -52,12 +52,12 @@ public class Scenario {
         trucks.add(t);
     }
 
-    public ArrayList<Node> getNodes() {
-        return (ArrayList<Node>) nodes;
+    public List<Node> getNodes() {
+        return nodes;
     }
 
-    public ArrayList<Truck> getTrucks() {
-        return (ArrayList<Truck>) trucks;
+    public List<Truck> getTrucks() {
+        return trucks;
     }
 
 }

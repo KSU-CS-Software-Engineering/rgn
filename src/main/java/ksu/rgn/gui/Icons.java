@@ -38,6 +38,7 @@ public class Icons {
     public final Image GO_RIGHT;
     public final Image GO_LEFT;
     public final Image LOCATION;
+    public final Image TRASH;
 
 
 
@@ -66,6 +67,7 @@ public class Icons {
         GO_RIGHT = get("go-right");
         GO_LEFT = get("go-left");
         LOCATION = get("location");
+        TRASH = get("trash");
     }
 
     public Image get(String name) {

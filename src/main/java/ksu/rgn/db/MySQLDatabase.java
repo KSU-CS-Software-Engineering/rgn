@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +61,8 @@ public class MySQLDatabase extends Thread implements DBQueries {
             properties.put("javax.persistence.jdbc.url", "jdbc:mysql://" + url + "/" + dbName);
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("RGN", properties);
             EntityManager em = emf.createEntityManager();
+            em.setFlushMode(FlushModeType.COMMIT);
+
 
             if (onOpenSuccess != null) onOpenSuccess.run();
 
@@ -93,6 +96,8 @@ public class MySQLDatabase extends Thread implements DBQueries {
                 LOG.error("Database error", e);
                 if (emf.isOpen()) emf.close();
                 close = true;
+            } finally {
+                if (onClosed != null) onClosed.run();
             }
 
         } catch (Exception e) {
@@ -100,9 +105,12 @@ public class MySQLDatabase extends Thread implements DBQueries {
         }
     }
 
+    private Runnable onClosed = null;
     @Override
-    public void close() {
+    public void close(Runnable onClosed) {
+        this.onClosed = onClosed;
         close = true;
+        synchronized (lock) { lock.notify(); }
     }
 
     void addJob(Job j) {
@@ -137,6 +145,21 @@ public class MySQLDatabase extends Thread implements DBQueries {
     @Override
     public void persistTruck(Truck t) {
         addJob(new Job.SimplePersist(t));
+    }
+
+    @Override
+    public void dropScenario(Scenario s) {
+        addJob(new Job.SimpleDrop(s));
+    }
+
+    @Override
+    public void dropNode(Node n) {
+        addJob(new Job.SimpleDrop(n));
+    }
+
+    @Override
+    public void dropTruck(Truck t) {
+        addJob(new Job.SimpleDrop(t));
     }
 
 }

@@ -7,13 +7,15 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="truck")
-public final class Truck {
+public class Truck {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int ID;
 
+    public String name;
 
+    @ManyToOne(cascade = CascadeType.ALL)
     public Node startingNode, endingNode;
 
     @Column(nullable = false)

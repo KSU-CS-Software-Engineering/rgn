@@ -37,4 +37,19 @@ public class MockDatabase implements DBQueries {
     public void persistScenario(Scenario s) {
         if (!scenarios.contains(s)) scenarios.add(s);
     }
+
+    @Override
+    public void dropScenario(Scenario s) {
+
+    }
+
+    @Override
+    public void dropNode(Node n) {
+
+    }
+
+    @Override
+    public void dropTruck(Truck t) {
+        scenarios.forEach(s -> s.getTrucks().remove(t));
+    }
 }
