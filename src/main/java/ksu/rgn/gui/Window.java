@@ -174,13 +174,13 @@ public class Window extends Application {
         trucksB.setStyle("-fx-background-radius: 0");
         routesB.setStyle("-fx-background-radius: 0 3 3 0");
 
-        scenarioB.setOnAction(e -> border.setLeft(scenarioB.isSelected() ? createScenarioToolbox(selectedScenario) : null));
-        nodesB.setOnAction(e -> border.setLeft(nodesB.isSelected() ? createNodesToolbox(selectedScenario) : null));
-        trucksB.setOnAction(e -> border.setLeft(trucksB.isSelected() ? createTrucksToolbox(selectedScenario) : null));
-        routesB.setOnAction(e -> border.setLeft(routesB.isSelected() ? createRoutesToolbox(selectedScenario) : null));
+        scenarioB.setOnAction(e -> border.setLeft(scenarioB.isSelected() ? createToolbox(createScenarioToolbox(selectedScenario)) : null));
+        nodesB.setOnAction(e -> border.setLeft(nodesB.isSelected() ? createToolbox(createNodesToolbox(selectedScenario)) : null));
+        trucksB.setOnAction(e -> border.setLeft(trucksB.isSelected() ? createToolbox(createTrucksToolbox(selectedScenario)) : null));
+        routesB.setOnAction(e -> border.setLeft(routesB.isSelected() ? createToolbox(createRoutesToolbox(selectedScenario)) : null));
 
         scenarioB.setSelected(true);
-        border.setLeft(createScenarioToolbox(selectedScenario));
+        border.setLeft(createToolbox(createScenarioToolbox(selectedScenario)));
 
         HBox hBox = new HBox(0);
         hBox.getChildren().addAll(scenarioB, nodesB, trucksB, routesB);
@@ -437,6 +437,14 @@ public class Window extends Application {
         root.setPrefSize(300, 500);
         stage.show();
 
+    }
+
+    private Node createToolbox(Node toolbox) {
+        final ScrollPane sp = new ScrollPane(toolbox);
+        sp.setFitToWidth(true);
+        sp.getStyleClass().add("edge-to-edge");
+
+        return sp;
     }
 
     private Scenario addNewScenario() {
