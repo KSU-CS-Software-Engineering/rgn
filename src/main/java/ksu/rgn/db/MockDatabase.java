@@ -23,19 +23,11 @@ public class MockDatabase implements DBQueries {
         if (cb != null) cb.accept(scenarios);
     }
 
-    @Override
-    public void persistNode(Node n) {
-
-    }
 
     @Override
-    public void persistTruck(Truck t) {
-
-    }
-
-    @Override
-    public void persistScenario(Scenario s) {
-        if (!scenarios.contains(s)) scenarios.add(s);
+    public void persist(Runnable action, Object o) {
+        if (action != null) action.run();
+        if (o instanceof Scenario && !scenarios.contains(o)) scenarios.add((Scenario) o);
     }
 
     @Override

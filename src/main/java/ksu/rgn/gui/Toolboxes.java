@@ -188,10 +188,7 @@ public class Toolboxes {
         final VBox pane = createPane("Scenario");
 
         addTextF(pane, "Name", s.name, null);
-        addTextAreaF(pane, "Description", s.description, t -> {
-            s.description = t;
-            Main.db.persistScenario(s);
-        });
+        addTextAreaF(pane, "Description", s.description, t -> Main.db.persist(() -> s.description = t, s));
 
         return pane;
     }
@@ -241,8 +238,7 @@ public class Toolboxes {
 
                 // TODO start/end location
 
-                s.add(t);
-                Main.db.persistScenario(s);
+                Main.db.persist(() -> s.add(t), s);
                 Platform.runLater(() -> truckListEncapsulation[0].setItems(FXCollections.observableList(s.getTrucks())));
             }
         });
@@ -270,8 +266,7 @@ public class Toolboxes {
                     final Button goB = new Button("", new ImageView(Icons._24.TRASH));
                     goB.setPadding(new Insets(5, 8, 5, 8));
                     goB.setOnAction(e -> {
-                        s.getTrucks().remove(t);
-                        Main.db.persistScenario(s);
+                        Main.db.persist(() -> s.getTrucks().remove(t), s);
                         Main.db.dropTruck(t);
                         Platform.runLater(() -> truckListEncapsulation[0].setItems(FXCollections.observableList(s.getTrucks())));
                     });

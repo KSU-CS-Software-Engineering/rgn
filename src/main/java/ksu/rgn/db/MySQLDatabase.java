@@ -116,7 +116,7 @@ public class MySQLDatabase extends Thread implements DBQueries {
     void addJob(Job j) {
         LOG.info("Queueing new DB job: {}", j);
         synchronized (lock) {
-            jobs.removeIf(j::makesObsolete);
+            jobs.removeIf(j::mergeActions);
             jobs.add(j);
             lock.notify();
         }
@@ -133,18 +133,12 @@ public class MySQLDatabase extends Thread implements DBQueries {
     }
 
     @Override
-    public void persistScenario(Scenario s) {
-        addJob(new Job.SimplePersist(s));
-    }
-
-    @Override
-    public void persistNode(Node n) {
-        addJob(new Job.SimplePersist(n));
-    }
-
-    @Override
-    public void persistTruck(Truck t) {
-        addJob(new Job.SimplePersist(t));
+    public void persist(Runnable action, Object o) {
+        if (action == null) {
+            addJob(new Job.SimplePersist(o));
+        } else {
+            addJob(new Job.ActionPersist(action, o));
+        }
     }
 
     @Override

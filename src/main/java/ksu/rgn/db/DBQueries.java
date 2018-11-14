@@ -14,9 +14,7 @@ public interface DBQueries {
 
     void getAllScenarios(Consumer<List<Scenario>> cb);
 
-    void persistScenario(Scenario s);
-    void persistNode(Node n);
-    void persistTruck(Truck t);
+    void persist(Runnable action, Object o);
 
     void dropScenario(Scenario s);
     void dropNode(Node n);

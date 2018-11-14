@@ -449,7 +449,7 @@ public class Window extends Application {
 
         if (name.isPresent()) {
             final Scenario s = new Scenario(name.get(), null);
-            Main.db.persistScenario(s);
+            Main.db.persist(null, s);
             return s;
         } else {
             return null;
