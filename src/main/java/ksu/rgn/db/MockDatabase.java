@@ -25,23 +25,25 @@ public class MockDatabase implements DBQueries {
 
 
     @Override
-    public void persist(Runnable action, Object o) {
+    public DBFuture persist(Runnable action, Object o) {
         if (action != null) action.run();
         if (o instanceof Scenario && !scenarios.contains(o)) scenarios.add((Scenario) o);
+        return new DBFuture();
     }
 
     @Override
-    public void dropScenario(Scenario s) {
-
+    public DBFuture dropScenario(Scenario s) {
+        return new DBFuture();
     }
 
     @Override
-    public void dropNode(Node n) {
-
+    public DBFuture dropNode(Node n) {
+        return new DBFuture();
     }
 
     @Override
-    public void dropTruck(Truck t) {
+    public DBFuture dropTruck(Truck t) {
         scenarios.forEach(s -> s.getTrucks().remove(t));
+        return new DBFuture();
     }
 }

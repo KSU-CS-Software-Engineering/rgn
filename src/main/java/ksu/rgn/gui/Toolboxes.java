@@ -2,13 +2,14 @@ package ksu.rgn.gui;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.util.Callback;
 import ksu.rgn.Main;
 import ksu.rgn.scenario.MapLocation;
 import ksu.rgn.scenario.Scenario;
@@ -171,12 +172,11 @@ public class Toolboxes {
     }
 
 
-    private static <T> ListView<T> addList(Pane to, Callback<ListView<T>, ListCell<T>> renderer) {
-        final ListView<T> list = new ListView<>();
-
-        list.setCellFactory(renderer);
-        list.setEditable(false);
-        list.setFixedCellSize(34 + 8);
+    private static VBox addList(Pane to) {
+        final VBox list = new VBox(10);
+        list.setStyle("-fx-border-color: #ddd; -fx-border-style: solid; -fx-border-width: 0 0 0 1px");
+        list.setPadding(new Insets(0, 0, 0, 5));
+        list.setMaxHeight(Double.MAX_VALUE);
 
         to.getChildren().add(list);
 
@@ -206,6 +206,52 @@ public class Toolboxes {
         return pane;
     }
 
+    private static void updateTruckList(VBox list, Scenario s, Truck[] trucksFuture) {
+        list.getChildren().clear();
+
+        Truck[] ts = trucksFuture == null ? s.getTrucks().toArray(new Truck[0]) : trucksFuture;
+
+        for (Truck t : ts) {
+            final HBox row = new HBox(5);
+            row.setStyle("-fx-background-color: white; -fx-padding: 5px;-fx-border-color: #ddd; -fx-border-style: solid; -fx-border-width: 1px");
+
+            final Button goB = new Button("", new ImageView(Icons._24.TRASH));
+            goB.setPadding(new Insets(5, 8, 5, 8));
+            goB.setOnAction(e -> {
+                Main.db.persist(() -> s.getTrucks().remove(t), s).finished(() -> Platform.runLater(() -> updateTruckList(list, s, null)));
+                Platform.runLater(() -> {
+                    final Truck[] deletedTruck = new Truck[ts.length - 1];
+                    int skip = 0;
+                    for (int i = 0; i < deletedTruck.length; i++) {
+                        if (ts[i + skip] == t) skip++;
+                        deletedTruck[i] = ts[i + skip];
+                    }
+
+                    updateTruckList(list, s, deletedTruck);
+                });
+            });
+
+            final Pane hGrow = new Pane();
+            HBox.setHgrow(hGrow, Priority.ALWAYS);
+
+            final Label nameL = new Label("Truck - " + t.name);
+            nameL.setStyle("-fx-font-weight: bold;");
+
+            final Label descL = new Label((t.refrigerated ? "Refrigerated, " : "") + t.capacity + " pounds");
+
+            final VBox labelsG = new VBox(0);
+            labelsG.getChildren().addAll(nameL, descL);
+
+            row.getChildren().addAll(
+                    labelsG,
+                    hGrow,
+                    goB
+            );
+
+            list.getChildren().add(row);
+        }
+    }
+
     public static Node createTrucksToolbox(Scenario s) {
         final VBox pane = createPane("Trucks");
 
@@ -226,7 +272,8 @@ public class Toolboxes {
         addCheckboxF(endingLocationForm, "Given end location", false, truckFormV.listenF("End enable"));
         addGpsF(endingLocationForm, "", 0, 0, truckFormV.listenF("End location"));
 
-        @SuppressWarnings("unchecked") final ListView<Truck> truckListEncapsulation[] = new ListView[1];
+        addVSpace(pane, 10);
+        final VBox truckList = addList(pane);
         final Label addTruckL = addButtonWithLabel(addTruckForm, "Add truck", () -> {
             if (truckFormV.isValid) {
 
@@ -238,8 +285,12 @@ public class Toolboxes {
 
                 // TODO start/end location
 
-                Main.db.persist(() -> s.add(t), s);
-                Platform.runLater(() -> truckListEncapsulation[0].setItems(FXCollections.observableList(s.getTrucks())));
+                Main.db.persist(() -> s.add(t), s).finished(() -> Platform.runLater(() -> updateTruckList(truckList, s, null)));
+                Platform.runLater(() -> {
+                    final Truck[] ts = s.getTrucks().toArray(new Truck[s.getTrucks().size() + 1]);
+                    ts[ts.length - 1] = t;
+                    updateTruckList(truckList, s, ts);
+                });
             }
         });
         addTruckL.setStyle("-fx-text-fill: red; -fx-padding: 5px 0px 0px 5px;");
@@ -251,49 +302,9 @@ public class Toolboxes {
             }
         };
 
+        updateTruckList(truckList, s, null);
 
         addVSpace(pane, 10);
-
-        truckListEncapsulation[0] = addList(pane, listView -> new ListCell<Truck>() {
-            @Override
-            public void updateItem(Truck t, boolean empty) {
-                super.updateItem(t, empty);
-                setGraphic(null);
-
-                if (t != null) {
-                    final HBox row = new HBox(5);
-
-                    final Button goB = new Button("", new ImageView(Icons._24.TRASH));
-                    goB.setPadding(new Insets(5, 8, 5, 8));
-                    goB.setOnAction(e -> {
-                        Main.db.persist(() -> s.getTrucks().remove(t), s);
-                        Main.db.dropTruck(t);
-                        Platform.runLater(() -> truckListEncapsulation[0].setItems(FXCollections.observableList(s.getTrucks())));
-                    });
-
-                    final Pane hGrow = new Pane();
-                    HBox.setHgrow(hGrow, Priority.ALWAYS);
-
-                    final Label nameL = new Label("Truck - " + t.name);
-                    nameL.setStyle("-fx-font-weight: bold;");
-
-                    final Label descL = new Label((t.refrigerated ? "Refrigerated, " : "") + t.capacity + " pounds");
-
-                    final VBox labelsG = new VBox(0);
-                    labelsG.getChildren().addAll(nameL, descL);
-
-                    row.getChildren().addAll(
-                            labelsG,
-                            hGrow,
-                            goB
-                    );
-                    setGraphic(row);
-                }
-            }
-
-
-        });
-        truckListEncapsulation[0].setItems(FXCollections.observableList(s.getTrucks()));
 
         return pane;
     }

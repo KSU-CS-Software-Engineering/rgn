@@ -14,11 +14,11 @@ public interface DBQueries {
 
     void getAllScenarios(Consumer<List<Scenario>> cb);
 
-    void persist(Runnable action, Object o);
+    DBFuture persist(Runnable action, Object o);
 
-    void dropScenario(Scenario s);
-    void dropNode(Node n);
-    void dropTruck(Truck t);
+    DBFuture dropScenario(Scenario s);
+    DBFuture dropNode(Node n);
+    DBFuture dropTruck(Truck t);
 
     void open(String url, String dbName, String user, String password);
 

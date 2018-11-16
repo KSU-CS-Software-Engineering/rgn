@@ -16,6 +16,8 @@ abstract class Job {
         return false;
     }
 
+    final ArrayList<DBFuture> dbf = new ArrayList<>();
+
     @Override
     public String toString() {
         return "Job." + getClass();
@@ -41,7 +43,10 @@ abstract class Job {
         @Override
         public boolean mergeActions(Job j) {
             if (j instanceof SimplePersist) {
-                return ((SimplePersist) j).o == o;
+                if (((SimplePersist) j).o == o) {
+                    dbf.addAll(((SimplePersist) j).dbf);
+                    return true;
+                }
             }
             return false;
         }
@@ -75,10 +80,14 @@ abstract class Job {
                 if (((ActionPersist) j).o == o) {
                     prePersist.addAll(((ActionPersist) j).prePersist);
                     if (a != null) prePersist.add(((ActionPersist) j).a);
+                    dbf.addAll(((ActionPersist) j).dbf);
                     return true;
                 }
             } else if (j instanceof SimplePersist) {
-                return (((SimplePersist) j).o == o);
+                if (((SimplePersist) j).o == o) {
+                    dbf.addAll(((SimplePersist) j).dbf);
+                    return true;
+                }
             }
             return false;
         }

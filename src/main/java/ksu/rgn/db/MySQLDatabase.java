@@ -6,10 +6,8 @@ import ksu.rgn.scenario.Truck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.FlushModeType;
-import javax.persistence.Persistence;
+import javax.persistence.*;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,7 +77,10 @@ public class MySQLDatabase extends Thread implements DBQueries {
                         if (!syncStarted && onSyncStarted != null) onSyncStarted.run();
                         syncStarted = true;
 
-                        j.run(em);
+                        try {
+                            j.run(em);
+                        } catch (RollbackException ignored) {}
+                        j.dbf.forEach(DBFuture::invokeFinished);
                     }
 
                     synchronized (lock) {
@@ -113,11 +114,12 @@ public class MySQLDatabase extends Thread implements DBQueries {
         synchronized (lock) { lock.notify(); }
     }
 
-    void addJob(Job j) {
+    void addJob(Job j, DBFuture f) {
         LOG.info("Queueing new DB job: {}", j);
         synchronized (lock) {
             jobs.removeIf(j::mergeActions);
             jobs.add(j);
+            j.dbf.add(f);
             lock.notify();
         }
     }
@@ -129,31 +131,40 @@ public class MySQLDatabase extends Thread implements DBQueries {
                 List<Scenario> result = (List<Scenario>) list;
                 cb.accept(result);
             }
-        }));
+        }), new DBFuture());
     }
 
     @Override
-    public void persist(Runnable action, Object o) {
+    public DBFuture persist(Runnable action, Object o) {
+        final DBFuture f = new DBFuture();
         if (action == null) {
-            addJob(new Job.SimplePersist(o));
+            addJob(new Job.SimplePersist(o), f);
         } else {
-            addJob(new Job.ActionPersist(action, o));
+            addJob(new Job.ActionPersist(action, o), f);
         }
+
+        return f;
     }
 
     @Override
-    public void dropScenario(Scenario s) {
-        addJob(new Job.SimpleDrop(s));
+    public DBFuture dropScenario(Scenario s) {
+        final DBFuture f = new DBFuture();
+        addJob(new Job.SimpleDrop(s), f);
+        return f;
     }
 
     @Override
-    public void dropNode(Node n) {
-        addJob(new Job.SimpleDrop(n));
+    public DBFuture dropNode(Node n) {
+        final DBFuture f = new DBFuture();
+        addJob(new Job.SimpleDrop(n), f);
+        return f;
     }
 
     @Override
-    public void dropTruck(Truck t) {
-        addJob(new Job.SimpleDrop(t));
+    public DBFuture dropTruck(Truck t) {
+        final DBFuture f = new DBFuture();
+        addJob(new Job.SimpleDrop(t), f);
+        return f;
     }
 
 }
