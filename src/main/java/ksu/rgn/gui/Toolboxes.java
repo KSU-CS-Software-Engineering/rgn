@@ -36,6 +36,12 @@ public class Toolboxes {
         return list;
     }
 
+    private static void addHeader(Pane to, String text) {
+        final Label l = new Label(text);
+        l.setStyle("-fx-font-size: 1.3em;");
+        l.setPadding(new Insets(0, 0, 5, 0));
+        to.getChildren().add(l);
+    }
 
     private static void addTextAreaF(Pane to, String name, String initialValue, Consumer<String> onChange) {
         addTextF(to, name, initialValue, onChange);
@@ -190,6 +196,14 @@ public class Toolboxes {
         addTextF(pane, "Name", s.name, null);
         addTextAreaF(pane, "Description", s.description, t -> Main.db.persist(() -> s.description = t, s));
 
+        addVSpace(pane, 30);
+        final Pane arcGis = addForm(pane);
+        addHeader(arcGis, "ArcGIS software link");
+        addTextF(arcGis, "Server URL", s.arcGisUrl, t -> Main.db.persist(() -> s.arcGisUrl = t, s));
+        addTextF(arcGis, "Client ID", s.arcGisClientID, t -> Main.db.persist(() -> s.arcGisClientID = t, s));
+        addTextF(arcGis, "Access token", s.arcGisToken, t -> Main.db.persist(() -> s.arcGisToken= t, s));
+        Label l = addButtonWithLabel(arcGis, "Test connection", null);
+
         return pane;
     }
 
@@ -200,8 +214,6 @@ public class Toolboxes {
         addTextF(addNodeForm, "Name", "", null);
         addGpsF(addNodeForm, "Position", 0, 0, null);
         addButton(addNodeForm, "Add node", null);
-
-        addButton(pane, "Remove all nodes", null);
 
         return pane;
     }

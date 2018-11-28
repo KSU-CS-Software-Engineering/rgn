@@ -26,6 +26,13 @@ public class Scenario {
     public String name;
     public String description;
 
+    @Column(nullable = false)
+    public String arcGisToken;
+    @Column(nullable = false)
+    public String arcGisUrl;
+    @Column(nullable = false)
+    public String arcGisClientID;
+
 
     @OneToMany(cascade = CascadeType.ALL)
     private final List<Node> nodes = new ArrayList<>();
@@ -33,11 +40,18 @@ public class Scenario {
     @OneToMany(cascade = CascadeType.ALL)
     private final List<Truck> trucks = new ArrayList<>();
 
-    public Scenario() {}
+    public Scenario() {
+        this.arcGisToken = "";
+        this.arcGisUrl = "";
+        this.arcGisClientID = "";
+    }
 
     public Scenario(String name, String description) {
         this.name = name;
         this.description = description;
+        this.arcGisToken = "";
+        this.arcGisUrl = "";
+        this.arcGisClientID = "";
 
         LOG.debug("Creating scenario '{}'{}", this.name, this.description == null ? "" : (" - '" + this.description + "'"));
     }
