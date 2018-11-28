@@ -9,10 +9,10 @@ import java.util.function.Consumer;
 /**
  *
  */
-abstract class Job {
+abstract class DBJob {
 
     public abstract void run(EntityManager em);
-    public boolean mergeActions(Job j) {
+    public boolean mergeActions(DBJob j) {
         return false;
     }
 
@@ -20,10 +20,10 @@ abstract class Job {
 
     @Override
     public String toString() {
-        return "Job." + getClass();
+        return "DBJob." + getClass();
     }
 
-    static class SimplePersist extends Job {
+    static class SimplePersist extends DBJob {
         private final Object o;
         public SimplePersist(Object o) {
             this.o = o;
@@ -41,7 +41,7 @@ abstract class Job {
         }
 
         @Override
-        public boolean mergeActions(Job j) {
+        public boolean mergeActions(DBJob j) {
             if (j instanceof SimplePersist) {
                 if (((SimplePersist) j).o == o) {
                     dbf.addAll(((SimplePersist) j).dbf);
@@ -52,7 +52,7 @@ abstract class Job {
         }
     }
 
-    static class ActionPersist extends Job {
+    static class ActionPersist extends DBJob {
         private final Object o;
         private final Runnable a;
         private final ArrayList<Runnable> prePersist = new ArrayList<>();
@@ -75,7 +75,7 @@ abstract class Job {
         }
 
         @Override
-        public boolean mergeActions(Job j) {
+        public boolean mergeActions(DBJob j) {
             if (j instanceof ActionPersist) {
                 if (((ActionPersist) j).o == o) {
                     prePersist.addAll(((ActionPersist) j).prePersist);
@@ -93,7 +93,7 @@ abstract class Job {
         }
     }
 
-    static class SimpleDrop extends Job {
+    static class SimpleDrop extends DBJob {
         private final Object o;
         public SimpleDrop(Object o) {
             this.o = o;
@@ -112,7 +112,7 @@ abstract class Job {
 
     }
 
-    static class Query extends Job {
+    static class Query extends DBJob {
         private final String q;
         private final Class<?> c;
         private final Consumer<List> cb;

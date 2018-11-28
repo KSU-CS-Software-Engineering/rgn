@@ -11,6 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import ksu.rgn.Main;
+import ksu.rgn.arcgis.GISBridge;
+import ksu.rgn.arcgis.GISFuture;
 import ksu.rgn.scenario.MapLocation;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.Truck;
@@ -199,10 +201,45 @@ public class Toolboxes {
         addVSpace(pane, 30);
         final Pane arcGis = addForm(pane);
         addHeader(arcGis, "ArcGIS software link");
-        addTextF(arcGis, "Server URL", s.arcGisUrl, t -> Main.db.persist(() -> s.arcGisUrl = t, s));
-        addTextF(arcGis, "Client ID", s.arcGisClientID, t -> Main.db.persist(() -> s.arcGisClientID = t, s));
-        addTextF(arcGis, "Access token", s.arcGisToken, t -> Main.db.persist(() -> s.arcGisToken= t, s));
-        Label l = addButtonWithLabel(arcGis, "Test connection", null);
+
+        final String[] params = new String[] {s.arcGisUrl, s.arcGisClientID, s.arcGisToken};
+
+        addTextF(arcGis, "Server URL", params[0], t -> {
+            params[0] = t;
+            Main.db.persist(() -> s.arcGisUrl = t, s);
+        });
+        addTextF(arcGis, "Client ID", params[1], t -> {
+            params[1] = t;
+            Main.db.persist(() -> s.arcGisClientID = t, s);
+        });
+        addTextF(arcGis, "Access token", params[2], t -> {
+            params[2] = t;
+            Main.db.persist(() -> s.arcGisToken= t, s);
+        });
+        final Label[] lEnc = new Label[1];
+        lEnc[0] = addButtonWithLabel(arcGis, "Test connection", () -> {
+            final GISBridge b = new GISBridge(params[0], params[1], params[2]);
+            GISFuture f = new GISFuture();
+            f.fail(o -> {
+                Platform.runLater(() -> {
+                    lEnc[0].setText(o.toString());
+                    lEnc[0].setStyle("-fx-padding: 5px 0px 0px 5px; -fx-text-fill: red;");
+                });
+                b.close();
+            });
+            f.success(o -> {
+                Platform.runLater(() -> {
+                    lEnc[0].setText("Success");
+                    lEnc[0].setStyle("-fx-padding: 5px 0px 0px 5px; -fx-text-fill: green;");
+                });
+                b.close();
+            });
+            Platform.runLater(() -> {
+                lEnc[0].setText("Testing...");
+                lEnc[0].setStyle("-fx-padding: 5px 0px 0px 5px;");
+            });
+            b.testConnection(f);
+        });
 
         return pane;
     }

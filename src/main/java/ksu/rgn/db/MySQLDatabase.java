@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +46,7 @@ public class MySQLDatabase extends Thread implements DBQueries {
         this.onSyncStarted = onSyncStarted;
     }
 
-    private final ArrayList<Job> jobs = new ArrayList<>();
+    private final ArrayList<DBJob> dbJobs = new ArrayList<>();
     private boolean close = false;
     private final Object lock = new Object();
     @Override
@@ -66,11 +65,11 @@ public class MySQLDatabase extends Thread implements DBQueries {
 
             try {
                 boolean syncStarted = false;
-                while (!close || !jobs.isEmpty()) {
-                    Job j = null;
+                while (!close || !dbJobs.isEmpty()) {
+                    DBJob j = null;
                     synchronized (lock) {
-                        if (!jobs.isEmpty()) {
-                            j = jobs.remove(0);
+                        if (!dbJobs.isEmpty()) {
+                            j = dbJobs.remove(0);
                         }
                     }
                     if (j != null) {
@@ -84,7 +83,7 @@ public class MySQLDatabase extends Thread implements DBQueries {
                     }
 
                     synchronized (lock) {
-                        if (jobs.isEmpty()) {
+                        if (dbJobs.isEmpty()) {
                             if (syncStarted && onSyncFinished != null) onSyncFinished.run();
                             syncStarted = false;
                             lock.wait();
@@ -114,11 +113,11 @@ public class MySQLDatabase extends Thread implements DBQueries {
         synchronized (lock) { lock.notify(); }
     }
 
-    void addJob(Job j, DBFuture f) {
+    void addJob(DBJob j, DBFuture f) {
         LOG.info("Queueing new DB job: {}", j);
         synchronized (lock) {
-            jobs.removeIf(j::mergeActions);
-            jobs.add(j);
+            dbJobs.removeIf(j::mergeActions);
+            dbJobs.add(j);
             j.dbf.add(f);
             lock.notify();
         }
@@ -126,7 +125,7 @@ public class MySQLDatabase extends Thread implements DBQueries {
 
     @Override
     public void getAllScenarios(Consumer<List<Scenario>> cb) {
-        addJob(new Job.Query("SELECT s FROM Scenario s", Scenario.class, list -> {
+        addJob(new DBJob.Query("SELECT s FROM Scenario s", Scenario.class, list -> {
             if (cb != null) {
                 List<Scenario> result = (List<Scenario>) list;
                 cb.accept(result);
@@ -138,9 +137,9 @@ public class MySQLDatabase extends Thread implements DBQueries {
     public DBFuture persist(Runnable action, Object o) {
         final DBFuture f = new DBFuture();
         if (action == null) {
-            addJob(new Job.SimplePersist(o), f);
+            addJob(new DBJob.SimplePersist(o), f);
         } else {
-            addJob(new Job.ActionPersist(action, o), f);
+            addJob(new DBJob.ActionPersist(action, o), f);
         }
 
         return f;
@@ -149,21 +148,21 @@ public class MySQLDatabase extends Thread implements DBQueries {
     @Override
     public DBFuture dropScenario(Scenario s) {
         final DBFuture f = new DBFuture();
-        addJob(new Job.SimpleDrop(s), f);
+        addJob(new DBJob.SimpleDrop(s), f);
         return f;
     }
 
     @Override
     public DBFuture dropNode(Node n) {
         final DBFuture f = new DBFuture();
-        addJob(new Job.SimpleDrop(n), f);
+        addJob(new DBJob.SimpleDrop(n), f);
         return f;
     }
 
     @Override
     public DBFuture dropTruck(Truck t) {
         final DBFuture f = new DBFuture();
-        addJob(new Job.SimpleDrop(t), f);
+        addJob(new DBJob.SimpleDrop(t), f);
         return f;
     }
 
