@@ -260,6 +260,8 @@ public class Window extends Application {
                             } else {
                                 descL.setStyle("-fx-font-style: italic;");
                             }
+                            descL.setTextOverrun(OverrunStyle.ELLIPSIS);
+
 
                             final VBox labelsG = new VBox(0);
                             labelsG.getChildren().addAll(nameL, descL);
@@ -269,6 +271,7 @@ public class Window extends Application {
                                     hGrow,
                                     goB
                             );
+                            row.setMaxWidth(layout.getWidth() - 20);
                             setGraphic(row);
                         }
                     }
@@ -448,7 +451,7 @@ public class Window extends Application {
     }
 
     private Scenario addNewScenario() {
-        final TextInputDialog input = new TextInputDialog("New #" + Integer.toString((int)(Math.random() * 899999 + 100000)));
+        final TextInputDialog input = new TextInputDialog("New #" + (int) (Math.random() * 899999 + 100000));
         input.setTitle("New scenario");
         input.setContentText("Name:");
         input.setHeaderText("");

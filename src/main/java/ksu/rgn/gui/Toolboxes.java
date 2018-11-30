@@ -4,10 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import ksu.rgn.Main;
@@ -46,7 +43,18 @@ public class Toolboxes {
     }
 
     private static void addTextAreaF(Pane to, String name, String initialValue, Consumer<String> onChange) {
-        addTextF(to, name, initialValue, onChange);
+        final Label l = new Label(name);
+        l.setPadding(new Insets(0, 0, -7, 0));
+        final TextArea tf = new TextArea(initialValue);
+        tf.setWrapText(true);
+        tf.setPrefRowCount(5);
+        if (onChange != null) {
+            tf.textProperty().addListener((observableValue, s, t1) -> onChange.accept(tf.getText()));
+            onChange.accept(tf.getText());
+        }
+
+        if (!name.isEmpty()) to.getChildren().add(l);
+        to.getChildren().add(tf);
     }
     private static void addTextF(Pane to, String name, String initialValue, Consumer<String> onChange) {
         final Label l = new Label(name);
