@@ -35,7 +35,7 @@ public class Scenario {
 
 
     @OneToMany(cascade = CascadeType.ALL)
-    private final List<Node> nodes = new ArrayList<>();
+    private final List<MapNode> nodes = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
     private final List<Truck> trucks = new ArrayList<>();
@@ -56,7 +56,7 @@ public class Scenario {
         LOG.debug("Creating scenario '{}'{}", this.name, this.description == null ? "" : (" - '" + this.description + "'"));
     }
 
-    public void add(Node n) {
+    public void add(MapNode n) {
         LOG.debug("{}: Adding {}", name, n);
         nodes.add(n);
     }
@@ -66,7 +66,7 @@ public class Scenario {
         trucks.add(t);
     }
 
-    public List<Node> getNodes() {
+    public List<MapNode> getNodes() {
         return nodes;
     }
 

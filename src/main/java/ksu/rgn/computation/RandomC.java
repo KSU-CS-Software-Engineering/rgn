@@ -25,9 +25,9 @@ public class RandomC implements ScenarioComputation {
             return null;
         }
 
-        Node supplyNode = null;
+        MapNode supplyNode = null;
         Truck truck = s.getTrucks().get(0);
-        for (Node n : s.getNodes()) {
+        for (MapNode n : s.getNodes()) {
             if (n.demand < 0) { // Assume it is infinite, for now
                 supplyNode = n;
                 break;
@@ -46,10 +46,10 @@ public class RandomC implements ScenarioComputation {
             j.addLeg(new DirectRoute(truck.startingNode, supplyNode), 0);
         }
 
-        final Node[] nodes = s.getNodes().toArray(new Node[0]);
+        final MapNode[] nodes = s.getNodes().toArray(new MapNode[0]);
         Collections.shuffleArray(nodes);
 
-        for(Node n : nodes) {
+        for(MapNode n : nodes) {
             if (n.demand <= 0) continue;
 
             int toDeliver = n.demand;

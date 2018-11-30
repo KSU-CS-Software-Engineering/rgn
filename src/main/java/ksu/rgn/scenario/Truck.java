@@ -16,7 +16,7 @@ public class Truck {
     public String name;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    public Node startingNode, endingNode;
+    public MapNode startingNode, endingNode;
 
     @Column(nullable = false)
     public int capacity; // in kg

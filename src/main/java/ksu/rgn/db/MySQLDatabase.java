@@ -1,6 +1,6 @@
 package ksu.rgn.db;
 
-import ksu.rgn.scenario.Node;
+import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.Truck;
 import org.slf4j.Logger;
@@ -153,7 +153,7 @@ public class MySQLDatabase extends Thread implements DBQueries {
     }
 
     @Override
-    public DBFuture dropNode(Node n) {
+    public DBFuture dropNode(MapNode n) {
         final DBFuture f = new DBFuture();
         addJob(new DBJob.SimpleDrop(n), f);
         return f;

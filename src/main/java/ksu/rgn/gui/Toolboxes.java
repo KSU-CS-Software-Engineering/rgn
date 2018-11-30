@@ -12,10 +12,17 @@ import ksu.rgn.arcgis.GISBridge;
 import ksu.rgn.arcgis.GISFuture;
 import ksu.rgn.scenario.MapLocation;
 import ksu.rgn.scenario.Scenario;
+import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Truck;
+import ksu.rgn.utils.Tuple2;
+import ksu.rgn.utils.Units;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  *
@@ -253,48 +260,20 @@ public class Toolboxes {
     }
 
     public static Node createNodesToolbox(Scenario s) {
-        final VBox pane = createPane("Nodes");
+        final Function<Tuple2<Object, Button>, HBox> nodeRenderer = o -> {
+            final MapNode n = (MapNode) o._1;
 
-        final Pane addNodeForm = addForm(pane);
-        addTextF(addNodeForm, "Name", "", null);
-        addGpsF(addNodeForm, "Position", 0, 0, null);
-        addButton(addNodeForm, "Add node", null);
-
-        return pane;
-    }
-
-    private static void updateTruckList(VBox list, Scenario s, Truck[] trucksFuture) {
-        list.getChildren().clear();
-
-        Truck[] ts = trucksFuture == null ? s.getTrucks().toArray(new Truck[0]) : trucksFuture;
-
-        for (Truck t : ts) {
             final HBox row = new HBox(5);
             row.setStyle("-fx-background-color: white; -fx-padding: 5px;-fx-border-color: #ddd; -fx-border-style: solid; -fx-border-width: 1px");
-
-            final Button goB = new Button("", new ImageView(Icons._24.TRASH));
-            goB.setPadding(new Insets(5, 8, 5, 8));
-            goB.setOnAction(e -> {
-                Main.db.persist(() -> s.getTrucks().remove(t), s).finished(() -> Platform.runLater(() -> updateTruckList(list, s, null)));
-                Platform.runLater(() -> {
-                    final Truck[] deletedTruck = new Truck[ts.length - 1];
-                    int skip = 0;
-                    for (int i = 0; i < deletedTruck.length; i++) {
-                        if (ts[i + skip] == t) skip++;
-                        deletedTruck[i] = ts[i + skip];
-                    }
-
-                    updateTruckList(list, s, deletedTruck);
-                });
-            });
 
             final Pane hGrow = new Pane();
             HBox.setHgrow(hGrow, Priority.ALWAYS);
 
-            final Label nameL = new Label("Truck - " + t.name);
+
+            final Label nameL = new Label("Node - " + n.name);
             nameL.setStyle("-fx-font-weight: bold;");
 
-            final Label descL = new Label((t.refrigerated ? "Refrigerated, " : "") + t.capacity + " pounds");
+            final Label descL = new Label(Units.toPounds(n.demand) + " / " + Units.toPounds(n.supply) + " pounds");
 
             final VBox labelsG = new VBox(0);
             labelsG.getChildren().addAll(nameL, descL);
@@ -302,14 +281,115 @@ public class Toolboxes {
             row.getChildren().addAll(
                     labelsG,
                     hGrow,
-                    goB
+                    o._2
             );
 
-            list.getChildren().add(row);
+            return row;
+        };
+
+
+        final VBox pane = createPane("Nodes");
+
+        final Pane addNodeForm = addForm(pane);
+        final FormValues nodeFormV = new FormValues();
+
+        addTextF(addNodeForm, "Name", "", nodeFormV.listenF("Name"));
+        addGpsF(addNodeForm, "Location", 0, 0, nodeFormV.listenF("Location"));
+        addVSpace(addNodeForm, 5);
+        addNumberF(addNodeForm, "Demand", "pounds", 0, nodeFormV.listenF("Demand"));
+        addNumberF(addNodeForm, "Supply", "pounds", 0, nodeFormV.listenF("Supply"));
+        addVSpace(addNodeForm, 10);
+        addVSpace(pane, 10);
+
+        final VBox nodeList = addList(pane);
+        final Label addNodeL = addButtonWithLabel(addNodeForm, "Add node", () -> {
+            if (nodeFormV.isValid) {
+
+                final MapNode n = new MapNode();
+
+                n.name = (String) nodeFormV.vars.get("Name");
+                n.location = (MapLocation) nodeFormV.vars.get("Location");
+
+                n.demand = Units.toKilograms((Integer) nodeFormV.vars.get("Demand"));
+                n.supply = Units.toKilograms((Integer) nodeFormV.vars.get("Supply"));
+
+                Main.db.persist(() -> s.add(n), s).finished(() -> Platform.runLater(() -> updateList(nodeList, s, null, nodeRenderer, s::getNodes)));
+                Platform.runLater(() -> {
+                    final MapNode[] ns = s.getNodes().toArray(new MapNode[s.getNodes().size() + 1]);
+                    ns[ns.length - 1] = n;
+                    updateList(nodeList, s, ns, nodeRenderer, s::getNodes);
+                });
+            }
+        });
+        addNodeL.setStyle("-fx-text-fill: red; -fx-padding: 5px 0px 0px 5px;");
+        nodeFormV.onIsValidChange = isValid -> {
+            if (isValid) {
+                addNodeL.setText("");
+            } else {
+                addNodeL.setText("Invalid input");
+            }
+        };
+
+        updateList(nodeList, s, null, nodeRenderer, s::getNodes);
+
+        return pane;
+    }
+
+    private static void updateList(VBox list, Scenario s, Object[] future, Function<Tuple2<Object, Button>, HBox> renderer, Supplier<List> getUpToDateData) {
+        list.getChildren().clear();
+
+        Object[] ts = future == null ? getUpToDateData.get().toArray(new Object[0]) : future;
+
+        for (Object t : ts) {
+            final Button goB = new Button("", new ImageView(Icons._24.TRASH));
+            goB.setPadding(new Insets(5, 8, 5, 8));
+            goB.setOnAction(e -> {
+                Main.db.persist(() -> getUpToDateData.get().remove(t), s).finished(() -> Platform.runLater(() -> updateList(list, s, null, renderer, getUpToDateData)));
+                Platform.runLater(() -> {
+                    final Object[] deleted = new Object[ts.length - 1];
+                    int skip = 0;
+                    for (int i = 0; i < deleted.length; i++) {
+                        if (ts[i + skip] == t) skip++;
+                        deleted[i] = ts[i + skip];
+                    }
+
+                    updateList(list, s, deleted, renderer, getUpToDateData);
+                });
+            });
+
+            list.getChildren().add(renderer.apply(new Tuple2<>(t, goB)));
         }
     }
 
     public static Node createTrucksToolbox(Scenario s) {
+        final Function<Tuple2<Object, Button>, HBox> truckRenderer = o -> {
+            final Truck t = (Truck) o._1;
+
+            final HBox row = new HBox(5);
+            row.setStyle("-fx-background-color: white; -fx-padding: 5px;-fx-border-color: #ddd; -fx-border-style: solid; -fx-border-width: 1px");
+
+            final Pane hGrow = new Pane();
+            HBox.setHgrow(hGrow, Priority.ALWAYS);
+
+
+            final Label nameL = new Label("Truck - " + t.name);
+            nameL.setStyle("-fx-font-weight: bold;");
+
+            final Label descL = new Label((t.refrigerated ? "Refrigerated, " : "") + Units.toPounds(t.capacity) + " pounds");
+
+            final VBox labelsG = new VBox(0);
+            labelsG.getChildren().addAll(nameL, descL);
+
+            row.getChildren().addAll(
+                    labelsG,
+                    hGrow,
+                    o._2
+            );
+
+            return row;
+        };
+
+
         final VBox pane = createPane("Trucks");
 
         final Pane addTruckForm = addForm(pane);
@@ -337,16 +417,16 @@ public class Toolboxes {
                 final Truck t = new Truck();
 
                 t.name = (String) truckFormV.vars.get("Name");
-                t.capacity = (Integer) truckFormV.vars.get("Capacity");
+                t.capacity = Units.toKilograms((Integer) truckFormV.vars.get("Capacity"));
                 t.refrigerated = (Boolean) truckFormV.vars.get("Refrigerated");
 
                 // TODO start/end location
 
-                Main.db.persist(() -> s.add(t), s).finished(() -> Platform.runLater(() -> updateTruckList(truckList, s, null)));
+                Main.db.persist(() -> s.add(t), s).finished(() -> Platform.runLater(() -> updateList(truckList, s, null, truckRenderer, s::getTrucks)));
                 Platform.runLater(() -> {
                     final Truck[] ts = s.getTrucks().toArray(new Truck[s.getTrucks().size() + 1]);
                     ts[ts.length - 1] = t;
-                    updateTruckList(truckList, s, ts);
+                    updateList(truckList, s, ts, truckRenderer, s::getTrucks);
                 });
             }
         });
@@ -359,7 +439,7 @@ public class Toolboxes {
             }
         };
 
-        updateTruckList(truckList, s, null);
+        updateList(truckList, s, null, truckRenderer, s::getTrucks);
 
         addVSpace(pane, 10);
 

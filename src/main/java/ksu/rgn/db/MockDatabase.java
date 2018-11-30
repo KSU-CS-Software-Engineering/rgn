@@ -1,6 +1,6 @@
 package ksu.rgn.db;
 
-import ksu.rgn.scenario.Node;
+import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.Truck;
 
@@ -37,7 +37,7 @@ public class MockDatabase implements DBQueries {
     }
 
     @Override
-    public DBFuture dropNode(Node n) {
+    public DBFuture dropNode(MapNode n) {
         return new DBFuture();
     }
 

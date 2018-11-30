@@ -11,9 +11,9 @@ public class DirectRoute {
 
     private static final Logger LOG = LoggerFactory.getLogger(DirectRoute.class);
 
-    public final Node from, to;
+    public final MapNode from, to;
 
-    public DirectRoute(Node from, Node to) {
+    public DirectRoute(MapNode from, MapNode to) {
         this.from = from;
         this.to = to;
     }

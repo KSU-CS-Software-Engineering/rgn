@@ -1,6 +1,6 @@
 package ksu.rgn.db;
 
-import ksu.rgn.scenario.Node;
+import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.Truck;
 
@@ -17,7 +17,7 @@ public interface DBQueries {
     DBFuture persist(Runnable action, Object o);
 
     DBFuture dropScenario(Scenario s);
-    DBFuture dropNode(Node n);
+    DBFuture dropNode(MapNode n);
     DBFuture dropTruck(Truck t);
 
     void open(String url, String dbName, String user, String password);

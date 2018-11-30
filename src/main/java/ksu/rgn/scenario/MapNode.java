@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="node")
-public class Node {
+public class MapNode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +17,7 @@ public class Node {
 
     @ManyToOne(cascade = CascadeType.ALL)
     public MapLocation location;
+    public String name;
 
     @Column(nullable = false)
     public int demand; // In kg
@@ -26,7 +27,7 @@ public class Node {
 
     @Override
     public String toString() {
-        return String.format("Node #%d { demand = %d, location = %s }", ID, demand, location.toString());
+        return String.format("Node #%d { name = %s, demand = %d, location = %s }", ID, name, demand, location.toString());
     }
 }
 
