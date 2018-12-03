@@ -34,10 +34,10 @@ public class Scenario {
     public String arcGisClientID;
 
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
     private final List<MapNode> nodes = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
     private final List<Truck> trucks = new ArrayList<>();
 
     public Scenario() {

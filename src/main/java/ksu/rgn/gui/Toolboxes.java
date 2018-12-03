@@ -332,6 +332,11 @@ public class Toolboxes {
 
         updateList(nodeList, s, null, nodeRenderer, s::getNodes);
 
+        addButton(pane, "Remove all nodes", () -> {
+            Main.db.persist(() -> s.getNodes().clear(), s).finished(() -> Platform.runLater(() -> updateList(nodeList, s, null, nodeRenderer, s::getNodes)));
+            Platform.runLater(() -> updateList(nodeList, s, new MapNode[]{}, nodeRenderer, s::getNodes));
+        });
+
         return pane;
     }
 
