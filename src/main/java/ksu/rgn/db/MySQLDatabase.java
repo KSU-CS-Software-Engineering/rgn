@@ -86,7 +86,7 @@ public class MySQLDatabase extends Thread implements DBQueries {
                         if (dbJobs.isEmpty()) {
                             if (syncStarted && onSyncFinished != null) onSyncFinished.run();
                             syncStarted = false;
-                            lock.wait();
+                            if (!close) lock.wait();
                         }
                     }
                 }
