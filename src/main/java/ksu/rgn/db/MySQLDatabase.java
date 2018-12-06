@@ -124,6 +124,19 @@ public class MySQLDatabase extends Thread implements DBQueries {
     }
 
     @Override
+    public DBFuture preCache(Runnable job) {
+        final DBFuture f = new DBFuture();
+        addJob(new DBJob() {
+            @Override
+            public void run(EntityManager em) {
+                job.run();
+                f.invokeFinished();
+            }
+        }, f);
+        return f;
+    }
+
+    @Override
     public void getAllScenarios(Consumer<List<Scenario>> cb) {
         addJob(new DBJob.Query("SELECT s FROM Scenario s", Scenario.class, list -> {
             if (cb != null) {

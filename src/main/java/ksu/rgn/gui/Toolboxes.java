@@ -1,22 +1,36 @@
 package ksu.rgn.gui;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import ksu.rgn.Main;
 import ksu.rgn.arcgis.GISBridge;
 import ksu.rgn.arcgis.GISFuture;
 import ksu.rgn.scenario.MapLocation;
-import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.MapNode;
+import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.Truck;
 import ksu.rgn.utils.Tuple2;
 import ksu.rgn.utils.Units;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -156,12 +170,14 @@ public class Toolboxes {
         to.getChildren().add(c);
     }
 
-    private static void addButton(Pane to, String name, Runnable onClick) {
+    private static Button addButton(Pane to, String name, Runnable onClick) {
         final Button b = new Button(name);
         if (onClick != null) {
             b.setOnAction(ae -> onClick.run());
         }
         to.getChildren().add(b);
+
+        return b;
     }
     private static Label addButtonWithLabel(Pane to, String name, Runnable onClick) {
         final Button b = new Button(name);
@@ -207,7 +223,7 @@ public class Toolboxes {
     }
 
 
-    public static Node createScenarioToolbox(Scenario s) {
+    public static Node createScenarioToolbox(Scenario s, Window owner) {
         final VBox pane = createPane("Scenario");
 
         addTextF(pane, "Name", s.name, null);
@@ -259,7 +275,7 @@ public class Toolboxes {
         return pane;
     }
 
-    public static Node createNodesToolbox(Scenario s) {
+    public static Node createNodesToolbox(Scenario s, Window owner) {
         final Function<Tuple2<Object, Button>, HBox> nodeRenderer = o -> {
             final MapNode n = (MapNode) o._1;
 
@@ -299,9 +315,217 @@ public class Toolboxes {
         addNumberF(addNodeForm, "Demand", "pounds", 0, nodeFormV.listenF("Demand"));
         addNumberF(addNodeForm, "Supply", "pounds", 0, nodeFormV.listenF("Supply"));
         addVSpace(addNodeForm, 10);
+
+        final VBox[] nodeListEnc = new VBox[1];
+
+        addButton(pane, "Import nodes from .csv", () -> {
+            final FileChooser fc = new FileChooser();
+            fc.setTitle("Import nodes from .csv");
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter(".csv files", "*.csv"));
+            final File f = fc.showOpenDialog(owner);
+            if (f != null) {
+                try {
+                    final String[] lines = Files.lines(Paths.get(f.toURI())).limit(5).toArray(String[]::new);
+
+                    Stage dialogStage = new Stage();
+                    dialogStage.initModality(Modality.WINDOW_MODAL);
+
+                    final VBox dialog = createPane("Import from .csv");
+                    dialog.setPrefWidth(600);
+                    final Label l = new Label(f.getAbsolutePath());
+                    l.setPadding(new Insets(0, 0, 5, 0));
+                    dialog.getChildren().add(l);
+                    addVSpace(dialog, 5);
+                    final boolean[] firstLineHeader = new boolean[]{true};
+                    addCheckboxF(dialog, "First line is a header", true, b -> {
+                        firstLineHeader[0] = b;
+                    });
+                    addVSpace(dialog, 5);
+
+                    int cols = 0;
+                    for (String line : lines) {
+                        cols = Math.max(cols, line.split(",").length);
+                    }
+
+                    final TableView<List<String>> table = new TableView<>();
+                    table.setEditable(false);
+                    table.setPrefHeight(150);
+                    for (int i = 0; i < cols; i++) {
+                        final TableColumn<List<String>, String> col = new TableColumn<>(Integer.toString(i + 1));
+                        final int colIndex = i ;
+                        col.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().get(colIndex)));
+                        table.getColumns().add(col);
+                    }
+
+                    final List<List<String>> data = new ArrayList<>();
+                    for (String line : lines) {
+                        final String[] fields = line.split(",");
+                        final List<String> row = new ArrayList<>();
+                        Collections.addAll(row, fields);
+                        for (int j = fields.length; j < cols; j++) {
+                            row.add("");
+                        }
+                        data.add(row);
+                    }
+
+                    table.setItems(FXCollections.observableArrayList(data));
+                    table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+                    dialog.getChildren().add(table);
+                    addVSpace(dialog, 10);
+
+                    final String[] properties = new String[] {
+                            "Name", "GPS Latitude", "GPS Longitude", "Demand [pounds]", "Supply [pounds]"
+                    };
+                    final int[] propertyCols = new int[properties.length];
+
+                    int selectedId = 0;
+                    for (int i = 0; i < properties.length; i++) {
+                        final int propertyI = i;
+                        final String property = properties[i];
+
+                        final HBox line = new HBox(0);
+                        final Text pText = new Text(property);
+                        pText.setStyle("-fx-font-weight: bold;");
+                        line.getChildren().add(new TextFlow(new Text("Column for - "), pText, new Text(": ")));
+                        final Pane hSpacer = new Pane();
+                        HBox.setHgrow(hSpacer, Priority.ALWAYS);
+                        line.getChildren().add(hSpacer);
+
+                        final ToggleGroup group = new ToggleGroup();
+
+                        for (int j = 0; j < cols; j++) {
+                            final int colI = j;
+                            ToggleButton button = new ToggleButton(Integer.toString(j + 1));
+                            button.setToggleGroup(group);
+
+                            button.setStyle("-fx-background-radius: 0; -fx-padding: 4px 10px 4px 10px;");
+                            if (j == 0) {
+                                button.setStyle("-fx-background-radius: 3 0 0 3; -fx-padding: 4px 10px 4px 10px;");
+                            } else if (j == cols - 1) {
+                                button.setStyle("-fx-background-radius: 0 3 3 0; -fx-padding: 4px 10px 4px 10px;");
+                            }
+                            if (selectedId == j) {
+                                button.setSelected(true);
+                                propertyCols[i] = selectedId;
+                            }
+                            button.setOnAction(ae -> {
+                                if (button.isSelected()) {
+                                    propertyCols[propertyI] = colI;
+                                } else {
+                                    propertyCols[propertyI] = -1;
+                                }
+                            });
+                            line.getChildren().add(button);
+                        }
+                        selectedId++;
+
+                        dialog.getChildren().add(line);
+                    }
+
+                    addButton(dialog, "Ok, import", () -> {
+                        try {
+                            final String[] csvRecords = Files.lines(Paths.get(f.toURI())).skip(firstLineHeader[0] ? 1 : 0).toArray(String[]::new);
+                            final ArrayList<MapNode> toAdd = new ArrayList<>();
+                            int validCounter = 0, invalidCounter = 0;
+
+                            for (String record : csvRecords) {
+                                final String[] fields = record.split(",");
+
+                                final MapNode node = new MapNode();
+                                boolean invalidRecord = false;
+
+                                // Name
+                                if (invalidRecord || propertyCols[0] == -1 || propertyCols[0] >= fields.length) {
+                                    invalidRecord = true;
+                                } else {
+                                    node.name = fields[propertyCols[0]];
+                                }
+
+                                // GPS Locataion
+                                if (invalidRecord || propertyCols[1] == -1 || propertyCols[1] >= fields.length || propertyCols[2] == -1 || propertyCols[2] >= fields.length) {
+                                    invalidRecord = true;
+                                } else {
+                                    try {
+                                        node.location = new MapLocation(
+                                                Double.parseDouble(fields[propertyCols[1]]),
+                                                Double.parseDouble(fields[propertyCols[2]])
+                                        );
+                                    } catch (NumberFormatException nfe) {
+                                        invalidRecord = true;
+                                    }
+                                }
+
+                                // Demand
+                                if (invalidRecord || propertyCols[3] == -1 || propertyCols[3] >= fields.length) {
+                                    invalidRecord = true;
+                                } else {
+                                    try {
+                                        node.demand = Units.toKilograms(Integer.parseInt(fields[propertyCols[3]]));
+                                    } catch (NumberFormatException nfe) {
+                                        invalidRecord = true;
+                                    }
+
+                                }
+
+                                // Supply
+                                if (invalidRecord || propertyCols[4] == -1 || propertyCols[4] >= fields.length) {
+                                    invalidRecord = true;
+                                } else {
+                                    try {
+                                        node.supply = Units.toKilograms(Integer.parseInt(fields[propertyCols[4]]));
+                                    } catch (NumberFormatException nfe) {
+                                        invalidRecord = true;
+                                    }
+                                }
+
+                                if (!invalidRecord) {
+                                    toAdd.add(node);
+                                    validCounter ++;
+                                } else {
+                                    invalidCounter ++;
+                                }
+                            }
+
+                            if (validCounter > 0) {
+                                Main.db.persist(() -> s.getNodes().addAll(toAdd), s).finished(() -> Platform.runLater(() -> updateList(nodeListEnc[0], s, null, nodeRenderer, s::getNodes)));
+                                Platform.runLater(() -> {
+                                    final MapNode[] ns = s.getNodes().toArray(new MapNode[s.getNodes().size() + toAdd.size()]);
+                                    for (int i = 0; i < toAdd.size(); i++) {
+                                        ns[s.getNodes().size() + i] = toAdd.get(i);
+                                    }
+                                    updateList(nodeListEnc[0], s, ns, nodeRenderer, s::getNodes);
+                                });
+                            }
+
+                            final Alert alert = new Alert(invalidCounter > 0 ? Alert.AlertType.WARNING : Alert.AlertType.INFORMATION, "Corrupted records: " + invalidCounter + "\nImported records: " + validCounter, ButtonType.OK);
+                            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                            alert.show();
+
+                        } catch (IOException e) {
+                            final Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot read selected file\n" + f.getAbsolutePath(), ButtonType.OK);
+                            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                            alert.show();
+                        }
+
+                        dialogStage.close();
+
+                    }).setDefaultButton(true);
+
+                    dialogStage.setScene(new Scene(dialog));
+                    dialogStage.show();
+                } catch (IOException e) {
+
+                    final Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot read selected file\n" + f.getAbsolutePath(), ButtonType.OK);
+                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                    alert.show();
+                }
+            }
+        });
+
         addVSpace(pane, 10);
 
-        final VBox nodeList = addList(pane);
+        nodeListEnc[0] = addList(pane);
         final Label addNodeL = addButtonWithLabel(addNodeForm, "Add node", () -> {
             if (nodeFormV.isValid) {
 
@@ -313,12 +537,13 @@ public class Toolboxes {
                 n.demand = Units.toKilograms((Integer) nodeFormV.vars.get("Demand"));
                 n.supply = Units.toKilograms((Integer) nodeFormV.vars.get("Supply"));
 
-                Main.db.persist(() -> s.add(n), s).finished(() -> Platform.runLater(() -> updateList(nodeList, s, null, nodeRenderer, s::getNodes)));
+                Main.db.persist(() -> s.add(n), s).finished(() -> Platform.runLater(() -> updateList(nodeListEnc[0], s, null, nodeRenderer, s::getNodes)));
                 Platform.runLater(() -> {
                     final MapNode[] ns = s.getNodes().toArray(new MapNode[s.getNodes().size() + 1]);
                     ns[ns.length - 1] = n;
-                    updateList(nodeList, s, ns, nodeRenderer, s::getNodes);
+                    updateList(nodeListEnc[0], s, ns, nodeRenderer, s::getNodes);
                 });
+
             }
         });
         addNodeL.setStyle("-fx-text-fill: red; -fx-padding: 5px 0px 0px 5px;");
@@ -330,11 +555,11 @@ public class Toolboxes {
             }
         };
 
-        updateList(nodeList, s, null, nodeRenderer, s::getNodes);
+        updateList(nodeListEnc[0], s, null, nodeRenderer, s::getNodes);
 
         addButton(pane, "Remove all nodes", () -> {
-            Main.db.persist(() -> s.getNodes().clear(), s).finished(() -> Platform.runLater(() -> updateList(nodeList, s, null, nodeRenderer, s::getNodes)));
-            Platform.runLater(() -> updateList(nodeList, s, new MapNode[]{}, nodeRenderer, s::getNodes));
+            Main.db.persist(() -> s.getNodes().clear(), s).finished(() -> Platform.runLater(() -> updateList(nodeListEnc[0], s, null, nodeRenderer, s::getNodes)));
+            Platform.runLater(() -> updateList(nodeListEnc[0], s, new MapNode[]{}, nodeRenderer, s::getNodes));
         });
 
         return pane;
@@ -343,30 +568,44 @@ public class Toolboxes {
     private static void updateList(VBox list, Scenario s, Object[] future, Function<Tuple2<Object, Button>, HBox> renderer, Supplier<List> getUpToDateData) {
         list.getChildren().clear();
 
-        Object[] ts = future == null ? getUpToDateData.get().toArray(new Object[0]) : future;
+        final Node spinner = ksu.rgn.gui.Window.createSpinner();
+        addVSpace(list, 5);
+        list.getChildren().add(spinner);
+        addVSpace(list, 5);
 
-        for (Object t : ts) {
-            final Button goB = new Button("", new ImageView(Icons._24.TRASH));
-            goB.setPadding(new Insets(5, 8, 5, 8));
-            goB.setOnAction(e -> {
-                Main.db.persist(() -> getUpToDateData.get().remove(t), s).finished(() -> Platform.runLater(() -> updateList(list, s, null, renderer, getUpToDateData)));
-                Platform.runLater(() -> {
-                    final Object[] deleted = new Object[ts.length - 1];
-                    int skip = 0;
-                    for (int i = 0; i < deleted.length; i++) {
-                        if (ts[i + skip] == t) skip++;
-                        deleted[i] = ts[i + skip];
-                    }
+        if (future == null) {
+            Main.db.preCache(() -> {
+                final Object[] data = getUpToDateData.get().toArray(new Object[0]);
 
-                    updateList(list, s, deleted, renderer, getUpToDateData);
-                });
+                Platform.runLater(() -> updateList(list, s, data, renderer, getUpToDateData));
             });
+        } else {
 
-            list.getChildren().add(renderer.apply(new Tuple2<>(t, goB)));
+            list.getChildren().clear();
+            for (Object t : future) {
+                final Button goB = new Button("", new ImageView(Icons._24.TRASH));
+                goB.setPadding(new Insets(5, 8, 5, 8));
+                goB.setOnAction(e -> {
+                    Main.db.persist(() -> getUpToDateData.get().remove(t), s).finished(() -> Platform.runLater(() -> updateList(list, s, null, renderer, getUpToDateData)));
+                    Platform.runLater(() -> {
+                        final Object[] deleted = new Object[future.length - 1];
+                        int skip = 0;
+                        for (int i = 0; i < deleted.length; i++) {
+                            if (future[i + skip] == t) skip++;
+                            deleted[i] = future[i + skip];
+                        }
+
+                        updateList(list, s, deleted, renderer, getUpToDateData);
+                    });
+                });
+
+                list.getChildren().add(renderer.apply(new Tuple2<>(t, goB)));
+            }
         }
+
     }
 
-    public static Node createTrucksToolbox(Scenario s) {
+    public static Node createTrucksToolbox(Scenario s, Window owner) {
         final Function<Tuple2<Object, Button>, HBox> truckRenderer = o -> {
             final Truck t = (Truck) o._1;
 
@@ -451,7 +690,7 @@ public class Toolboxes {
         return pane;
     }
 
-    public static Node createRoutesToolbox(Scenario s) {
+    public static Node createRoutesToolbox(Scenario s, Window owner) {
         final VBox pane = createPane("Routes");
 
         addButton(pane, "Calculate", null);
@@ -459,7 +698,7 @@ public class Toolboxes {
         return pane;
     }
 
-    public static Node createMapView(Scenario s) {
+    public static Node createMapView(Scenario s, Window owner) {
         BorderPane p = new BorderPane();
         p.setStyle("-fx-background-color:white;");
         Label l = new Label("This is a map");

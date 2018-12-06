@@ -15,7 +15,7 @@ public class MapNode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int ID;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     public MapLocation location;
     public String name;
 

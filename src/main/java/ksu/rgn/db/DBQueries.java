@@ -26,4 +26,5 @@ public interface DBQueries {
         if (onClosed != null) onClosed.run();
     }
 
+    DBFuture preCache(Runnable job);
 }

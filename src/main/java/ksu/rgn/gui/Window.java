@@ -174,13 +174,13 @@ public class Window extends Application {
         trucksB.setStyle("-fx-background-radius: 0");
         routesB.setStyle("-fx-background-radius: 0 3 3 0");
 
-        scenarioB.setOnAction(e -> border.setLeft(scenarioB.isSelected() ? createToolbox(createScenarioToolbox(selectedScenario)) : null));
-        nodesB.setOnAction(e -> border.setLeft(nodesB.isSelected() ? createToolbox(createNodesToolbox(selectedScenario)) : null));
-        trucksB.setOnAction(e -> border.setLeft(trucksB.isSelected() ? createToolbox(createTrucksToolbox(selectedScenario)) : null));
-        routesB.setOnAction(e -> border.setLeft(routesB.isSelected() ? createToolbox(createRoutesToolbox(selectedScenario)) : null));
+        scenarioB.setOnAction(e -> border.setLeft(scenarioB.isSelected() ? createToolbox(createScenarioToolbox(selectedScenario, border.getScene().getWindow())) : null));
+        nodesB.setOnAction(e -> border.setLeft(nodesB.isSelected() ? createToolbox(createNodesToolbox(selectedScenario, border.getScene().getWindow())) : null));
+        trucksB.setOnAction(e -> border.setLeft(trucksB.isSelected() ? createToolbox(createTrucksToolbox(selectedScenario, border.getScene().getWindow())) : null));
+        routesB.setOnAction(e -> border.setLeft(routesB.isSelected() ? createToolbox(createRoutesToolbox(selectedScenario, border.getScene().getWindow())) : null));
 
         scenarioB.setSelected(true);
-        border.setLeft(createToolbox(createScenarioToolbox(selectedScenario)));
+        border.setLeft(createToolbox(createScenarioToolbox(selectedScenario, border.getScene().getWindow())));
 
         HBox hBox = new HBox(0);
         hBox.getChildren().addAll(scenarioB, nodesB, trucksB, routesB);
@@ -189,7 +189,7 @@ public class Window extends Application {
         }
         topBarP.getChildren().add(0, hBox);
 
-        border.setCenter(createMapView(selectedScenario));
+        border.setCenter(createMapView(selectedScenario, border.getScene().getWindow()));
     }
 
     private void showScenarioList() {
@@ -477,7 +477,7 @@ public class Window extends Application {
         return p;
     }
 
-    private ImageView createSpinner() {
+    static ImageView createSpinner() {
         ImageView iv = new ImageView(Icons._24.PROGRESS_INDICATOR);
         final Timeline timeLine = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(iv.rotateProperty(), 0.0)),
