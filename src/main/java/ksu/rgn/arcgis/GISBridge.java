@@ -5,6 +5,7 @@ import com.darkyen.dave.ResponseTranslator;
 import com.darkyen.dave.Webb;
 import com.darkyen.dave.WebbException;
 import ksu.rgn.scenario.MapNode;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +18,8 @@ import java.util.ArrayList;
 public class GISBridge extends Thread {
 
     private static final Logger LOG = LoggerFactory.getLogger(GISBridge.class);
-    private final String url, clientID, token;
-
-    private final Webb api;
+    final String url, clientID, token;
+    final Webb api;
 
     public GISBridge(String url, String clientID, String token) {
         this.url = url;
@@ -41,37 +41,30 @@ public class GISBridge extends Thread {
     public void testConnection(GISFuture future) {
         final GISJob job = new GISJob() {
             @Override
-            public void run(GISBridge b) {
+            public void run() {
                 try {
-                    Response<String> r = api
+                    final Response<String> r = api
                             .post("/ArcGIS/rest/info/healthCheck?f=pjson")
                             .execute(ResponseTranslator.STRING_TRANSLATOR);
-                    String responseString = r.getBody();
-                    JSONObject response = new JSONObject(responseString);
-                    Object o = response.get("success");
-                    boolean success = (boolean)o;
-                    if(success){
-                        future.invokeSuccess("The server is operational.");
+                    final String responseString = r.getBody();
+                    final JSONObject response = new JSONObject(responseString);
+                    if ((boolean) response.get("success")) {
+                        future.invokeSuccess("Server is running");
+                    } else {
+                        future.invokeFail("Could not contact server");
                     }
-                    else{
-                        future.invokeFail("The server is not operational.");
-                    }
-                }
-                catch(WebbException we)
-                {
+                } catch (WebbException we) {
                     LOG.warn("Exception in connecting to ArcGIS routing server", we);
                     future.invokeFail("The server could not be reached");
-                }
-                catch(NullPointerException npe)
-                {
-                    LOG.warn("ArcGIS sample server returning unexpected null value", npe);
-                    future.invokeFail("The server did not respond expectedly");
+                } catch (JSONException e) {
+                    LOG.warn("Server returned unexpected values", e);
+                    future.invokeFail("Unexpected response");
                 }
             }
 
             @Override
             public String toString() {
-                return "GISJob.testConnection()";
+                return "GISJob.TestConnection";
             }
         };
         job.future = future;
@@ -80,35 +73,10 @@ public class GISBridge extends Thread {
     }
 
     public void getRoute(GISFuture future, ArrayList<MapNode> nodes) {
-        final GISJob job = new GISJob() {
-            @Override
-            public void run(GISBridge bridge) {
-                try {
-                    final JSONObject parameters = new JSONObject();
-                    parameters.append("stops", getStopsJson(nodes));
-                    parameters.put("token", token);
-                    parameters.put("f", "pjson");
-                    Response<String> r = api
-                            .post("arcgis/rest/services/World/Route/NAServer/Route_World/solve?")
-                            .bodyJson(parameters.toString())
-                            .execute(ResponseTranslator.STRING_TRANSLATOR);
-                    String responseString = r.getBody();
-                    future.invokeSuccess(responseString);
-                }
-                catch(WebbException we)
-                {
-                    LOG.warn("Exception in connecting to ArcGIS routing server", we);
-                    future.invokeFail("The server could not be reached");
-                }
-                catch(NullPointerException npe){
-                    LOG.warn("ArcGIS routing server returning unexpected null value", npe);
-                    future.invokeFail("The server did not respond expectedly");
-                }
-            }
-            public String toString() {
-                return "GISJob.getRoute()";
-            }
-        };
+        final RouteGISJob job = new RouteGISJob(this, nodes);
+
+        job.future = future;
+        addJob(job);
     }
 
     void addJob(GISJob j) {
@@ -130,7 +98,7 @@ public class GISBridge extends Thread {
                     }
                 }
                 if (j != null) {
-                    j.run(this);
+                    j.run();
                 }
 
                 synchronized (lock) {
@@ -146,23 +114,6 @@ public class GISBridge extends Thread {
         }
     }
 
-    public JSONObject getStopsJson(ArrayList<MapNode> nodes){
-        JSONObject features = new JSONObject();
-        for(MapNode n : nodes)
-        {
-            JSONObject geometry = new JSONObject();
-            geometry.put("x", n.location.lat);
-            geometry.put("y", n.location.lon);
-            JSONObject attributes = new JSONObject();
-            attributes.put("name", n.ID);
-
-            JSONObject feature = new JSONObject();
-            feature.put("geometry", geometry);
-            feature.put("attributes", attributes);
-            features.append("features", feature);
-        }
-        return features;
-    }
     public void close() {
         this.close = true;
     }
