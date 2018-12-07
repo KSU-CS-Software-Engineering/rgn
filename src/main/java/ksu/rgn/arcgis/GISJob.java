@@ -11,8 +11,6 @@ public abstract class GISJob {
     public abstract void run(GISBridge bridge);
 
     @Override
-    public String toString() {
-        return "GISJob." + getClass();
-    }
+    public abstract String toString();
 
 }
