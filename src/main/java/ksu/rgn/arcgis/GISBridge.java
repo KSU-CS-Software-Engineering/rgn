@@ -4,7 +4,7 @@ import com.darkyen.dave.Response;
 import com.darkyen.dave.ResponseTranslator;
 import com.darkyen.dave.Webb;
 import com.darkyen.dave.WebbException;
-import ksu.rgn.scenario.Node;
+import ksu.rgn.scenario.MapNode;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +79,7 @@ public class GISBridge extends Thread {
         addJob(job);
     }
 
-    public void getRoute(GISFuture future, ArrayList<Node> nodes) {
+    public void getRoute(GISFuture future, ArrayList<MapNode> nodes) {
         final GISJob job = new GISJob() {
             @Override
             public void run(GISBridge bridge) {
@@ -146,9 +146,9 @@ public class GISBridge extends Thread {
         }
     }
 
-    public JSONObject getStopsJson(ArrayList<Node> nodes){
+    public JSONObject getStopsJson(ArrayList<MapNode> nodes){
         JSONObject features = new JSONObject();
-        for(Node n : nodes)
+        for(MapNode n : nodes)
         {
             JSONObject geometry = new JSONObject();
             geometry.put("x", n.location.lat);
