@@ -254,7 +254,9 @@ public class Window extends Application {
 
                             final Label descL = new Label("No description");
                             if (s.description != null && !s.description.isEmpty()) {
-                                descL.setText(s.description);
+                                int end = s.description.indexOf('\n');
+                                if (end == -1) end = s.description.length();
+                                descL.setText(s.description.substring(0, end));
                             } else {
                                 descL.setStyle("-fx-font-style: italic;");
                             }
