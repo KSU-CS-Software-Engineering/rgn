@@ -1,3 +1,5 @@
+For git commit messages style refer to [this article](https://chris.beams.io/posts/git-commit/)
+
 # Java Style Guide
 
 The intention of this guide is to provide a set of conventions that encourage good code.
