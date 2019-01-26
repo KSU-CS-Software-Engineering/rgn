@@ -1,12 +1,7 @@
 package ksu.rgn.arcgis;
 
-import com.darkyen.dave.Response;
-import com.darkyen.dave.ResponseTranslator;
 import com.darkyen.dave.Webb;
-import com.darkyen.dave.WebbException;
-import ksu.rgn.scenario.MapNode;
-import org.json.JSONException;
-import org.json.JSONObject;
+import ksu.rgn.utils.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,54 +32,16 @@ public class GISBridge extends Thread {
     private boolean close = false;
     private final Object lock = new Object();
 
-
-    public void testConnection(GISFuture future) {
-        final GISJob job = new GISJob() {
-            @Override
-            public void run() {
-                try {
-                    final Response<String> r = api
-                            .post("/ArcGIS/rest/info/healthCheck?f=pjson")
-                            .execute(ResponseTranslator.STRING_TRANSLATOR);
-                    final String responseString = r.getBody();
-                    final JSONObject response = new JSONObject(responseString);
-                    if ((boolean) response.get("success")) {
-                        future.invokeSuccess("Server is running");
-                    } else {
-                        future.invokeFail("Could not contact server");
-                    }
-                } catch (WebbException we) {
-                    LOG.warn("Exception in connecting to ArcGIS routing server", we);
-                    future.invokeFail("The server could not be reached");
-                } catch (JSONException e) {
-                    LOG.warn("Server returned unexpected values", e);
-                    future.invokeFail("Unexpected response");
-                }
-            }
-
-            @Override
-            public String toString() {
-                return "GISJob.TestConnection";
-            }
-        };
-        job.future = future;
-
-        addJob(job);
-    }
-
-    public void getRoute(GISFuture future, ArrayList<MapNode> nodes) {
-        final RouteGISJob job = new RouteGISJob(this, nodes);
-
-        job.future = future;
-        addJob(job);
-    }
-
-    void addJob(GISJob j) {
+    public Future addJob(GISJob j) {
         LOG.info("Queueing new GIS job: {}", j);
+        Future f = new Future();
+        j.bridge = this;
+        j.future = f;
         synchronized (lock) {
             jobs.add(j);
             lock.notify();
         }
+        return f;
     }
 
     @Override

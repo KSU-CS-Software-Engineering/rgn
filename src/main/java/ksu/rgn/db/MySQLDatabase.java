@@ -3,6 +3,7 @@ package ksu.rgn.db;
 import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.Truck;
+import ksu.rgn.utils.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,8 +79,11 @@ public class MySQLDatabase extends Thread implements DBQueries {
 
                         try {
                             j.run(em);
-                        } catch (RollbackException ignored) {}
-                        j.dbf.forEach(DBFuture::invokeFinished);
+                            j.dbf.forEach(f -> f.invokeSuccess(null));
+                        } catch (RollbackException e) {
+                            j.dbf.forEach(f -> f.invokeFail(e));
+                        }
+
                     }
 
                     synchronized (lock) {
@@ -113,7 +117,7 @@ public class MySQLDatabase extends Thread implements DBQueries {
         synchronized (lock) { lock.notify(); }
     }
 
-    void addJob(DBJob j, DBFuture f) {
+    void addJob(DBJob j, Future f) {
         LOG.info("Queueing new DB job: {}", j);
         synchronized (lock) {
             dbJobs.removeIf(j::mergeActions);
@@ -124,13 +128,12 @@ public class MySQLDatabase extends Thread implements DBQueries {
     }
 
     @Override
-    public DBFuture preCache(Runnable job) {
-        final DBFuture f = new DBFuture();
+    public Future preCache(Runnable job) {
+        final Future f = new Future();
         addJob(new DBJob() {
             @Override
             public void run(EntityManager em) {
                 job.run();
-                f.invokeFinished();
             }
         }, f);
         return f;
@@ -143,12 +146,12 @@ public class MySQLDatabase extends Thread implements DBQueries {
                 List<Scenario> result = (List<Scenario>) list;
                 cb.accept(result);
             }
-        }), new DBFuture());
+        }), new Future());
     }
 
     @Override
-    public DBFuture persist(Runnable action, Object o) {
-        final DBFuture f = new DBFuture();
+    public Future persist(Runnable action, Object o) {
+        final Future f = new Future();
         if (action == null) {
             addJob(new DBJob.SimplePersist(o), f);
         } else {
@@ -159,22 +162,22 @@ public class MySQLDatabase extends Thread implements DBQueries {
     }
 
     @Override
-    public DBFuture dropScenario(Scenario s) {
-        final DBFuture f = new DBFuture();
+    public Future dropScenario(Scenario s) {
+        final Future f = new Future();
         addJob(new DBJob.SimpleDrop(s), f);
         return f;
     }
 
     @Override
-    public DBFuture dropNode(MapNode n) {
-        final DBFuture f = new DBFuture();
+    public Future dropNode(MapNode n) {
+        final Future f = new Future();
         addJob(new DBJob.SimpleDrop(n), f);
         return f;
     }
 
     @Override
-    public DBFuture dropTruck(Truck t) {
-        final DBFuture f = new DBFuture();
+    public Future dropTruck(Truck t) {
+        final Future f = new Future();
         addJob(new DBJob.SimpleDrop(t), f);
         return f;
     }

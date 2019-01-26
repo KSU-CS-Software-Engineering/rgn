@@ -1,5 +1,7 @@
 package ksu.rgn.db;
 
+import ksu.rgn.utils.Future;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.util.ArrayList;
@@ -16,7 +18,7 @@ abstract class DBJob {
         return false;
     }
 
-    final ArrayList<DBFuture> dbf = new ArrayList<>();
+    final ArrayList<Future> dbf = new ArrayList<>();
 
     @Override
     public String toString() {

@@ -3,6 +3,7 @@ package ksu.rgn.db;
 import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.Truck;
+import ksu.rgn.utils.Future;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -14,11 +15,11 @@ public interface DBQueries {
 
     void getAllScenarios(Consumer<List<Scenario>> cb);
 
-    DBFuture persist(Runnable action, Object o);
+    Future persist(Runnable action, Object o);
 
-    DBFuture dropScenario(Scenario s);
-    DBFuture dropNode(MapNode n);
-    DBFuture dropTruck(Truck t);
+    Future dropScenario(Scenario s);
+    Future dropNode(MapNode n);
+    Future dropTruck(Truck t);
 
     void open(String url, String dbName, String user, String password);
 
@@ -26,5 +27,5 @@ public interface DBQueries {
         if (onClosed != null) onClosed.run();
     }
 
-    DBFuture preCache(Runnable job);
+    Future preCache(Runnable job);
 }

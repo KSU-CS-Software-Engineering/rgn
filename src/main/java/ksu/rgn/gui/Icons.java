@@ -48,7 +48,7 @@ public class Icons {
 
     private Icons(int size) {
         this.size = size;
-        this.basePath = "/icons/" + STYLE + "/_" + Integer.toString(size);
+        this.basePath = "/icons/" + STYLE + "/_" + size;
 
         CONNECTED = get("connected");
         DISCONNECTED = get("disconnected");
