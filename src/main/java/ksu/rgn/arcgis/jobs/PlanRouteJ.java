@@ -1,9 +1,6 @@
 package ksu.rgn.arcgis.jobs;
 
-import com.darkyen.dave.Response;
-import com.darkyen.dave.ResponseTranslator;
 import com.darkyen.dave.WebbException;
-import ksu.rgn.arcgis.GISBridge;
 import ksu.rgn.arcgis.GISJob;
 import ksu.rgn.scenario.MapNode;
 import org.json.JSONException;

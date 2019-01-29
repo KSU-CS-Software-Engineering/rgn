@@ -18,7 +18,6 @@ import ksu.rgn.Main;
 import ksu.rgn.scenario.MapLocation;
 import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
-import ksu.rgn.utils.Units;
 
 import java.io.File;
 import java.io.IOException;

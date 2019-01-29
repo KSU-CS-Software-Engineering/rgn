@@ -9,7 +9,6 @@ import javafx.stage.Window;
 import ksu.rgn.Main;
 import ksu.rgn.arcgis.GISBridge;
 import ksu.rgn.arcgis.jobs.TestConnectionJ;
-import ksu.rgn.utils.Future;
 import ksu.rgn.scenario.Scenario;
 
 import static ksu.rgn.gui.Toolboxes.*;
