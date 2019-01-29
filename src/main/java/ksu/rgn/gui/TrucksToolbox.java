@@ -27,7 +27,7 @@ public class TrucksToolbox {
 
         addTextF(addTruckForm, "Name", "", truckFormV.listenF("Name"));
         addNumberF(addTruckForm, "Capacity", "palettes", 0, truckFormV.listenF("Capacity"));
-        addCheckboxF(addTruckForm, "Refrigerated", false, truckFormV.listenF("Refrigerated"));
+        addCheckboxF(addTruckForm, "Refrigerated", true, truckFormV.listenF("Refrigerated"));
 
         addVSpace(addTruckForm, 10);
 
