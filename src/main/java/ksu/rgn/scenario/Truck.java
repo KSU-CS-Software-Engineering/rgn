@@ -19,7 +19,7 @@ public class Truck {
     public MapNode startingNode, endingNode;
 
     @Column(nullable = false)
-    public int capacity; // in kg
+    public int capacity; // in std palettes
 
     @Column(nullable = false)
     public boolean refrigerated;

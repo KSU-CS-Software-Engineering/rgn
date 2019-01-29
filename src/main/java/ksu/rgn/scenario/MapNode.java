@@ -20,9 +20,9 @@ public class MapNode {
     public String name;
 
     @Column(nullable = false)
-    public int demand; // In kg
+    public int demand; // In std palettes
     @Column(nullable = false)
-    public int supply; // In kg
+    public int supply; // In std palettes
 
 
     @Override

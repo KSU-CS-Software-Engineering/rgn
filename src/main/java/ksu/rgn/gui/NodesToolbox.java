@@ -45,8 +45,8 @@ public class NodesToolbox {
         addTextF(addNodeForm, "Name", "", nodeFormV.listenF("Name"));
         addGpsF(addNodeForm, "Location", 0, 0, nodeFormV.listenF("Location"));
         addVSpace(addNodeForm, 5);
-        addNumberF(addNodeForm, "Demand", "pounds", 0, nodeFormV.listenF("Demand"));
-        addNumberF(addNodeForm, "Supply", "pounds", 0, nodeFormV.listenF("Supply"));
+        addNumberF(addNodeForm, "Demand", "palettes", 0, nodeFormV.listenF("Demand"));
+        addNumberF(addNodeForm, "Supply", "palettes", 0, nodeFormV.listenF("Supply"));
         addVSpace(addNodeForm, 10);
 
         final UpdatableList[] nodeListEnc = new UpdatableList[] { null };
@@ -56,7 +56,7 @@ public class NodesToolbox {
 
         final UpdatableList nodeList = addUpdatableList(pane, UpdatableList.createTwoLineRenderer(
                 n -> "Node - " + ((MapNode)n).name,
-                n -> Units.toPounds(((MapNode)n).demand) + " / " + Units.toPounds(((MapNode)n).supply) + " pounds"
+                n -> ((MapNode)n).demand + " / " + ((MapNode)n).supply + " palettes"
         ));
         nodeListEnc[0] = nodeList;
         final Label addNodeL = addButtonWithLabel(addNodeForm, "Add node", () -> {
@@ -67,8 +67,8 @@ public class NodesToolbox {
                 n.name = (String) nodeFormV.vars.get("Name");
                 n.location = (MapLocation) nodeFormV.vars.get("Location");
 
-                n.demand = Units.toKilograms((Integer) nodeFormV.vars.get("Demand"));
-                n.supply = Units.toKilograms((Integer) nodeFormV.vars.get("Supply"));
+                n.demand = (Integer) nodeFormV.vars.get("Demand");
+                n.supply = (Integer) nodeFormV.vars.get("Supply");
 
                 Main.db.persist(() -> s.add(n), s).onFinish(o -> Platform.runLater(() -> nodeList.updateList(s, null, s::getNodes)));
                 Platform.runLater(() -> {
@@ -147,7 +147,7 @@ public class NodesToolbox {
                 addVSpace(dialog, 10);
 
                 final String[] properties = new String[] {
-                        "Name", "GPS Latitude", "GPS Longitude", "Demand [pounds]", "Supply [pounds]"
+                        "Name", "GPS Latitude", "GPS Longitude", "Demand [palettes]", "Supply [palettes]"
                 };
                 final int[] propertyCols = new int[properties.length];
 
@@ -233,7 +233,7 @@ public class NodesToolbox {
                                 invalidRecord = true;
                             } else {
                                 try {
-                                    node.demand = Units.toKilograms(Integer.parseInt(fields[propertyCols[3]]));
+                                    node.demand = Integer.parseInt(fields[propertyCols[3]]);
                                 } catch (NumberFormatException nfe) {
                                     invalidRecord = true;
                                 }
@@ -245,7 +245,7 @@ public class NodesToolbox {
                                 invalidRecord = true;
                             } else {
                                 try {
-                                    node.supply = Units.toKilograms(Integer.parseInt(fields[propertyCols[4]]));
+                                    node.supply = Integer.parseInt(fields[propertyCols[4]]);
                                 } catch (NumberFormatException nfe) {
                                     invalidRecord = true;
                                 }
