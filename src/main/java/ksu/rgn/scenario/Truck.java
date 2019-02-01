@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Truck {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int ID;
 
     public String name;

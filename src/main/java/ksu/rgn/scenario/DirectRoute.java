@@ -20,7 +20,7 @@ public class DirectRoute {
 
 
     public double heuristics() {
-        return GPS.distanceInKmBetween(from.location, to.location);
+        return GPS.distanceInKmBetween(from, to);
     }
 
 

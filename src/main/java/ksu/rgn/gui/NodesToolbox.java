@@ -15,9 +15,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import ksu.rgn.Main;
-import ksu.rgn.scenario.MapLocation;
 import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
+import ksu.rgn.utils.Tuple2;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +64,9 @@ public class NodesToolbox {
                 final MapNode n = new MapNode();
 
                 n.name = (String) nodeFormV.vars.get("Name");
-                n.location = (MapLocation) nodeFormV.vars.get("Location");
+                final Tuple2<Double, Double> loc = (Tuple2<Double, Double>) nodeFormV.vars.get("Location");
+                n.gpsLat = loc._1;
+                n.gpsLon = loc._2;
 
                 n.demand = (Integer) nodeFormV.vars.get("Demand");
                 n.supply = (Integer) nodeFormV.vars.get("Supply");
@@ -218,10 +220,9 @@ public class NodesToolbox {
                                 invalidRecord = true;
                             } else {
                                 try {
-                                    node.location = new MapLocation(
-                                            Double.parseDouble(fields[propertyCols[1]]),
-                                            Double.parseDouble(fields[propertyCols[2]])
-                                    );
+                                    node.gpsLat = Double.parseDouble(fields[propertyCols[1]]);
+                                    node.gpsLon = Double.parseDouble(fields[propertyCols[2]]);
+
                                 } catch (NumberFormatException nfe) {
                                     invalidRecord = true;
                                 }

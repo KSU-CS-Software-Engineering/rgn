@@ -10,11 +10,11 @@ http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>ksu.rgn.scenario.MapNode</class>
         <class>ksu.rgn.scenario.Truck</class>
-        <class>ksu.rgn.scenario.MapLocation</class>
         <class>ksu.rgn.scenario.Scenario</class>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="create"/>
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <!-- <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/> -->
+            <property name="javax.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
         </properties>
     </persistence-unit>
 </persistence>

@@ -16,9 +16,9 @@ import java.util.function.Consumer;
 /**
  *
  */
-public class MySQLDatabase extends Thread implements DBQueries {
+public class MariaDBDatabase extends Thread implements DBQueries {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MySQLDatabase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MariaDBDatabase.class);
 
     private String url, dbName, user, password;
 
@@ -56,7 +56,7 @@ public class MySQLDatabase extends Thread implements DBQueries {
             final HashMap<String, String> properties = new HashMap<>();
             properties.put("javax.persistence.jdbc.user", user);
             properties.put("javax.persistence.jdbc.password", password);
-            properties.put("javax.persistence.jdbc.url", "jdbc:mysql://" + url + "/" + dbName);
+            properties.put("javax.persistence.jdbc.url", "jdbc:mariadb://" + url + "/" + dbName);
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("RGN", properties);
             EntityManager em = emf.createEntityManager();
             em.setFlushMode(FlushModeType.COMMIT);
@@ -118,7 +118,6 @@ public class MySQLDatabase extends Thread implements DBQueries {
     }
 
     void addJob(DBJob j, Future f) {
-        LOG.info("Queueing new DB job: {}", j);
         synchronized (lock) {
             dbJobs.removeIf(j::mergeActions);
             dbJobs.add(j);

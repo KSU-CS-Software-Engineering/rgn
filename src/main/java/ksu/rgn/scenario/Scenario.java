@@ -19,7 +19,7 @@ public class Scenario {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int ID;
 
     @Column(nullable = false)

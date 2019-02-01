@@ -12,11 +12,10 @@ import javax.persistence.*;
 public class MapNode {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int ID;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    public MapLocation location;
+    public double gpsLat, gpsLon;
     public String name;
 
     @Column(nullable = false)
@@ -27,7 +26,7 @@ public class MapNode {
 
     @Override
     public String toString() {
-        return String.format("Node #%d { name = %s, demand = %d, location = %s }", ID, name, demand, location.toString());
+        return String.format("Node #%d { name = %s, demand = %d, lat = %d, lon = %d }", ID, name, demand, gpsLat, gpsLon);
     }
 }
 
