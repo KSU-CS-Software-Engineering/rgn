@@ -27,11 +27,14 @@ public class Scenario {
     public String description;
 
     @Column(nullable = false)
-    public String arcGisToken;
+    public String arcGisSecret;
     @Column(nullable = false)
     public String arcGisUrl;
     @Column(nullable = false)
     public String arcGisClientID;
+
+    public String arcGisTmpToken;
+    public long arcGisTmpTokenExpires;
 
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
@@ -41,7 +44,7 @@ public class Scenario {
     private final List<Truck> trucks = new ArrayList<>();
 
     public Scenario() {
-        this.arcGisToken = "";
+        this.arcGisSecret = "";
         this.arcGisUrl = "";
         this.arcGisClientID = "";
     }
@@ -49,7 +52,7 @@ public class Scenario {
     public Scenario(String name, String description) {
         this.name = name;
         this.description = description;
-        this.arcGisToken = "";
+        this.arcGisSecret = "";
         this.arcGisUrl = "";
         this.arcGisClientID = "";
 

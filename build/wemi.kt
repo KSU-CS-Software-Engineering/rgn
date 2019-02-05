@@ -19,8 +19,7 @@ val rgn by project {
     libraryDependencies add { dependency("com.github.Darkyenus:DaveWebb:v1.2") } // Rest API
 
     libraryDependencies add { dependency("org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.1")} // Eclipse JPA
-    libraryDependencies add { dependency("org.mariadb.jdbc:mariadb-java-client:2.4.0") } // MariaDB Connector
-//    libraryDependencies add { dependency("mysql:mysql-connector-java:8.0.13") } // MySQL Connector
+    libraryDependencies add { dependency("mysql:mysql-connector-java:8.0.13") } // MySQL Connector
 
 //    libraryDependencies add { dependency("com.esri.arcgisruntime:arcgis-java-maven-plugin:1.0") } // ArcGIS Java SDK
 

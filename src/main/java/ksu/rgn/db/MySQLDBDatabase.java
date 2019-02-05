@@ -16,9 +16,9 @@ import java.util.function.Consumer;
 /**
  *
  */
-public class MariaDBDatabase extends Thread implements DBQueries {
+public class MySQLDBDatabase extends Thread implements DBQueries {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MariaDBDatabase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MySQLDBDatabase.class);
 
     private String url, dbName, user, password;
 
@@ -56,7 +56,7 @@ public class MariaDBDatabase extends Thread implements DBQueries {
             final HashMap<String, String> properties = new HashMap<>();
             properties.put("javax.persistence.jdbc.user", user);
             properties.put("javax.persistence.jdbc.password", password);
-            properties.put("javax.persistence.jdbc.url", "jdbc:mariadb://" + url + "/" + dbName);
+            properties.put("javax.persistence.jdbc.url", "jdbc:mysql://" + url + "/" + dbName);
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("RGN", properties);
             EntityManager em = emf.createEntityManager();
             em.setFlushMode(FlushModeType.COMMIT);

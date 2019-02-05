@@ -28,21 +28,36 @@ public class ScenarioToolbox {
         final Pane arcGis = addForm(pane);
         addHeader(arcGis, "ArcGIS software link");
 
-        final String[] params = new String[] {s.arcGisUrl, s.arcGisClientID, s.arcGisToken};
+        final String[] params = new String[] {s.arcGisUrl, s.arcGisClientID, s.arcGisSecret};
 
+        final Label[] lEnc = new Label[1];
         addTextF(arcGis, "Server URL", params[0], t -> {
             params[0] = t;
-            Main.db.persist(() -> s.arcGisUrl = t, s);
+            if (lEnc[0] != null) lEnc[0].setText("");
+            Main.db.persist(() -> {
+                s.arcGisUrl = t;
+                s.arcGisTmpToken = null;
+                s.arcGisTmpTokenExpires = 0;
+            }, s);
         });
         addTextF(arcGis, "Client ID", params[1], t -> {
             params[1] = t;
-            Main.db.persist(() -> s.arcGisClientID = t, s);
+            if (lEnc[0] != null) lEnc[0].setText("");
+            Main.db.persist(() -> {
+                s.arcGisClientID = t;
+                s.arcGisTmpToken = null;
+                s.arcGisTmpTokenExpires = 0;
+            }, s);
         });
-        addTextF(arcGis, "Access token", params[2], t -> {
+        addTextF(arcGis, "Client secret", params[2], t -> {
             params[2] = t;
-            Main.db.persist(() -> s.arcGisToken= t, s);
+            if (lEnc[0] != null) lEnc[0].setText("");
+            Main.db.persist(() -> {
+                s.arcGisSecret = t;
+                s.arcGisTmpToken = null;
+                s.arcGisTmpTokenExpires = 0;
+            }, s);
         });
-        final Label[] lEnc = new Label[1];
         lEnc[0] = addButtonWithLabel(arcGis, "Test connection", () -> {
             final GISBridge b = new GISBridge(params[0], params[1], params[2]);
             Platform.runLater(() -> {
@@ -65,6 +80,10 @@ public class ScenarioToolbox {
                     b.close();
                 });
         });
+        if (s.arcGisTmpToken != null) {
+            lEnc[0].setText("Success");
+            lEnc[0].setStyle("-fx-padding: 5px 0px 0px 5px; -fx-text-fill: green;");
+        }
 
         return pane;
     }

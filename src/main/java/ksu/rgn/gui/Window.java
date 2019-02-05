@@ -19,7 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import ksu.rgn.Main;
-import ksu.rgn.db.MariaDBDatabase;
+import ksu.rgn.db.MySQLDBDatabase;
 import ksu.rgn.scenario.Scenario;
 
 import java.io.*;
@@ -201,7 +201,7 @@ public class Window extends Application {
             statusBox.getChildren().add(new Label(" Connecting...", createSpinner()));
 
 
-            MariaDBDatabase db = new MariaDBDatabase();
+            MySQLDBDatabase db = new MySQLDBDatabase();
             Main.db = db;
 
             db.onOpenSuccess(() -> Platform.runLater(() -> {
