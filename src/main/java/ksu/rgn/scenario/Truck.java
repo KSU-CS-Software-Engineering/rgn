@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Truck {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int ID;
 
     public String name;
@@ -19,7 +19,7 @@ public class Truck {
     public MapNode startingNode, endingNode;
 
     @Column(nullable = false)
-    public int capacity; // in kg
+    public int capacity; // in std palettes
 
     @Column(nullable = false)
     public boolean refrigerated;

@@ -11,7 +11,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import ksu.rgn.Main;
-import ksu.rgn.scenario.MapLocation;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.utils.Tuple2;
 
@@ -100,7 +99,7 @@ public class Toolboxes {
         to.getChildren().add(hBox);
     }
 
-    static void addGpsF(Pane to, String name, double initialLat, double initialLon, Consumer<MapLocation> onChange) {
+    static void addGpsF(Pane to, String name, double initialLat, double initialLon, Consumer<Tuple2<Double, Double>> onChange) {
         final Label l = new Label(name);
         l.setPadding(new Insets(0, 0, -7, 0));
         final TextField latTf = new TextField(Double.toString(initialLat));
@@ -112,7 +111,7 @@ public class Toolboxes {
                 if (onChange != null) onChange.accept(null);
             } else {
                 latTf.setStyle("");
-                if (onChange != null) onChange.accept(new MapLocation(Double.parseDouble(latTf.getText()), Double.parseDouble(lonTf.getText())));
+                if (onChange != null) onChange.accept(new Tuple2<>(Double.parseDouble(latTf.getText()), Double.parseDouble(lonTf.getText())));
             }
         };
         latTf.textProperty().addListener(latListener);
@@ -124,7 +123,7 @@ public class Toolboxes {
                 if (onChange != null) onChange.accept(null);
             } else {
                 lonTf.setStyle("");
-                if (onChange != null) onChange.accept(new MapLocation(Double.parseDouble(latTf.getText()), Double.parseDouble(lonTf.getText())));
+                if (onChange != null) onChange.accept(new Tuple2<>(Double.parseDouble(latTf.getText()), Double.parseDouble(lonTf.getText())));
             }
         };
         lonTf.textProperty().addListener(lonListener);

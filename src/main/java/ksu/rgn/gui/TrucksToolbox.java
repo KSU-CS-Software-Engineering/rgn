@@ -9,7 +9,6 @@ import javafx.stage.Window;
 import ksu.rgn.Main;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.Truck;
-import ksu.rgn.utils.Units;
 
 import static ksu.rgn.gui.Toolboxes.*;
 
@@ -26,8 +25,8 @@ public class TrucksToolbox {
         final Toolboxes.FormValues truckFormV = new Toolboxes.FormValues();
 
         addTextF(addTruckForm, "Name", "", truckFormV.listenF("Name"));
-        addNumberF(addTruckForm, "Capacity", "pounds", 0, truckFormV.listenF("Capacity"));
-        addCheckboxF(addTruckForm, "Refrigerated", false, truckFormV.listenF("Refrigerated"));
+        addNumberF(addTruckForm, "Capacity", "palettes", 0, truckFormV.listenF("Capacity"));
+        addCheckboxF(addTruckForm, "Refrigerated", true, truckFormV.listenF("Refrigerated"));
 
         addVSpace(addTruckForm, 10);
 
@@ -42,7 +41,7 @@ public class TrucksToolbox {
         addVSpace(pane, 10);
         final UpdatableList truckList = addUpdatableList(pane, UpdatableList.createTwoLineRenderer(
                 t -> "Truck - " + ((Truck)t).name,
-                t -> (((Truck)t).refrigerated ? "Refrigerated, " : "") + Units.toPounds(((Truck)t).capacity) + " pounds"
+                t -> (((Truck)t).refrigerated ? "Refrigerated, " : "") + ((Truck)t).capacity + " palettes"
         ));
         final Label addTruckL = addButtonWithLabel(addTruckForm, "Add truck", () -> {
             if (truckFormV.isValid) {
@@ -50,7 +49,7 @@ public class TrucksToolbox {
                 final Truck t = new Truck();
 
                 t.name = (String) truckFormV.vars.get("Name");
-                t.capacity = Units.toKilograms((Integer) truckFormV.vars.get("Capacity"));
+                t.capacity = (Integer) truckFormV.vars.get("Capacity");
                 t.refrigerated = (Boolean) truckFormV.vars.get("Refrigerated");
 
                 // TODO start/end location

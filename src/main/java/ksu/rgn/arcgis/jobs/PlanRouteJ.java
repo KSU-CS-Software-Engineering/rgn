@@ -1,9 +1,6 @@
 package ksu.rgn.arcgis.jobs;
 
-import com.darkyen.dave.Response;
-import com.darkyen.dave.ResponseTranslator;
 import com.darkyen.dave.WebbException;
-import ksu.rgn.arcgis.GISBridge;
 import ksu.rgn.arcgis.GISJob;
 import ksu.rgn.scenario.MapNode;
 import org.json.JSONException;
@@ -54,8 +51,8 @@ public class PlanRouteJ extends GISJob {
         final JSONObject features = new JSONObject();
         for(MapNode n : nodes) {
             final JSONObject geometry = new JSONObject();
-            geometry.put("x", n.location.lat);
-            geometry.put("y", n.location.lon);
+            geometry.put("x", n.gpsLat);
+            geometry.put("y", n.gpsLon);
             final JSONObject attributes = new JSONObject();
             attributes.put("name", n.ID);
 

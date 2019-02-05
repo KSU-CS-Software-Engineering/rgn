@@ -16,9 +16,9 @@ import java.util.function.Consumer;
 /**
  *
  */
-public class MySQLDatabase extends Thread implements DBQueries {
+public class MySQLDBDatabase extends Thread implements DBQueries {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MySQLDatabase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MySQLDBDatabase.class);
 
     private String url, dbName, user, password;
 
@@ -118,7 +118,6 @@ public class MySQLDatabase extends Thread implements DBQueries {
     }
 
     void addJob(DBJob j, Future f) {
-        LOG.info("Queueing new DB job: {}", j);
         synchronized (lock) {
             dbJobs.removeIf(j::mergeActions);
             dbJobs.add(j);

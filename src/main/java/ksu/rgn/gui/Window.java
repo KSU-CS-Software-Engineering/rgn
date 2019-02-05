@@ -19,7 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import ksu.rgn.Main;
-import ksu.rgn.db.MySQLDatabase;
+import ksu.rgn.db.MySQLDBDatabase;
 import ksu.rgn.scenario.Scenario;
 
 import java.io.*;
@@ -69,7 +69,7 @@ public class Window extends Application {
     }
 
     public void onConnectedToDB(String uri) {
-        ImageView iv = new ImageView(Icons._32.CONNECTED);
+        ImageView iv = new ImageView(Icons._32.get("connected-ready"));
         Label connectedL = new Label("Connected");
         Label dbL = new Label(uri);
         dbL.setStyle("-fx-font-weight: bold");
@@ -201,7 +201,7 @@ public class Window extends Application {
             statusBox.getChildren().add(new Label(" Connecting...", createSpinner()));
 
 
-            MySQLDatabase db = new MySQLDatabase();
+            MySQLDBDatabase db = new MySQLDBDatabase();
             Main.db = db;
 
             db.onOpenSuccess(() -> Platform.runLater(() -> {
