@@ -5,6 +5,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+
 /**
  *
  */
@@ -21,14 +23,20 @@ public class RequestTmpTokenJ extends GISJob {
 
     @Override
     public void run() {
-        String parameters = "&client_id=" + this.clientId;
-        parameters += "&client_secret=" + this.clientSecret;
-        parameters += "&expiration=" + (24 * 60);
-        parameters += "&grant_type=" + "client_credentials";
-        final JSONObject tokenResponse = request("/sharing/rest/oauth2/token", parameters);
+
+        HashMap<String, String> parameters = new HashMap<>();
+        parameters.put("client_id", clientId);
+        parameters.put("client_secret", clientSecret);
+        parameters.put("expiration", Integer.toString(24 * 60));
+        parameters.put("grant_type", "client_credentials");
+
+        final JSONObject tokenResponse = request("/sharing/rest/oauth2/token", null, parameters);
         if(tokenResponse.has("access_token")) {
             future.invokeSuccess(tokenResponse.get("access_token"));
             LOG.info("Successfully retrieved token from the ArcGIS API");
+        } else {
+            future.invokeFail("Invalid response format");
+            LOG.warn("Unable to retrieve token from ArcGIS API");
         }
     }
 }

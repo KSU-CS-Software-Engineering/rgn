@@ -32,7 +32,7 @@ public class PlanRouteJ extends GISJob {
             final JSONObject parameters = new JSONObject();
             parameters.append("stops", getStopsJson(nodes));
 
-            final JSONObject r = request("/ArcGIS/rest/services/World/Route/NAServer/Route_World/solve", parameters);
+            final JSONObject r = request("/ArcGIS/rest/services/World/Route/NAServer/Route_World/solve", parameters, null);
 
 
             future.invokeSuccess(r);
