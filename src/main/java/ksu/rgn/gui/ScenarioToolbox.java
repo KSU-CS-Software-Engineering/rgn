@@ -64,7 +64,7 @@ public class ScenarioToolbox {
                 lEnc[0].setText("Testing...");
                 lEnc[0].setStyle("-fx-padding: 5px 0px 0px 5px;");
             });
-            b.addJob(new TestConnectionJ())
+            b.addJob(new TestConnectionJ(params[1], params[2]))
                 .onFail(o -> {
                     Platform.runLater(() -> {
                         lEnc[0].setText(o.toString());
