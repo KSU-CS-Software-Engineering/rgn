@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Window;
 import ksu.rgn.Main;
 import ksu.rgn.arcgis.GISBridge;
-import ksu.rgn.arcgis.jobs.TestConnectionJ;
+import ksu.rgn.arcgis.jobs.RequestTmpTokenJ;
 import ksu.rgn.scenario.Scenario;
 
 import static ksu.rgn.gui.Toolboxes.*;
@@ -59,12 +59,13 @@ public class ScenarioToolbox {
             }, s);
         });
         lEnc[0] = addButtonWithLabel(arcGis, "Test connection", () -> {
-            final GISBridge b = new GISBridge(params[0], params[1], params[2]);
+            final GISBridge b = new GISBridge(params[0], null);
+            final long expires = System.currentTimeMillis() + RequestTmpTokenJ.EXPIRATION;
             Platform.runLater(() -> {
                 lEnc[0].setText("Testing...");
                 lEnc[0].setStyle("-fx-padding: 5px 0px 0px 5px;");
             });
-            b.addJob(new TestConnectionJ(params[1], params[2]))
+            b.addJob(new RequestTmpTokenJ(params[1], params[2]))
                 .onFail(o -> {
                     Platform.runLater(() -> {
                         lEnc[0].setText(o.toString());
@@ -77,6 +78,10 @@ public class ScenarioToolbox {
                         lEnc[0].setText("Success");
                         lEnc[0].setStyle("-fx-padding: 5px 0px 0px 5px; -fx-text-fill: green;");
                     });
+                    Main.db.persist(() -> {
+                        s.arcGisTmpToken = (String) o;
+                        s.arcGisTmpTokenExpires = expires;
+                    }, s);
                     b.close();
                 });
         });

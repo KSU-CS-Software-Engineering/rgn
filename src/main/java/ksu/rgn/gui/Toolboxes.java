@@ -53,7 +53,6 @@ public class Toolboxes {
         tf.setPrefRowCount(5);
         if (onChange != null) {
             tf.textProperty().addListener((observableValue, s, t1) -> onChange.accept(tf.getText()));
-            onChange.accept(tf.getText());
         }
 
         if (!name.isEmpty()) to.getChildren().add(l);
@@ -65,7 +64,6 @@ public class Toolboxes {
         final TextField tf = new TextField(initialValue);
         if (onChange != null) {
             tf.textProperty().addListener((observableValue, s, t1) -> onChange.accept(tf.getText()));
-            onChange.accept(tf.getText());
         }
 
         if (!name.isEmpty()) to.getChildren().add(l);
@@ -85,7 +83,6 @@ public class Toolboxes {
             }
         };
         tf.textProperty().addListener(listener);
-        listener.changed(null, null, tf.getText());
 
         tf.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(tf, Priority.ALWAYS);
@@ -115,7 +112,6 @@ public class Toolboxes {
             }
         };
         latTf.textProperty().addListener(latListener);
-        latListener.changed(null, null, latTf.getText());
 
         final ChangeListener<? super String> lonListener = (observable, oldValue, newValue) -> {
             if (!newValue.matches("[+\\-]?[\\d]*\\.?[\\d]+") || newValue.isEmpty()) {
@@ -127,7 +123,6 @@ public class Toolboxes {
             }
         };
         lonTf.textProperty().addListener(lonListener);
-        lonListener.changed(null, null, lonTf.getText());
 
         final Button pickOnMapB = new Button("", new ImageView(Icons._16.LOCATION));
         pickOnMapB.setOnAction(ae -> {
@@ -147,7 +142,6 @@ public class Toolboxes {
         c.setSelected(initialValue);
         if (onChange != null) {
             c.selectedProperty().addListener(ae -> onChange.accept(c.isSelected()));
-            onChange.accept(c.isSelected());
         }
         to.getChildren().add(c);
     }
@@ -290,8 +284,8 @@ public class Toolboxes {
         Consumer<Boolean> onIsValidChange = null;
         Label isValidLabel = null;
 
-        public <T> Consumer<T> listenF(String varName) {
-            return o -> {
+        public <T> Consumer<T> listenF(String varName, T initialValue) {
+            final Consumer<T> cb = o -> {
                 vars.put(varName, o);
                 if (o == null) {
                     if (isValidLabel != null) isValidLabel.setText("Invalid input");
@@ -304,6 +298,8 @@ public class Toolboxes {
                     isValid = newIsValid;
                 }
             };
+            cb.accept(initialValue);
+            return cb;
         }
 
     }

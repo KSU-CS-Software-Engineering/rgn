@@ -18,8 +18,8 @@ public abstract class GISJob {
 
     public abstract void run();
 
-    protected JSONObject request(String path, JSONObject payload, HashMap<String, String> args) {
-        String argString = getArgString(args);
+    protected JSONObject request(String path, JSONObject payload, HashMap<String, String> urlArgs) {
+        String argString = getArgString(urlArgs);
         Request req = bridge.api.post(path + "?f=pjson" + argString);
         if (payload != null) {
             req.body(payload.toString(), "application/json");
@@ -31,12 +31,14 @@ public abstract class GISJob {
     }
 
     public String getArgString(HashMap<String, String> argsMap) {
-        String argString = "";
+        if (argsMap == null) return "";
+
+        StringBuilder argString = new StringBuilder();
         for(Map.Entry<String, String> entry : argsMap.entrySet()) {
-            argString += "&" + entry.getKey();
-            argString += "=" + entry.getValue();
+            argString.append("&").append(entry.getKey());
+            argString.append("=").append(entry.getValue());
         }
-        return argString;
+        return argString.toString();
     }
     @Override
     public String toString() {

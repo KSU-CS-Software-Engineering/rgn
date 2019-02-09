@@ -9,6 +9,7 @@ import javafx.stage.Window;
 import ksu.rgn.Main;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.scenario.Truck;
+import ksu.rgn.utils.Tuple2;
 
 import static ksu.rgn.gui.Toolboxes.*;
 
@@ -24,19 +25,19 @@ public class TrucksToolbox {
         final Pane addTruckForm = addForm(pane);
         final Toolboxes.FormValues truckFormV = new Toolboxes.FormValues();
 
-        addTextF(addTruckForm, "Name", "", truckFormV.listenF("Name"));
-        addNumberF(addTruckForm, "Capacity", "palettes", 0, truckFormV.listenF("Capacity"));
-        addCheckboxF(addTruckForm, "Refrigerated", true, truckFormV.listenF("Refrigerated"));
+        addTextF(addTruckForm, "Name", "", truckFormV.listenF("Name", ""));
+        addNumberF(addTruckForm, "Capacity", "palettes", 0, truckFormV.listenF("Capacity", 0));
+        addCheckboxF(addTruckForm, "Refrigerated", true, truckFormV.listenF("Refrigerated", true));
 
         addVSpace(addTruckForm, 10);
 
         final Pane startingLocationForm = addForm(addTruckForm);
-        addCheckboxF(startingLocationForm, "Given start location", false, truckFormV.listenF("Start enable"));
-        addGpsF(startingLocationForm, "", 0, 0, truckFormV.listenF("Start location"));
+        addCheckboxF(startingLocationForm, "Given start location", false, truckFormV.listenF("Start enable", false));
+        addGpsF(startingLocationForm, "", 0, 0, truckFormV.listenF("Start location", new Tuple2<>(0.0, 0.0)));
 
         final Pane endingLocationForm = addForm(addTruckForm);
-        addCheckboxF(endingLocationForm, "Given end location", false, truckFormV.listenF("End enable"));
-        addGpsF(endingLocationForm, "", 0, 0, truckFormV.listenF("End location"));
+        addCheckboxF(endingLocationForm, "Given end location", false, truckFormV.listenF("End enable", false));
+        addGpsF(endingLocationForm, "", 0, 0, truckFormV.listenF("End location", new Tuple2<>(0.0, 0.0)));
 
         addVSpace(pane, 10);
         final UpdatableList truckList = addUpdatableList(pane, UpdatableList.createTwoLineRenderer(

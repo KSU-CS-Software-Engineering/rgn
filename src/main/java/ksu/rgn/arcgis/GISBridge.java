@@ -13,13 +13,12 @@ import java.util.ArrayList;
 public class GISBridge extends Thread {
 
     private static final Logger LOG = LoggerFactory.getLogger(GISBridge.class);
-    final String url, clientID, token;
+    final String url, tmpToken;
     final Webb api;
 
-    public GISBridge(String url, String clientID, String token) {
+    public GISBridge(String url, String tmpToken) {
         this.url = url;
-        this.clientID = clientID;
-        this.token = token;
+        this.tmpToken = tmpToken;
 
         this.api = new Webb(url);
 

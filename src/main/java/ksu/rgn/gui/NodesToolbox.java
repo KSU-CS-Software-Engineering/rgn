@@ -41,11 +41,11 @@ public class NodesToolbox {
         final Pane addNodeForm = addForm(pane);
         final Toolboxes.FormValues nodeFormV = new Toolboxes.FormValues();
 
-        addTextF(addNodeForm, "Name", "", nodeFormV.listenF("Name"));
-        addGpsF(addNodeForm, "Location", 0, 0, nodeFormV.listenF("Location"));
+        addTextF(addNodeForm, "Name", "", nodeFormV.listenF("Name", ""));
+        addGpsF(addNodeForm, "Location", 0, 0, nodeFormV.listenF("Location", new Tuple2<>(0.0, 0.0)));
         addVSpace(addNodeForm, 5);
-        addNumberF(addNodeForm, "Demand", "palettes", 0, nodeFormV.listenF("Demand"));
-        addNumberF(addNodeForm, "Supply", "palettes", 0, nodeFormV.listenF("Supply"));
+        addNumberF(addNodeForm, "Demand", "palettes", 0, nodeFormV.listenF("Demand", 0));
+        addNumberF(addNodeForm, "Supply", "palettes", 0, nodeFormV.listenF("Supply", 0));
         addVSpace(addNodeForm, 10);
 
         final UpdatableList[] nodeListEnc = new UpdatableList[] { null };
