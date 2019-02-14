@@ -55,7 +55,7 @@ To import nodes from a .csv file, click the Import nodes from .csv button, which
 
 ![Import Node Dialog](img/import-node-data.png)
 
-Clicking the open button when you have your data selected will prompt you with the Import from .csv dialogue. In this you can select which columns correspond to the data needed for a node object. If the spreadsheet doesn’t have a particular field (in the example below, supply), click a selected column number to deselect it.
+Clicking the open button when you have your data selected will prompt you with the Import from .csv dialogue. In this you can select which columns correspond to the data needed for a node object. 
 
 ![Import from CSV](img/import-from-csv.png)
 
