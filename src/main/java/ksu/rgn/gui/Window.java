@@ -164,7 +164,7 @@ public class Window extends Application {
         vbox.getChildren().add(passwordF);
         vbox.getChildren().add(new Label("Database name:"));
         vbox.getChildren().add(databaseF);
-        vbox.getChildren().add(new Label("Server url:"));
+        vbox.getChildren().add(new Label("Server URL:"));
         vbox.getChildren().add(urlF);
 
         HBox hbox = new HBox(5);

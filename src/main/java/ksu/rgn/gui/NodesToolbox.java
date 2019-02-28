@@ -89,6 +89,8 @@ public class NodesToolbox {
         });
 
         nodeList.updateList(s, null, s::getNodes);
+        nodeList.addOnChangedListener(() -> MapView.current().updateMarkers(s.getNodes()));
+        MapView.current().updateMarkers(s.getNodes());
 
         return pane;
     }
@@ -260,13 +262,17 @@ public class NodesToolbox {
                         }
 
                         if (validCounter > 0) {
-                            Main.db.persist(() -> s.getNodes().addAll(toAdd), s).onFinish(o -> Platform.runLater(() -> nodeList.updateList(s, null, s::getNodes)));
+                            Main.db.persist(() -> s.getNodes().addAll(toAdd), s).onFinish(o -> Platform.runLater(() -> {
+                                nodeList.updateList(s, null, s::getNodes);
+                                MapView.current().updateMarkers(s.getNodes());
+                            }));
                             Platform.runLater(() -> {
                                 final MapNode[] ns = s.getNodes().toArray(new MapNode[s.getNodes().size() + toAdd.size()]);
                                 for (int i = 0; i < toAdd.size(); i++) {
                                     ns[s.getNodes().size() + i] = toAdd.get(i);
                                 }
                                 nodeList.updateList(s, ns, s::getNodes);
+                                MapView.current().updateMarkers(s.getNodes());
                             });
                         }
 

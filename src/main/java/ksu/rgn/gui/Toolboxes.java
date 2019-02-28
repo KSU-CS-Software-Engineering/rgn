@@ -243,6 +243,8 @@ public class Toolboxes {
             list.getChildren().add(spinnerPad);
             addVSpace(list, 5);
 
+            if (onChanged != null) onChanged.run();
+
             if (future == null) {
                 Main.db.preCache(() -> {
                     final Object[] data = getUpToDateData.get().toArray(new Object[0]);
@@ -272,6 +274,11 @@ public class Toolboxes {
                 }
             }
 
+        }
+
+        private Runnable onChanged;
+        void addOnChangedListener(Runnable onChanged) {
+            this.onChanged = onChanged;
         }
 
     }
