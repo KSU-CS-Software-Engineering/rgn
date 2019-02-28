@@ -1,4 +1,4 @@
-import wemi.Keys.runDirectory
+import wemi.dependency
 
 
 val rgn by project {
@@ -7,8 +7,8 @@ val rgn by project {
     projectGroup set { "rgn" }
     projectVersion set { "0.1-SNAPSHOT" }
 
-    repositories add { repository("jitpack", "https://jitpack.io") }
-    repositories add { repository("arcgis-plugin", "https://esri.bintray.com/arcgis") }
+    repositories add { wemi.dependency.Jitpack }
+    repositories add { Repository("arcgis-plugin", "https://esri.bintray.com/arcgis/") }
 
     libraryDependencies add { dependency("org.slf4j:slf4j-api:1.7.22") } // Logging backend
     libraryDependencies add { dependency("com.github.Darkyenus:tproll:v1.2.4") } // Logging frontend
@@ -22,6 +22,7 @@ val rgn by project {
     libraryDependencies add { dependency("mysql:mysql-connector-java:8.0.13") } // MySQL Connector
 
 //    libraryDependencies add { dependency("com.esri.arcgisruntime:arcgis-java-maven-plugin:1.0") } // ArcGIS Java SDK
+    libraryDependencies add { dependency("com.esri.arcgisruntime:arcgis-java:100.4.0") } // ArcGIS Java SDK
 
 
     extend(testing) {
@@ -30,6 +31,6 @@ val rgn by project {
     }
 
     mainClass set { "ksu.rgn.Main" }
-    runDirectory set { projectRoot.get() }
+//    runDirectory set { projectRoot.get() }
 
 }
