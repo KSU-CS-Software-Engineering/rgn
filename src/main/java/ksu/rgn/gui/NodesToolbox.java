@@ -3,6 +3,8 @@ package ksu.rgn.gui;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -103,6 +106,7 @@ public class NodesToolbox {
         if (f != null) {
             try {
                 final String[] lines = Files.lines(Paths.get(f.toURI())).limit(5).toArray(String[]::new);
+                final Label errorMessageL;
 
                 Stage dialogStage = new Stage();
                 dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -154,51 +158,11 @@ public class NodesToolbox {
                 };
                 final int[] propertyCols = new int[properties.length];
 
-                int selectedId = 0;
-                for (int i = 0; i < properties.length; i++) {
-                    final int propertyI = i;
-                    final String property = properties[i];
-
-                    final HBox line = new HBox(0);
-                    final Text pText = new Text(property);
-                    pText.setStyle("-fx-font-weight: bold;");
-                    line.getChildren().add(new TextFlow(new Text("Column for - "), pText, new Text(": ")));
-                    final Pane hSpacer = new Pane();
-                    HBox.setHgrow(hSpacer, Priority.ALWAYS);
-                    line.getChildren().add(hSpacer);
-
-                    final ToggleGroup group = new ToggleGroup();
-
-                    for (int j = 0; j < cols; j++) {
-                        final int colI = j;
-                        ToggleButton button = new ToggleButton(Integer.toString(j + 1));
-                        button.setToggleGroup(group);
-
-                        button.setStyle("-fx-background-radius: 0; -fx-padding: 4px 10px 4px 10px;");
-                        if (j == 0) {
-                            button.setStyle("-fx-background-radius: 3 0 0 3; -fx-padding: 4px 10px 4px 10px;");
-                        } else if (j == cols - 1) {
-                            button.setStyle("-fx-background-radius: 0 3 3 0; -fx-padding: 4px 10px 4px 10px;");
-                        }
-                        if (selectedId == j) {
-                            button.setSelected(true);
-                            propertyCols[i] = selectedId;
-                        }
-                        button.setOnAction(ae -> {
-                            if (button.isSelected()) {
-                                propertyCols[propertyI] = colI;
-                            } else {
-                                propertyCols[propertyI] = -1;
-                            }
-                        });
-                        line.getChildren().add(button);
-                    }
-                    selectedId++;
-
-                    dialog.getChildren().add(line);
-                }
-
-                addButton(dialog, "Ok, import", () -> {
+                final Label importErrorLabel = new Label();
+                importErrorLabel.setStyle("-fx-text-fill: red; -fx-padding: 5px 0px 0px 5px;");
+                final Button importButton = new Button("Ok, import");
+                importButton.setDefaultButton(true);
+                importButton.setOnAction(ae -> {
                     try {
                         final String[] csvRecords = Files.lines(Paths.get(f.toURI())).skip(firstLineHeader[0] ? 1 : 0).toArray(String[]::new);
                         final ArrayList<MapNode> toAdd = new ArrayList<>();
@@ -285,8 +249,55 @@ public class NodesToolbox {
                     }
 
                     dialogStage.close();
+                });
+                final HBox importBox = new HBox(3);
+                importBox.getChildren().addAll(importButton, importErrorLabel);
 
-                }).setDefaultButton(true);
+                int selectedId = 0;
+                for (int i = 0; i < properties.length; i++) {
+                    final int propertyI = i;
+                    final String property = properties[i];
+
+                    final HBox line = new HBox(0);
+                    final Text pText = new Text(property);
+                    pText.setStyle("-fx-font-weight: bold;");
+                    line.getChildren().add(new TextFlow(new Text("Column for - "), pText, new Text(": ")));
+                    final Pane hSpacer = new Pane();
+                    HBox.setHgrow(hSpacer, Priority.ALWAYS);
+                    line.getChildren().add(hSpacer);
+
+                    final ToggleGroup group = new ToggleGroup();
+
+                    for (int j = 0; j < cols; j++) {
+                        final int colI = j;
+                        ToggleButton button = new ToggleButton(Integer.toString(j + 1));
+                        button.setToggleGroup(group);
+                        button.setStyle("-fx-background-radius: 0; -fx-padding: 4px 10px 4px 10px;");
+                        if (j == 0) {
+                            button.setStyle("-fx-background-radius: 3 0 0 3; -fx-padding: 4px 10px 4px 10px;");
+                        } else if (j == cols - 1) {
+                            button.setStyle("-fx-background-radius: 0 3 3 0; -fx-padding: 4px 10px 4px 10px;");
+                        }
+                        if (selectedId == j) {
+                            button.setSelected(true);
+                            propertyCols[i] = selectedId;
+                        }
+                        button.setOnAction(ae -> {
+                            if (button.isSelected()) {
+                                propertyCols[propertyI] = colI;
+                            } else {
+                                button.setSelected(true);
+                            }
+                            checkValidColumnSelection(propertyCols, dialog, importErrorLabel);
+                        });
+                        line.getChildren().add(button);
+                    }
+                    selectedId++;
+
+                    dialog.getChildren().add(line);
+                }
+
+                dialog.getChildren().add(importBox);
 
                 dialogStage.setScene(new Scene(dialog));
                 dialogStage.show();
@@ -297,10 +308,47 @@ public class NodesToolbox {
 
     }
 
+    private static void checkValidColumnSelection(int [] propertyCols, VBox dialog, Label errorLabel) {
+        boolean valid = true;
+        int i = 0;
+        int [] comparePropertyCols = Arrays.copyOf(propertyCols, propertyCols.length);
+        while (valid && i < propertyCols.length) {
+            int j = 0;
+            while (valid && j < comparePropertyCols.length) {
+                if (    (i != j) &&
+                        (propertyCols[i] == comparePropertyCols[j])) {
+                    valid = false;
+                }
+                j++;
+            }
+            i++;
+        }
+
+        ObservableList<Node> nodeList = dialog.getChildren();
+        for(Node node : nodeList) {
+            if(node instanceof HBox) {
+                ObservableList<Node> hNodeList = ((HBox) node).getChildren();
+                for(Node hNode : hNodeList) {
+                    if(hNode instanceof Button) {
+                        Button b = (Button)hNode;
+                        if(b.getText() == "Ok, import") {
+                            if (valid) {
+                                b.setDisable(false);
+                                errorLabel.setText("");
+                            } else {
+                                b.setDisable(true);
+                                errorLabel.setText("Duplicate columns selected for same properties.");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private static void showIOEDialog(File f) {
         final Alert alert = new Alert(Alert.AlertType.ERROR, "Cannot read selected file\n" + f.getAbsolutePath(), ButtonType.OK);
         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.show();
     }
-
 }
