@@ -106,7 +106,6 @@ public class NodesToolbox {
         if (f != null) {
             try {
                 final String[] lines = Files.lines(Paths.get(f.toURI())).limit(5).toArray(String[]::new);
-                final Label errorMessageL;
 
                 Stage dialogStage = new Stage();
                 dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -158,8 +157,8 @@ public class NodesToolbox {
                 };
                 final int[] propertyCols = new int[properties.length];
 
-                final Label importErrorLabel = new Label();
-                importErrorLabel.setStyle("-fx-text-fill: red; -fx-padding: 5px 0px 0px 5px;");
+                final Label importErrorL = new Label();
+                importErrorL.setStyle("-fx-text-fill: red; -fx-padding: 5px 0px 0px 5px;");
                 final Button importButton = new Button("Ok, import");
                 importButton.setDefaultButton(true);
                 importButton.setOnAction(ae -> {
@@ -251,7 +250,7 @@ public class NodesToolbox {
                     dialogStage.close();
                 });
                 final HBox importBox = new HBox(3);
-                importBox.getChildren().addAll(importButton, importErrorLabel);
+                importBox.getChildren().addAll(importButton, importErrorL);
 
                 int selectedId = 0;
                 for (int i = 0; i < properties.length; i++) {
@@ -267,6 +266,8 @@ public class NodesToolbox {
                     line.getChildren().add(hSpacer);
 
                     final ToggleGroup group = new ToggleGroup();
+
+                    propertyCols[i] = -1;
 
                     for (int j = 0; j < cols; j++) {
                         final int colI = j;
@@ -288,7 +289,7 @@ public class NodesToolbox {
                             } else {
                                 button.setSelected(true);
                             }
-                            checkValidColumnSelection(propertyCols, dialog, importErrorLabel);
+                            checkValidColumnSelection(propertyCols, importButton, importErrorL);
                         });
                         line.getChildren().add(button);
                     }
@@ -296,8 +297,8 @@ public class NodesToolbox {
 
                     dialog.getChildren().add(line);
                 }
-
                 dialog.getChildren().add(importBox);
+                checkValidColumnSelection(propertyCols, importButton, importErrorL);
 
                 dialogStage.setScene(new Scene(dialog));
                 dialogStage.show();
@@ -308,40 +309,32 @@ public class NodesToolbox {
 
     }
 
-    private static void checkValidColumnSelection(int [] propertyCols, VBox dialog, Label errorLabel) {
-        boolean valid = true;
-        int i = 0;
-        int [] comparePropertyCols = Arrays.copyOf(propertyCols, propertyCols.length);
-        while (valid && i < propertyCols.length) {
-            int j = 0;
-            while (valid && j < comparePropertyCols.length) {
-                if (    (i != j) &&
-                        (propertyCols[i] == comparePropertyCols[j])) {
-                    valid = false;
-                }
-                j++;
+    private static void checkValidColumnSelection(int[] propertyCols, Button button, Label errorLabel) {
+        boolean duplicates = false;
+        boolean notAllSelected = false;
+        for (int i = 0; i < propertyCols.length; i++) {
+            if (propertyCols[i] == -1 ) {
+                notAllSelected = true;
+                break;
             }
-            i++;
+            for (int j = 0; j < propertyCols.length; j++) {
+                if (i != j && propertyCols[i] == propertyCols[j]) {
+                    duplicates = true;
+                    break;
+                }
+            }
         }
 
-        ObservableList<Node> nodeList = dialog.getChildren();
-        for(Node node : nodeList) {
-            if(node instanceof HBox) {
-                ObservableList<Node> hNodeList = ((HBox) node).getChildren();
-                for(Node hNode : hNodeList) {
-                    if(hNode instanceof Button) {
-                        Button b = (Button)hNode;
-                        if(b.getText() == "Ok, import") {
-                            if (valid) {
-                                b.setDisable(false);
-                                errorLabel.setText("");
-                            } else {
-                                b.setDisable(true);
-                                errorLabel.setText("Duplicate columns selected for same properties.");
-                            }
-                        }
-                    }
-                }
+        if(button.getText().equals("Ok, import")) {
+            if (duplicates) {
+                button.setDisable(true);
+                errorLabel.setText("Duplicate columns selected for same properties.");
+            } else if (notAllSelected) {
+                button.setDisable(true);
+                errorLabel.setText("Some properties are not assigned");
+            } else {
+                button.setDisable(false);
+                errorLabel.setText("");
             }
         }
     }
