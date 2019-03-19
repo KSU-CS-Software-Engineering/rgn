@@ -26,7 +26,7 @@ public class MapNode {
 
     @Override
     public String toString() {
-        return String.format("Node #%d { name = %s, demand = %d, lat = %d, lon = %d }", ID, name, demand, gpsLat, gpsLon);
+        return String.format("Node #%d { name = %s, demand = %d, lat = %f, lon = %f }", ID, name, demand, gpsLat, gpsLon);
     }
 }
 

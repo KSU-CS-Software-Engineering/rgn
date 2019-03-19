@@ -138,7 +138,7 @@ public class Window extends Application {
         VBox vbox = new VBox(5);
         vbox.setPadding(new Insets(10));
 
-        Label title = new Label("Database login credentials");
+        Label title = new Label("MySQL/MariaDB login credentials");
         title.setStyle("-fx-font-weight: bold; -fx-font-size: 1.2em; -fx-padding: 0 0 25px 0;");
         vbox.getChildren().add(title);
 
