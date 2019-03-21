@@ -122,7 +122,7 @@ public class NodesToolbox {
 
                 int cols = 0;
                 for (String line : lines) {
-                    cols = Math.max(cols, line.split(",").length);
+                    cols = Math.max(cols, parseLine(line).length);
                 }
 
                 final TableView<List<String>> table = new TableView<>();
@@ -137,7 +137,7 @@ public class NodesToolbox {
 
                 final List<List<String>> data = new ArrayList<>();
                 for (String line : lines) {
-                    final String[] fields = line.split(",");
+                    final String[] fields = parseLine(line);
                     final List<String> row = new ArrayList<>();
                     Collections.addAll(row, fields);
                     for (int j = fields.length; j < cols; j++) {
@@ -307,6 +307,27 @@ public class NodesToolbox {
             }
         }
 
+    }
+
+    private static String[] parseLine(String line) {
+        final ArrayList<String> cols = new ArrayList<>(Arrays.asList(line.split(",")));
+        for (int i = 0; i < cols.size() - 1; i ++) {
+            final String iStr = cols.get(i).trim();
+            if (iStr.startsWith("\"") && !iStr.endsWith("\"")) {
+                cols.set(i, cols.get(i) + "," + cols.get(i + 1));
+                cols.remove(i + 1);
+                i --;
+            }
+        }
+
+        cols.forEach(System.out::println);
+
+        return cols.stream().map((c) -> {
+            final String cTrim = c.trim();
+            if (cTrim.startsWith("\"") && cTrim.endsWith("\"")) {
+                return cTrim.substring(1, cTrim.length() - 1);
+            } else return c;
+        }).map(c -> c.replaceAll("\"\"", "\"")).toArray(String[]::new);
     }
 
     private static void checkValidColumnSelection(int[] propertyCols, Button button, Label errorLabel) {
