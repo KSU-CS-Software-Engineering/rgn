@@ -8,13 +8,16 @@ import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.symbology.MarkerSymbol;
+import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.util.ListenableList;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.stage.Window;
 import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -82,12 +85,19 @@ public class MapView {
 //        promise.addDoneListener(() -> System.out.println("Done"));
     }
 
+    private static final Image STORE_HERE_IMG = Icons._32.get("store-here");
+    private static final Image WAREHOUSE_HERE_IMG = Icons._32.get("warehouse-here");
+    private static final Image WAREHOUSE_STORE_HERE_IMG = Icons._32.get("warehouse-store-here");
+    private static final Image ERROR_IMG = Icons._32.get("error-here");
+    private static final Image NOTHING_IMG = Icons._32.get("nothing-here");
+
     private void updateGraphics(List<MapNode> nodes) {
-        MarkerSymbol marker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.X, 0xFF800080, 15);
+//        MarkerSymbol marker = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.X, 0xFF800080, 15);
 
         final ListenableList<Graphic> g = graphicsOverlay.getGraphics();
         g.clear();
         for (MapNode n : nodes) {
+            final PictureMarkerSymbol marker = new PictureMarkerSymbol(n.demand <= 0 ? n.supply > 0 ? WAREHOUSE_HERE_IMG : ERROR_IMG : n.supply > 0 ? WAREHOUSE_STORE_HERE_IMG : STORE_HERE_IMG);
             g.add(new Graphic(new Point(n.gpsLon, n.gpsLat, reference), marker));
         }
     }

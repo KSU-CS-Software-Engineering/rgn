@@ -33,6 +33,7 @@ public class Icons {
     public final Image PROGRESS_INDICATOR;
     public final Image OPEN_FOLDER;
     public final Image GROCERY_STORE;
+    public final Image WAREHOUSE;
     public final Image TRUCK;
     public final Image ROUTE;
     public final Image GO_RIGHT;
@@ -62,6 +63,7 @@ public class Icons {
         PROGRESS_INDICATOR = get("progress-indicator");
         OPEN_FOLDER = get("open-folder");
         GROCERY_STORE = get("grocery-store");
+        WAREHOUSE = get("warehouse");
         TRUCK = get("truck");
         ROUTE = get("route");
         GO_RIGHT = get("go-right");
