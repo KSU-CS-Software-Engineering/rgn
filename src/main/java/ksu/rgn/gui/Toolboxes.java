@@ -105,9 +105,11 @@ public class Toolboxes {
         final ChangeListener<? super String> latListener = (observable, oldValue, newValue) -> {
             if (!newValue.matches("[+\\-]?[\\d]*\\.?[\\d]+") || newValue.isEmpty()) {
                 latTf.setStyle("-fx-control-inner-background: #ff9696;");
+                MapView.current().selectPoint(null);
                 if (onChange != null) onChange.accept(null);
             } else {
                 latTf.setStyle("");
+                MapView.current().updatePointSelection(Double.parseDouble(latTf.getText()), Double.parseDouble(lonTf.getText()));
                 if (onChange != null) onChange.accept(new Tuple2<>(Double.parseDouble(latTf.getText()), Double.parseDouble(lonTf.getText())));
             }
         };
@@ -116,19 +118,23 @@ public class Toolboxes {
         final ChangeListener<? super String> lonListener = (observable, oldValue, newValue) -> {
             if (!newValue.matches("[+\\-]?[\\d]*\\.?[\\d]+") || newValue.isEmpty()) {
                 lonTf.setStyle("-fx-control-inner-background: #ff9696;");
+                MapView.current().selectPoint(null);
                 if (onChange != null) onChange.accept(null);
             } else {
                 lonTf.setStyle("");
+                MapView.current().updatePointSelection(Double.parseDouble(latTf.getText()), Double.parseDouble(lonTf.getText()));
                 if (onChange != null) onChange.accept(new Tuple2<>(Double.parseDouble(latTf.getText()), Double.parseDouble(lonTf.getText())));
             }
         };
         lonTf.textProperty().addListener(lonListener);
 
-        final Button pickOnMapB = new Button("", new ImageView(Icons._16.LOCATION));
-        pickOnMapB.setOnAction(ae -> {
-            latTf.setText("0.0");
-            lonTf.setText("0.0");
-        });
+        final ToggleButton pickOnMapB = new ToggleButton("", new ImageView(Icons._16.LOCATION));
+        pickOnMapB.setOnAction(ae -> MapView.current().selectPoint(pos -> {
+            latTf.setText("" + pos._1);
+            lonTf.setText("" + pos._2);
+            if (onChange != null) onChange.accept(pos);
+            pickOnMapB.setSelected(false);
+        }));
 
         final HBox loc = new HBox(3);
         loc.getChildren().addAll(latTf, lonTf, pickOnMapB);

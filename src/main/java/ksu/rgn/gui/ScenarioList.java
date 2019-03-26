@@ -197,10 +197,22 @@ public class ScenarioList {
         trucksB.setStyle("-fx-background-radius: 0");
         routesB.setStyle("-fx-background-radius: 0 3 3 0");
 
-        scenarioB.setOnAction(e -> w.border.setLeft(scenarioB.isSelected() ? createToolbox(ScenarioToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null));
-        nodesB.setOnAction(e -> w.border.setLeft(nodesB.isSelected() ? createToolbox(NodesToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null));
-        trucksB.setOnAction(e -> w.border.setLeft(trucksB.isSelected() ? createToolbox(TrucksToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null));
-        routesB.setOnAction(e -> w.border.setLeft(routesB.isSelected() ? createToolbox(RoutesToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null));
+        scenarioB.setOnAction(e -> {
+            MapView.current().selectPoint(null);
+            w.border.setLeft(scenarioB.isSelected() ? createToolbox(ScenarioToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null);
+        });
+        nodesB.setOnAction(e -> {
+            MapView.current().selectPoint(null);
+            w.border.setLeft(nodesB.isSelected() ? createToolbox(NodesToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null);
+        });
+        trucksB.setOnAction(e -> {
+            MapView.current().selectPoint(null);
+            w.border.setLeft(trucksB.isSelected() ? createToolbox(TrucksToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null);
+        });
+        routesB.setOnAction(e -> {
+            MapView.current().selectPoint(null);
+            w.border.setLeft(routesB.isSelected() ? createToolbox(RoutesToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null);
+        });
 
         scenarioB.setSelected(true);
         w.border.setLeft(createToolbox(ScenarioToolbox.create(w.selectedScenario, w.border.getScene().getWindow())));
@@ -213,6 +225,7 @@ public class ScenarioList {
         w.topBarP.getChildren().add(0, hBox);
 
         w.border.setCenter(MapView.create(w.selectedScenario, w.border.getScene().getWindow()));
+        MapView.current().selectPoint(null);
     }
 
     private static Scenario addNewScenario() {

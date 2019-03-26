@@ -74,6 +74,8 @@ public class NodesToolbox {
                 n.demand = (Integer) nodeFormV.vars.get("Demand");
                 n.supply = (Integer) nodeFormV.vars.get("Supply");
 
+                MapView.current().selectPoint(null);
+
                 Main.db.persist(() -> s.add(n), s).onFinish(o -> Platform.runLater(() -> nodeList.updateList(s, null, s::getNodes)));
                 Platform.runLater(() -> {
                     final MapNode[] ns = s.getNodes().toArray(new MapNode[s.getNodes().size() + 1]);
