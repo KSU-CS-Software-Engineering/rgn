@@ -123,7 +123,15 @@ public class Window extends Application {
         topBarP.getChildren().addAll(hGrow, connectionP);
     }
 
+    public void closeScenario() {
+        border.setCenter(createConnectToDBBody());
+        border.setLeft(null);
 
+        Pane hGrow = new Pane();
+        HBox.setHgrow(hGrow, Priority.ALWAYS);
+        topBarP.getChildren().clear();
+        topBarP.getChildren().addAll(ScenarioList.createScenarioSelectPanel(this), hGrow, connectionP);
+    }
 
     private void showDbInfoWindow() {
         Stage stage = new Stage();

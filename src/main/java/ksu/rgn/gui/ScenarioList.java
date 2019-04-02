@@ -199,23 +199,23 @@ public class ScenarioList {
 
         scenarioB.setOnAction(e -> {
             MapView.current().selectPoint(null);
-            w.border.setLeft(scenarioB.isSelected() ? createToolbox(ScenarioToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null);
+            w.border.setLeft(scenarioB.isSelected() ? createToolbox(ScenarioToolbox.create(w.selectedScenario, w)) : null);
         });
         nodesB.setOnAction(e -> {
             MapView.current().selectPoint(null);
-            w.border.setLeft(nodesB.isSelected() ? createToolbox(NodesToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null);
+            w.border.setLeft(nodesB.isSelected() ? createToolbox(NodesToolbox.create(w.selectedScenario, w)) : null);
         });
         trucksB.setOnAction(e -> {
             MapView.current().selectPoint(null);
-            w.border.setLeft(trucksB.isSelected() ? createToolbox(TrucksToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null);
+            w.border.setLeft(trucksB.isSelected() ? createToolbox(TrucksToolbox.create(w.selectedScenario, w)) : null);
         });
         routesB.setOnAction(e -> {
             MapView.current().selectPoint(null);
-            w.border.setLeft(routesB.isSelected() ? createToolbox(RoutesToolbox.create(w.selectedScenario, w.border.getScene().getWindow())) : null);
+            w.border.setLeft(routesB.isSelected() ? createToolbox(RoutesToolbox.create(w.selectedScenario, w)) : null);
         });
 
         scenarioB.setSelected(true);
-        w.border.setLeft(createToolbox(ScenarioToolbox.create(w.selectedScenario, w.border.getScene().getWindow())));
+        w.border.setLeft(createToolbox(ScenarioToolbox.create(w.selectedScenario, w)));
 
         HBox hBox = new HBox(0);
         hBox.getChildren().addAll(scenarioB, nodesB, trucksB, routesB);

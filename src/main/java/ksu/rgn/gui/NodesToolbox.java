@@ -3,8 +3,6 @@ package ksu.rgn.gui;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -15,7 +13,6 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import ksu.rgn.Main;
 import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
@@ -104,7 +101,7 @@ public class NodesToolbox {
         final FileChooser fc = new FileChooser();
         fc.setTitle("Import nodes from .csv");
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter(".csv files", "*.csv"));
-        final File f = fc.showOpenDialog(owner);
+        final File f = fc.showOpenDialog(owner.border.getScene().getWindow());
         if (f != null) {
             try {
                 final String[] lines = Files.lines(Paths.get(f.toURI())).limit(5).toArray(String[]::new);

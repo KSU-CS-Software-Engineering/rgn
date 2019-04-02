@@ -2,14 +2,17 @@ package ksu.rgn.gui;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Window;
 import ksu.rgn.Main;
 import ksu.rgn.arcgis.GISBridge;
 import ksu.rgn.arcgis.jobs.RequestTmpTokenJ;
 import ksu.rgn.scenario.Scenario;
+
+import java.util.Optional;
 
 import static ksu.rgn.gui.Toolboxes.*;
 
@@ -89,6 +92,23 @@ public class ScenarioToolbox {
             lEnc[0].setText("Success");
             lEnc[0].setStyle("-fx-padding: 5px 0px 0px 5px; -fx-text-fill: green;");
         }
+
+        addVSpace(pane, 50);
+        final Pane dangerZone = addForm(pane);
+        addHeader(dangerZone, "Danger zone");
+        addButton(dangerZone, "Delete scenario", () -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete scenario?");
+            alert.setHeaderText("You are about to delete a scenario");
+            alert.setContentText("This action cannot be undone.");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Main.db.dropScenario(s);
+                owner.closeScenario();
+            }
+        });
+        addVSpace(pane, 50);
 
         return pane;
     }

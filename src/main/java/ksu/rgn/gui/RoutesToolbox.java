@@ -2,7 +2,6 @@ package ksu.rgn.gui;
 
 import javafx.scene.Node;
 import javafx.scene.layout.VBox;
-import javafx.stage.Window;
 import ksu.rgn.scenario.Scenario;
 
 import static ksu.rgn.gui.Toolboxes.addButton;
