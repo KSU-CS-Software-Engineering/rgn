@@ -26,7 +26,7 @@ public class RandomC implements ScenarioComputation {
         }
 
         MapNode supplyNode = null;
-        Truck truck = s.getTrucks().get(0);
+        Truck truck = s.getTrucks().iterator().next();
         for (MapNode n : s.getNodes()) {
             if (n.demand < 0) { // Assume it is infinite, for now
                 supplyNode = n;

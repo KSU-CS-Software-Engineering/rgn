@@ -1,16 +1,16 @@
 package ksu.rgn.gui;
 
-import com.esri.arcgisruntime.concurrent.ListenableFuture;
+import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
 import com.esri.arcgisruntime.geometry.*;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
-import com.esri.arcgisruntime.symbology.MarkerSymbol;
+import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
-import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 import com.esri.arcgisruntime.util.ListenableList;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -20,12 +20,8 @@ import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.utils.Tuple2;
 
-import javax.swing.*;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Set;
 import java.util.function.Consumer;
-
-import static com.sun.org.apache.xalan.internal.lib.ExsltStrings.split;
 
 /**
  *
@@ -62,15 +58,15 @@ public class MapView {
         return current.mapView;
     }
 
-    void updateMarkers(List<MapNode> nodes) {
-        updateGraphics(nodes);
+    void updateMarkers(Set<MapNode> nodes) {
+        Platform.runLater(() -> updateGraphics(nodes));
     }
 
     private static final float marginPercent = 1.3f;
 
     private Consumer<Tuple2<Double, Double>> selectingPoint = null;
     private Graphic selectPointG = null;
-    private void setViewpoint(List<MapNode> nodes, ArcGISMap map) {
+    private void setViewpoint(Set<MapNode> nodes, ArcGISMap map) {
         final PointCollection points = new PointCollection(reference);
 
         for (MapNode n : nodes) {
@@ -86,7 +82,8 @@ public class MapView {
             );
             map.setInitialViewpoint(new Viewpoint(marginEnvelope));
         } else if (nodes.size() > 0) {
-            map.setInitialViewpoint(new Viewpoint(new Point(nodes.get(0).gpsLon, nodes.get(0).gpsLat, reference), 30000));
+            MapNode n = nodes.iterator().next();
+            map.setInitialViewpoint(new Viewpoint(new Point(n.gpsLon, n.gpsLat, reference), 30000));
         } else {
             map.setInitialViewpoint(new Viewpoint(new Point(0, 0, reference), Double.MAX_VALUE));
         }
@@ -135,7 +132,7 @@ public class MapView {
     private static final Image ERROR_IMG = Icons._32.get("error-here");
     private static final Image NOTHING_IMG = Icons._32.get("nothing-here");
 
-    private void updateGraphics(List<MapNode> nodes) {
+    private void updateGraphics(Set<MapNode> nodes) {
         final ListenableList<Graphic> g = graphicsOverlay.getGraphics();
         g.clear();
         for (MapNode n : nodes) {

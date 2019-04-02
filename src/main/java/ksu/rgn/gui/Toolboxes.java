@@ -16,6 +16,7 @@ import ksu.rgn.utils.Tuple2;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -239,7 +240,7 @@ public class Toolboxes {
             this.renderer = renderer;
         }
 
-        void updateList(Scenario s, Object[] future, Supplier<List> getUpToDateData) {
+        void updateList(Scenario s, Object[] future, Supplier<Set> getUpToDateData) {
             list.getChildren().clear();
 
             final Node spinner = ksu.rgn.gui.Window.createSpinner();

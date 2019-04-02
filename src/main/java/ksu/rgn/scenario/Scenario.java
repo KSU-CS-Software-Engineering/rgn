@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -38,10 +38,10 @@ public class Scenario {
 
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
-    private final List<MapNode> nodes = new ArrayList<>();
+    private final Set<MapNode> nodes = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
-    private final List<Truck> trucks = new ArrayList<>();
+    private final Set<Truck> trucks = new HashSet<>();
 
     public Scenario() {
         this.arcGisSecret = "";
@@ -69,11 +69,11 @@ public class Scenario {
         trucks.add(t);
     }
 
-    public List<MapNode> getNodes() {
+    public Set<MapNode> getNodes() {
         return nodes;
     }
 
-    public List<Truck> getTrucks() {
+    public Set<Truck> getTrucks() {
         return trucks;
     }
 
