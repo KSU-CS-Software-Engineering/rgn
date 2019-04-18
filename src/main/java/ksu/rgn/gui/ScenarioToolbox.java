@@ -24,7 +24,7 @@ public class ScenarioToolbox {
     public static Node create(Scenario s, Window owner) {
         final VBox pane = createPane("Scenario");
 
-        addTextF(pane, "Name", s.name, null);
+        addTextF(pane, "Name", s.name, t -> Main.db.persist(() -> s.name = t, s));
         addTextAreaF(pane, "Description", s.description, t -> Main.db.persist(() -> s.description = t, s));
 
         addVSpace(pane, 30);
