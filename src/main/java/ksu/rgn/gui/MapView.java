@@ -52,7 +52,7 @@ public class MapView {
 
         if (license == null || license.isEmpty() || ArcGISRuntimeEnvironment.setLicense(license).getLicenseStatus() != LicenseStatus.VALID) {
 
-            final Label l = new Label("Map view requires valid ArcGIS license");
+            final Label l = new Label("Map view requires valid ArcGIS license key");
 
             l.setStyle("-fx-background-color: white; -fx-text-fill: " + Window.STYLE_LOW_CONTRAST_TEXT_COLOR + ";");
 

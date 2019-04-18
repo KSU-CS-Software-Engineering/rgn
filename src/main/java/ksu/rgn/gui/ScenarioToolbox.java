@@ -52,7 +52,7 @@ public class ScenarioToolbox {
                 s.arcGisTmpTokenExpires = 0;
             }, s);
         });
-        addTextF(arcGis, "License key text", params[2], t -> {
+        addTextF(arcGis, "License key", params[2], t -> {
             params[2] = t;
             if (lEnc[0] != null) lEnc[0].setText("");
             Main.db.persist(() -> {
