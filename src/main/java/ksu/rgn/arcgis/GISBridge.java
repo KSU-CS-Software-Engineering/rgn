@@ -12,15 +12,16 @@ import java.util.ArrayList;
  */
 public class GISBridge extends Thread {
 
+    private final String URL = "https://www.arcgis.com";
+
     private static final Logger LOG = LoggerFactory.getLogger(GISBridge.class);
-    final String url, tmpToken;
+    final String tmpToken;
     final Webb api;
 
-    public GISBridge(String url, String tmpToken) {
-        this.url = url;
+    public GISBridge(String tmpToken) {
         this.tmpToken = tmpToken;
 
-        this.api = new Webb(url);
+        this.api = new Webb(URL);
 
         setDaemon(true);
         start();

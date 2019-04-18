@@ -224,7 +224,7 @@ public class ScenarioList {
         }
         w.topBarP.getChildren().add(0, hBox);
 
-        w.border.setCenter(MapView.create(w.selectedScenario, w.border.getScene().getWindow()));
+        w.border.setCenter(MapView.create(w.selectedScenario, scenario.arcGisLicense, w));
         MapView.current().selectPoint(null);
     }
 

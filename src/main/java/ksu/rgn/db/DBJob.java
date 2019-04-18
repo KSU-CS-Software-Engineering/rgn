@@ -71,13 +71,9 @@ abstract class DBJob {
             final EntityTransaction et = em.getTransaction();
             if (a != null) prePersist.add(a);
             prePersist.forEach(Runnable::run);
-            System.out.println("1");
             et.begin();
-            System.out.println("2");
             em.persist(o);
-            System.out.println("3");
             et.commit();
-            System.out.println("4");
         }
 
         @Override

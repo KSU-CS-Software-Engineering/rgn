@@ -31,20 +31,11 @@ public class ScenarioToolbox {
         final Pane arcGis = addForm(pane);
         addHeader(arcGis, "ArcGIS software link");
 
-        final String[] params = new String[] {s.arcGisUrl, s.arcGisClientID, s.arcGisSecret};
+        final String[] params = new String[] {s.arcGisClientID, s.arcGisSecret, s.arcGisLicense};
 
         final Label[] lEnc = new Label[1];
-        addTextF(arcGis, "Server URL", params[0], t -> {
+        addTextF(arcGis, "Client ID", params[0], t -> {
             params[0] = t;
-            if (lEnc[0] != null) lEnc[0].setText("");
-            Main.db.persist(() -> {
-                s.arcGisUrl = t;
-                s.arcGisTmpToken = null;
-                s.arcGisTmpTokenExpires = 0;
-            }, s);
-        });
-        addTextF(arcGis, "Client ID", params[1], t -> {
-            params[1] = t;
             if (lEnc[0] != null) lEnc[0].setText("");
             Main.db.persist(() -> {
                 s.arcGisClientID = t;
@@ -52,8 +43,8 @@ public class ScenarioToolbox {
                 s.arcGisTmpTokenExpires = 0;
             }, s);
         });
-        addTextF(arcGis, "Client secret", params[2], t -> {
-            params[2] = t;
+        addTextF(arcGis, "Client secret", params[1], t -> {
+            params[1] = t;
             if (lEnc[0] != null) lEnc[0].setText("");
             Main.db.persist(() -> {
                 s.arcGisSecret = t;
@@ -61,14 +52,23 @@ public class ScenarioToolbox {
                 s.arcGisTmpTokenExpires = 0;
             }, s);
         });
-        lEnc[0] = addButtonWithLabel(arcGis, "Test connection", () -> {
-            final GISBridge b = new GISBridge(params[0], null);
+        addTextF(arcGis, "License key text", params[2], t -> {
+            params[2] = t;
+            if (lEnc[0] != null) lEnc[0].setText("");
+            Main.db.persist(() -> {
+                s.arcGisLicense = t;
+                s.arcGisTmpToken = null;
+                s.arcGisTmpTokenExpires = 0;
+            }, s);
+        });
+        lEnc[0] = addButtonWithLabel(arcGis, "Validate", () -> {
+            final GISBridge b = new GISBridge(null);
             final long expires = System.currentTimeMillis() + RequestTmpTokenJ.EXPIRATION;
             Platform.runLater(() -> {
                 lEnc[0].setText("Testing...");
                 lEnc[0].setStyle("-fx-padding: 5px 0px 0px 5px;");
             });
-            b.addJob(new RequestTmpTokenJ(params[1], params[2]))
+            b.addJob(new RequestTmpTokenJ(params[0], params[1]))
                 .onFail(o -> {
                     Platform.runLater(() -> {
                         lEnc[0].setText(o.toString());
@@ -87,6 +87,7 @@ public class ScenarioToolbox {
                     }, s);
                     b.close();
                 });
+            MapView.current().w.border.setCenter(MapView.create(s, s.arcGisLicense, MapView.current().w));
         });
         if (s.arcGisTmpToken != null) {
             lEnc[0].setText("Success");

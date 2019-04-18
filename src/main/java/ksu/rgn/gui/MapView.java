@@ -1,21 +1,24 @@
 package ksu.rgn.gui;
 
 import com.esri.arcgisruntime.ArcGISRuntimeEnvironment;
+import com.esri.arcgisruntime.LicenseStatus;
 import com.esri.arcgisruntime.geometry.*;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
-import com.esri.arcgisruntime.portal.PortalItem;
 import com.esri.arcgisruntime.symbology.PictureMarkerSymbol;
 import com.esri.arcgisruntime.util.ListenableList;
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import javafx.stage.Window;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import ksu.rgn.scenario.MapNode;
 import ksu.rgn.scenario.Scenario;
 import ksu.rgn.utils.Tuple2;
@@ -35,11 +38,33 @@ public class MapView {
 
     private static final SpatialReference reference = SpatialReference.create(4326);
 
+    private boolean valid = false;
+    public Window w;
+
     private GraphicsOverlay graphicsOverlay;
     private com.esri.arcgisruntime.mapping.view.MapView mapView;
-    public static Node create(Scenario s, Window owner) {
-        if (current != null) current.mapView.dispose();
+    public static Node create(Scenario s, String license, Window w) {
+        if (current != null) {
+            if (current.valid) current.mapView.dispose();
+        }
         current = new MapView();
+        current.w = w;
+
+        if (license == null || license.isEmpty() || ArcGISRuntimeEnvironment.setLicense(license).getLicenseStatus() != LicenseStatus.VALID) {
+
+            final Label l = new Label("Map view requires valid ArcGIS license");
+
+            l.setStyle("-fx-background-color: white; -fx-text-fill: " + Window.STYLE_LOW_CONTRAST_TEXT_COLOR + ";");
+
+            final BorderPane p = new BorderPane();
+            p.setStyle("-fx-background-color: white; -fx-text-alignment: center");
+            p.setCenter(l);
+
+            return p;
+
+        }
+
+        current.valid = true;
 
         current.graphicsOverlay = new GraphicsOverlay();
         Basemap basemap = Basemap.createStreets();
@@ -59,6 +84,7 @@ public class MapView {
     }
 
     void updateMarkers(Set<MapNode> nodes) {
+        if (!valid) return;
         Platform.runLater(() -> updateGraphics(nodes));
     }
 
@@ -67,6 +93,8 @@ public class MapView {
     private Consumer<Tuple2<Double, Double>> selectingPoint = null;
     private Graphic selectPointG = null;
     private void setViewpoint(Set<MapNode> nodes, ArcGISMap map) {
+        if (!valid) return;
+
         final PointCollection points = new PointCollection(reference);
 
         for (MapNode n : nodes) {
@@ -105,10 +133,11 @@ public class MapView {
             }
         });
 
-//        promise.addDoneListener(() -> System.out.println("Done"));
     }
 
     public void selectPoint(Consumer<Tuple2<Double, Double>> onSelect) {
+        if (!valid) return;
+
         this.selectingPoint = onSelect;
 
         if (selectPointG != null) {
@@ -118,6 +147,8 @@ public class MapView {
     }
     private static final PictureMarkerSymbol marker = new PictureMarkerSymbol(Icons._24.LOCATION);
     public void updatePointSelection(double gpsLat, double gpsLon) {
+        if (!valid) return;
+
         if (selectPointG != null) {
             graphicsOverlay.getGraphics().remove(selectPointG);
         }
@@ -133,6 +164,8 @@ public class MapView {
     private static final Image NOTHING_IMG = Icons._32.get("nothing-here");
 
     private void updateGraphics(Set<MapNode> nodes) {
+        if (!valid) return;
+
         final ListenableList<Graphic> g = graphicsOverlay.getGraphics();
         g.clear();
         for (MapNode n : nodes) {

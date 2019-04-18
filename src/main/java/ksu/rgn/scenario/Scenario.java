@@ -27,11 +27,11 @@ public class Scenario {
     public String description;
 
     @Column(nullable = false)
+    public String arcGisClientID;
+    @Column(nullable = false)
     public String arcGisSecret;
     @Column(nullable = false)
-    public String arcGisUrl;
-    @Column(nullable = false)
-    public String arcGisClientID;
+    public String arcGisLicense;
 
     public String arcGisTmpToken;
     public long arcGisTmpTokenExpires;
@@ -44,17 +44,17 @@ public class Scenario {
     private final Set<Truck> trucks = new HashSet<>();
 
     public Scenario() {
-        this.arcGisSecret = "";
-        this.arcGisUrl = "";
         this.arcGisClientID = "";
+        this.arcGisSecret = "";
+        this.arcGisLicense = "";
     }
 
     public Scenario(String name, String description) {
         this.name = name;
         this.description = description;
-        this.arcGisSecret = "";
-        this.arcGisUrl = "";
         this.arcGisClientID = "";
+        this.arcGisSecret = "";
+        this.arcGisLicense = "";
 
         LOG.debug("Creating scenario '{}'{}", this.name, this.description == null ? "" : (" - '" + this.description + "'"));
     }
