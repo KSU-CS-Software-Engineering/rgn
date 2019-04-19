@@ -1,6 +1,9 @@
 package ksu.rgn.arcgis.jobs;
 
 import com.darkyen.dave.WebbException;
+import com.esri.arcgisruntime.geometry.*;
+import com.esri.arcgisruntime.loadable.*;
+import com.esri.arcgisruntime.tasks.networkanalysis.*;
 import ksu.rgn.arcgis.GISJob;
 import ksu.rgn.scenario.MapNode;
 import org.json.JSONException;
@@ -8,6 +11,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,44 +27,47 @@ public class PlanRouteJ extends GISJob {
         this.nodes = routeStops;
     }
 
+    private static final SpatialReference reference = SpatialReference.create(4326);
+
     @Override
     public void run() {
+        final String routeTaskWorld = "http://route.arcgis.com/arcgis/rest/services/World/Route/NAServer";
+        RouteTask routeTask = new RouteTask(routeTaskWorld);
+        routeTask.loadAsync();
+        RouteParameters rp = new RouteParameters();
+
+        routeTask.addDoneLoadingListener(() -> {
+            if (routeTask.getLoadError() == null && routeTask.getLoadStatus() == LoadStatus.LOADED) {
+                // route task has loaded successfully
+            }
+        });
         try {
+            // get default route parameters
+            rp = routeTask.createDefaultParametersAsync().get();
+            // set flags to return stops and directions
+            rp.setReturnStops(true);
+            rp.setReturnDirections(true);
+        } catch (Exception e) {
+            future.invokeFail("Failed to route");
+        }
 
-            // TODO (nils)
+        // add route stops
+        rp.setStops(getStopsFromNodes(nodes));
 
-            final JSONObject parameters = new JSONObject();
-            parameters.append("stops", getStopsJson(nodes));
-
-            final JSONObject r = request("/ArcGIS/rest/services/World/Route/NAServer/Route_World/solve", parameters, null);
-
-
-            future.invokeSuccess(r);
-
-        } catch (WebbException we) {
-            LOG.warn("GIS Server could not be reached");
-            future.invokeFail("The server could not be reached");
-        } catch (JSONException e) {
-            LOG.warn("GIS Server replied with unexpected response");
-            LOG.debug("Cause: {}", e);
-            future.invokeFail("Unexpected response");
+        try {
+            RouteResult result = routeTask.solveRouteAsync(rp).get();
+            future.invokeSuccess(result);
+        } catch (Exception ex) {
+            future.invokeFail("Failed to route");
         }
     }
 
-    private JSONObject getStopsJson(List<MapNode> nodes) {
-        final JSONObject features = new JSONObject();
+    private List<Stop> getStopsFromNodes(List<MapNode> nodes) {
+        ArrayList<Stop> stops = new ArrayList<Stop>();
         for(MapNode n : nodes) {
-            final JSONObject geometry = new JSONObject();
-            geometry.put("x", n.gpsLat);
-            geometry.put("y", n.gpsLon);
-            final JSONObject attributes = new JSONObject();
-            attributes.put("name", n.ID);
-
-            final JSONObject feature = new JSONObject();
-            feature.put("geometry", geometry);
-            feature.put("attributes", attributes);
-            features.append("features", feature);
+            Stop stop = new Stop(new Point(n.gpsLat, n.gpsLon, reference));
+            stops.add(stop);
         }
-        return features;
+        return stops;
     }
 }
