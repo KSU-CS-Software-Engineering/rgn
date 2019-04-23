@@ -35,7 +35,7 @@ public class Future {
         success = null;
         fail = null;
         if (isFinished) {
-            if (finish != null) finish.accept(failPayload);
+            if (finish != null) finish.accept(failPayload != null ? failPayload : successPayload);
         }
         return this;
     }
