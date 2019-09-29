@@ -30,7 +30,6 @@ import java.nio.charset.StandardCharsets;
 /**
  *
  */
-@SpringBootApplication
 public class Window extends Application {
 
     static final String STYLE_BACKGROUND_COLOR = "#F4F4F4";
@@ -41,11 +40,6 @@ public class Window extends Application {
     HBox connectionP, topBarP;
     final Label selectedScenarioL = new Label("");
     final Label nameSelectedScenarioL = new Label("");
-
-    @Override
-    public void init() throws Exception {
-        SpringApplication.run(Window.class);
-    }
 
     @Override
     public void start(Stage stage) {
