@@ -16,9 +16,9 @@ routes between nodes on a map. An ArcGIS Online subscription is required to full
 * Clone repository to a local folder
 * Enter rgn folder
 * Type `mvn package --file ./GroceryImplementation/pom.xml`
-* Output jar can be found in ./rgn/GroceryImplementation/target/
+* Output jar can be found in `./rgn/GroceryImplementation/target/`
 
-### Building With Intellij Ultimate
+### Building with Intellij Ultimate
 
 * Install jdk11
 * Install Intellij Ultimate
