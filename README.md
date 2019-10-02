@@ -1,3 +1,4 @@
+[![BCH compliance](https://bettercodehub.com/edge/badge/Colin1224/rgn?branch=master)](https://bettercodehub.com/)
 # Rural grocery network optimizer
 
 ### About:
