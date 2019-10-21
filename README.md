@@ -12,22 +12,9 @@ manipulate nodes (a store or distribution center), trucks, demand, and more. To 
 portion of the calculations, the application utilizes ArcGIS Online, a service that can find the best 
 routes between nodes on a map. An ArcGIS Online subscription is required to fully utilize this application.
 
-### Building with CLI:
+### Building
 
-* Install jdk11
-* Install Maven
-* Clone repository to a local folder
-* Enter rgn folder
-* Type `mvn package --file ./GroceryImplementation/pom.xml`
-* Output jar can be found in `./rgn/GroceryImplementation/target/`
-
-### Building with Intellij Ultimate
-
-* Install jdk11
-* Install Intellij Ultimate
-* Clone repository to a local folder
-* Import repository to Intellij as a Maven Project
-* Build & Run in Intellij
+Todo
 
 ### Credits:
 
