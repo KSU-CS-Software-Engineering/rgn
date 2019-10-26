@@ -12,9 +12,13 @@ manipulate nodes (a store or distribution center), trucks, demand, and more. To 
 portion of the calculations, the application utilizes ArcGIS Online, a service that can find the best 
 routes between nodes on a map. An ArcGIS Online subscription is required to fully utilize this application.
 
-### Building
+### Building && Running
 
-Todo
+* Install .NET Core 3.0
+* Clone git repository
+* Run `dotnet build`
+* Run `dotnet run`
+* Navigate to `http://localhost:5001`
 
 ### Credits:
 
