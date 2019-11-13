@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 ﻿@page "/login"
 
+=======
+﻿@page "/"
+<link rel="stylesheet" href="css/Style.css" />
+>>>>>>> first commit
 <h1>Log-in Page</h1>
 
 <p>Enter Log-in information below</p>
@@ -14,7 +19,11 @@
 <div class="form-field">
     <label>Password:</label>
     <div>
+<<<<<<< HEAD
         <input @bind="Password" />
+=======
+        <input type="password" @bind="Password" />
+>>>>>>> first commit
     </div>
 </div>
 
@@ -31,6 +40,14 @@
         <input @bind="ServerURL" />
     </div>
 </div>
+<<<<<<< HEAD
+=======
+<br />
+<button>
+    <label>Connect</label>
+    <img src="img/check.png" />
+</button>
+>>>>>>> first commit
 
 @code {
     public string Username { get; set; }

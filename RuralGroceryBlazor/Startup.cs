@@ -25,6 +25,12 @@ namespace RuralGroceryBlazor
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<Truck>();
+            services.AddSingleton<Scenario>();
+            services.AddSingleton<Node>();
+            //services.AddScoped<Scenario>();
+            //services.AddScoped<Truck>();
+            //services.AddScoped<Node>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
         }
