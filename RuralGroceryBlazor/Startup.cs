@@ -28,9 +28,6 @@ namespace RuralGroceryBlazor
             services.AddSingleton<Truck>();
             services.AddSingleton<Scenario>();
             services.AddSingleton<Node>();
-            //services.AddScoped<Scenario>();
-            //services.AddScoped<Truck>();
-            //services.AddScoped<Node>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
         }
