@@ -1,6 +1,6 @@
-![Dotnet pipeline status badge](https://github.com/Colin1224/rgn/workflows/.NET%20Core/badge.svg) [![BCH compliance](https://bettercodehub.com/edge/badge/Colin1224/rgn?branch=master)](https://bettercodehub.com/) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/26d7b54ca4d045d7b6770740bc7efce3)](https://www.codacy.com/manual/colin.cope/rgn?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Colin1224/rgn&amp;utm_campaign=Badge_Grade)
-# Rural grocery network optimizer
-
+![Dotnet pipeline status badge](https://github.com/Colin1224/rgn/workflows/.NET%20Core%20deploy/badge.svg) [![BCH compliance](https://bettercodehub.com/edge/badge/Colin1224/rgn?branch=master)](https://bettercodehub.com/) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/26d7b54ca4d045d7b6770740bc7efce3)](https://www.codacy.com/manual/colin.cope/rgn?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Colin1224/rgn&amp;utm_campaign=Badge_Grade)
+# Rural Grocery Network
+https://ruralgrocerynetwork.azurewebsites.net/
 
 
 ### About:
@@ -16,6 +16,7 @@ routes between nodes on a map. An ArcGIS Online subscription is required to full
 
 * Install .NET Core 3.0
 * Clone git repository
+* Navigate to `./rgn/RuralGroceryBlazor/`
 * Run `dotnet build`
 * Run `dotnet run`
 * Navigate to `http://localhost:5001`
