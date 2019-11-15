@@ -1,8 +1,10 @@
-﻿@page "/login"
+@page "/"
 
-<h1>Log-in Page</h1>
+<link rel="stylesheet" href="css/Style.css" />
 
-<p>Enter Log-in information below</p>
+<h1>Login Page</h1>
+
+<p>Enter Login information below</p>
 
 <div class="form-field">
     <label>Username:</label>
@@ -14,7 +16,9 @@
 <div class="form-field">
     <label>Password:</label>
     <div>
-        <input @bind="Password" />
+
+        <input type="password" @bind="Password" />
+
     </div>
 </div>
 
@@ -31,6 +35,13 @@
         <input @bind="ServerURL" />
     </div>
 </div>
+
+<br />
+<button>
+    <label>Connect</label>
+    <img src="img/check.png" />
+</button>
+
 
 @code {
     public string Username { get; set; }

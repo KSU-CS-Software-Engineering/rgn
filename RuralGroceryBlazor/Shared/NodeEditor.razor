@@ -1,0 +1,51 @@
+﻿
+<div class="form-field">
+    <label>Name:</label>
+    <div>
+        <input @bind="NodeState.Name" />
+    </div>
+</div>
+<div class="form-field">
+    <label>Location:</label>
+</div>
+<div class="form-field">
+    <input @bind="NodeState.Location_x" />
+    <input @bind="NodeState.Location_y" />
+
+    <button class="btn-1">
+        <img src="img/location.png" />
+    </button>
+   
+
+</div>
+<div class="form-field">
+    <label>Demand:</label>
+    <div>
+        <input @bind="NodeState.Demand" />
+        <label>palettes</label>
+    </div>
+</div>
+<div class="form-field">
+    <label>Supply:</label>
+    <div>
+        <input @bind="NodeState.Supply" />
+        <label>palettes</label>
+    </div>
+    <div class="dialog-buttons">
+        <br />
+        <button class="btn-1">Add Node</button>
+    </div>
+</div>
+
+<div class="dialog-buttons">
+    <br />
+    <button class="btn-1">Import Nodes from .csv</button>
+</div>
+
+<div class="dialog-buttons">
+    <br />
+    <button class="btn-1">Remove All Nodes</button>
+</div>
+@code {
+    [Parameter] public NodeState NodeState { get; set; }
+}
