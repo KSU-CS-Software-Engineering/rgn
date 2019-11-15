@@ -30,5 +30,5 @@ jobs:
       uses: azure/webapps-deploy@v1
       with: 
         app-name: RuralGroceryNetwork
-        publish-profile: $ ${{ secrets.PublishProfile }}
+        publish-profile: ${{ secrets.PublishProfile }}
         package: './RuralGroceryBlazor/RuralGroceryNetwork' 
