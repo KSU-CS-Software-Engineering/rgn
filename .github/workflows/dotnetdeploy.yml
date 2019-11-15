@@ -24,10 +24,11 @@ jobs:
         dotnet build --configuration Release
     - name: dotnet publish
       run: |
+        cd RuralGroceryBlazor
         dotnet publish -c Release -o RuralGroceryNetwork
     - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v1
       with: 
         app-name: RuralGroceryNetwork
         publish-profile: $ ${{ secrets.PublishProfile }}
-        package: './RuralGroceryNetwork' 
+        package: './RuralGroceryBlazor/RuralGroceryNetwork' 
