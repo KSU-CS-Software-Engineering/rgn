@@ -4,10 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuralGroceryBlazor", "RuralGroceryBlazor.csproj", "{E3450414-CCC8-4DD2-8ADB-BEBDED1BBFA8}"
-
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RuralGroceryBlazor.Client", "RuralGroceryBlazor.Client", "{D89BEA32-6C76-4C47-A228-DEA4753D9E97}"
-
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuralGroceryBlazor.Test", "..\RuralGroceryBlazor.Test\RuralGroceryBlazor.Test.csproj", "{3352406C-16FB-4987-A732-F8B900FB4FF3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.Components.Testing", "..\Microsoft.AspNetCore.Components.Testing\Microsoft.AspNetCore.Components.Testing.csproj", "{F4DBAA87-52DD-49FF-8292-692C56E14898}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,12 +19,17 @@ Global
 		{E3450414-CCC8-4DD2-8ADB-BEBDED1BBFA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3450414-CCC8-4DD2-8ADB-BEBDED1BBFA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3450414-CCC8-4DD2-8ADB-BEBDED1BBFA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3352406C-16FB-4987-A732-F8B900FB4FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3352406C-16FB-4987-A732-F8B900FB4FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3352406C-16FB-4987-A732-F8B900FB4FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3352406C-16FB-4987-A732-F8B900FB4FF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4DBAA87-52DD-49FF-8292-692C56E14898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4DBAA87-52DD-49FF-8292-692C56E14898}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4DBAA87-52DD-49FF-8292-692C56E14898}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4DBAA87-52DD-49FF-8292-692C56E14898}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{E3450414-CCC8-4DD2-8ADB-BEBDED1BBFA8} = {D89BEA32-6C76-4C47-A228-DEA4753D9E97}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0ECB523E-917F-4216-AB56-3E9E8D65E4AE}
