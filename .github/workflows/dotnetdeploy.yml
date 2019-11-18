@@ -22,6 +22,8 @@ jobs:
       run: |
         cd RuralGroceryBlazor
         dotnet build --configuration Release
+    - name: Test with dotnet
+      run: (cd RuralGroceryBlazor/ && dotnet test)
     - name: dotnet publish
       run: |
         cd RuralGroceryBlazor
