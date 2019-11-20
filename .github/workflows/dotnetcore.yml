@@ -19,6 +19,6 @@ jobs:
       with:
         dotnet-version: 3.0.100
     - name: Build with dotnet
-      run: (cd RuralGroceryBlazor/ && dotnet build)
+      run: dotnet build
     - name: Test with dotnet
-      run: (cd RuralGroceryBlazor/ && dotnet test)
+      run: dotnet test

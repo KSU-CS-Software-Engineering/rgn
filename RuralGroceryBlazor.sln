@@ -3,11 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuralGroceryBlazor", "RuralGroceryBlazor.csproj", "{E3450414-CCC8-4DD2-8ADB-BEBDED1BBFA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuralGroceryBlazor", "RuralGroceryBlazor\RuralGroceryBlazor.csproj", "{E3450414-CCC8-4DD2-8ADB-BEBDED1BBFA8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuralGroceryBlazor.Test", "..\RuralGroceryBlazor.Test\RuralGroceryBlazor.Test.csproj", "{3352406C-16FB-4987-A732-F8B900FB4FF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuralGroceryBlazor.Test", "RuralGroceryBlazor.Test\RuralGroceryBlazor.Test.csproj", "{3352406C-16FB-4987-A732-F8B900FB4FF3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.Components.Testing", "..\Microsoft.AspNetCore.Components.Testing\Microsoft.AspNetCore.Components.Testing.csproj", "{F4DBAA87-52DD-49FF-8292-692C56E14898}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.Components.Testing", "Microsoft.AspNetCore.Components.Testing\Microsoft.AspNetCore.Components.Testing.csproj", "{F4DBAA87-52DD-49FF-8292-692C56E14898}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5646A100-810A-42DB-910A-5555F1F537B4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tst", "tst", "{476795DA-C0CD-4D40-A919-93D0F38B9B6D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{B6AAA0D1-41C7-4E95-96CA-DC4FB2082DD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +36,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E3450414-CCC8-4DD2-8ADB-BEBDED1BBFA8} = {5646A100-810A-42DB-910A-5555F1F537B4}
+		{3352406C-16FB-4987-A732-F8B900FB4FF3} = {476795DA-C0CD-4D40-A919-93D0F38B9B6D}
+		{F4DBAA87-52DD-49FF-8292-692C56E14898} = {B6AAA0D1-41C7-4E95-96CA-DC4FB2082DD4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0ECB523E-917F-4216-AB56-3E9E8D65E4AE}

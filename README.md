@@ -16,9 +16,9 @@ routes between nodes on a map. An ArcGIS Online subscription is required to full
 
 * Install .NET Core 3.0
 * Clone git repository
-* Navigate to `./rgn/RuralGroceryBlazor/`
+* Enter repository folder
 * Run `dotnet build`
-* Run `dotnet run`
+* Run `dotnet run --project ./RuralGroceryBlazor/`
 * Navigate to `http://localhost:5001`
 
 ### Credits:
