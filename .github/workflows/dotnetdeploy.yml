@@ -22,11 +22,11 @@ jobs:
       run: (cd RuralGroceryBlazor/ && dotnet build --configuration Release)
     - name: Test with dotnet
       run: (cd RuralGroceryBlazor/ && dotnet test)
-    - name: dotnet publish
+    - name: Create executable with dotnet
       run: (cd RuralGroceryBlazor/ && dotnet publish -c Release -o RuralGroceryBlazor)
     - name: 'Run Azure webapp deploy action using publish profile credentials'
       uses: azure/webapps-deploy@v1
       with: 
-        app-name: RuralGroceryBlazor
+        app-name: RuralGroceryNetwork
         publish-profile: ${{ secrets.AzurePublishProfile }}
         package: './RuralGroceryBlazor/RuralGroceryBlazor' 
