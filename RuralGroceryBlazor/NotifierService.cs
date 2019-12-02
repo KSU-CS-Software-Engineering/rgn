@@ -11,7 +11,7 @@ namespace RuralGroceryBlazor
         {
             if (Notify != null)
             {
-                await Notify.Invoke(key, value);
+                await Notify.Invoke(key, value).ConfigureAwait(false);
             }
         }
 

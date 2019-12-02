@@ -4,7 +4,7 @@ namespace RuralGroceryBlazor.Shared
 {
     public class UserInfo
     {
-        public bool IsAuthenticated { get; set; } = false;
+        public bool IsAuthenticated { get; set; }
 
         public event Action OnChange;
 
