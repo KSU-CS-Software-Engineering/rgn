@@ -31,5 +31,5 @@ jobs:
       with:
         app-name: 'ruralgrocerynetwork'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_ca57fe692a4848429a5af78c0445df7e }}
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_e60df424ed9d4358bf08ed1e8f126beb }}
         package: ${{env.DOTNET_ROOT}}/myapp 
