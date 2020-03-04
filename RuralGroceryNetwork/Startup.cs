@@ -85,6 +85,12 @@ namespace RuralGroceryNetwork
 				endpoints.MapBlazorHub();
 				endpoints.MapFallbackToPage("/_Host");
 			});
+
+			using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+			{
+				scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+				scope.ServiceProvider.GetRequiredService<RuralGroceryDB.Data.RuralGrocery.RuralGroceryContext>().Database.Migrate();
+			}
 		}
 	}
 }
