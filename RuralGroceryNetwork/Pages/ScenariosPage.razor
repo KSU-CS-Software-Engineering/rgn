@@ -1,0 +1,17 @@
+﻿@page "/scenarios"
+
+@inject Scenario Scenario
+
+<AuthorizeView>
+	<link rel="stylesheet" href="css/Style.css" />
+	<h1><strong>Scenarios</strong> </h1>
+
+	<div class="Scenarios-infos">
+
+		<ScenarioEditor ScenarioState="@Scenario.State" />
+	</div>
+</AuthorizeView>
+
+@code {
+
+}
