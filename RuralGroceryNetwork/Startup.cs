@@ -43,10 +43,10 @@ namespace RuralGroceryNetwork
 #if RELEASE
 			services.AddDbContext<RuralGroceryDB.Data.RuralGrocery.RuralGroceryContext>(options =>
 			options.UseSqlServer(
-				Configuration.GetConnectionString(Environment.GetEnvironmentVariable("DefaultConnection"))));
+				Configuration.GetConnectionString(Environment.GetEnvironmentVariable("DefaultConnection", EnvironmentVariableTarget.Process))));
 			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(
-					Configuration.GetConnectionString(Environment.GetEnvironmentVariable("DefaultConnection"))));
+					Configuration.GetConnectionString(Environment.GetEnvironmentVariable("DefaultConnection", EnvironmentVariableTarget.Process))));
 #endif
 
 			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
