@@ -43,10 +43,10 @@ namespace RuralGroceryNetwork
 #if RELEASE
 			services.AddDbContext<RuralGroceryDB.Data.RuralGrocery.RuralGroceryContext>(options =>
 			options.UseSqlServer(
-				Configuration.GetConnectionString(GetSqlAzureConnectionString("DefaultConnection"))));
+				Configuration.GetConnectionString("DefaultConnection")));
 			services.AddDbContext<ApplicationDbContext>(options =>
 				options.UseSqlServer(
-					Configuration.GetConnectionString(GetSqlAzureConnectionString("DefaultConnection"))));
+					Configuration.GetConnectionString("DefaultConnection")));
 #endif
 
 			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -54,14 +54,6 @@ namespace RuralGroceryNetwork
 			services.AddRazorPages();
 			services.AddServerSideBlazor();
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-		}
-
-		public static string GetSqlAzureConnectionString(string name)
-		{
-			string conStr = Environment.GetEnvironmentVariable($"ConnectionStrings:{name}", EnvironmentVariableTarget.Process);
-			if (string.IsNullOrEmpty(conStr)) // Azure Functions App Service naming convention
-				conStr = Environment.GetEnvironmentVariable($"SQLAZURECONNSTR_{name}", EnvironmentVariableTarget.Process);
-			return conStr;
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
