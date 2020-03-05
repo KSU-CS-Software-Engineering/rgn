@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - ruralgrocerynetwork
+name: Azure Deploy
 
 on:
   push:
@@ -33,3 +33,4 @@ jobs:
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_10f00c43a19b4ea6b560bd6d7c158ff6 }}
         package: ${{env.DOTNET_ROOT}}/myapp 
+        
