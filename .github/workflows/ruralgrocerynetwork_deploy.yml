@@ -22,9 +22,12 @@ jobs:
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
+      
+    - name: Test with dotnet
+      run: dotnet test --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp RuralGroceryNetwork
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
