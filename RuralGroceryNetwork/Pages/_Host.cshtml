@@ -8,23 +8,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-        html, body, #viewDiv {
-            padding: 0;
-            margin: 0;
-            height: 100%;
-            width: 100%;
-        }
-    </style>
-    <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css">
-    <script src="https://js.arcgis.com/4.14/"></script>
-    <script src="Route.js"></script>
-    <title>Rural Grocery Network</title>
+    <title>RuralGroceryNetwork</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+
+
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
+    <script src="/ServiceWorkerRegister.js"></script>
+
+
+
+    <link href="/manifest.json" rel="manifest" />
+
+
 </head>
 <body>
     <app>
@@ -42,8 +45,11 @@
         <a class="dismiss">🗙</a>
     </div>
 
+
+
+
     <script src="_framework/blazor.server.js"></script>
-    <div id="viewDiv"></div>
- 
+    <script src="https://js.arcgis.com/4.14/"></script>
+    <script src="Route.js"></script>
 </body>
 </html>
