@@ -1,0 +1,122 @@
+/* Holds all 50 states with a respective ID */
+Table States
+{
+  StateID int [default: 1, unique, pk]
+  StateName varchar [not null, unique]
+}
+
+/* There are different service statuss for grocery stores */
+Table ServiceStatus
+{
+  ServiceStatusID int [default: 1, unique, pk]
+  ServiceStatusName varchar [not null, unique]
+}
+
+/* Which Distributor does food come from? */
+Table Distributor
+{
+  DistributorID int [default: 1, unique, pk]
+  DistributorName varchar [not null, unique]
+}
+
+/* Who do they sell to, main consumers? */
+Table GroceryRetailType
+{
+  GroceryRetailTypeID int [default: 1, unique, pk]
+  RetailTypeName varchar [not null, unique]
+}
+
+/* All cities in state of kansas. */
+Table Cities
+{
+  CityID int [default: 1, unique, pk]
+  CityName varchar [not null]
+  CityStateID int [not null, ref: > States.StateID]
+  
+  /* CityName and CityStateID must be a unique combination
+			No way to show that here */
+}
+
+/* This next part can be done in one of two ways.
+Way #1:
+We can use this SquareFootageInformation table and
+record exact squarefootages */
+Table SquareFootageInformationWay1
+{
+  SFInformationID int [default: 1, unique, pk]
+  TotalSF int [null]
+  RetailSF int [null]
+  StorageSF int [null]
+}
+
+
+/*Way #2:
+We can get an estimate and use this table instead */
+Table SquareFootageCategoriesWay2
+{
+  SFCatID int [default: 1, unique, pk]
+  SFCatName varcar [not null, unique] /* Such as "5000 - 10,000" */
+}
+
+
+/*This is the main table, this stores all of the geographical
+information as well as the layout of the store and the
+information behind how it runs */
+Table StoreInformation
+{
+  StoreID int [default: 1, pk]
+  CityID int [not null, ref: > Cities.CityID]
+  ServiceStatusID int [null, ref: > ServiceStatus.ServiceStatusID]
+  GroceryRetailTypeID int [null, ref: > GroceryRetailType.GroceryRetailTypeID]
+  DistributorID int [null, ref: > Distributor.DistributorID]
+  
+  /* Either pick way #1 or way #2
+		Way #1 */
+  SquareFootageInformationIDWay1 int [null, ref: > SquareFootageInformationWay1.SFInformationID]
+  
+  /* Way #2 */
+  SquareFootageInformationIDWay2 int [null, ref: > SquareFootageCategoriesWay2.SFCatID]
+
+  NumberOfCheckoutLanes int [null]
+  
+  WeeklyBuyingMinRequirement bool [null]
+}
+
+
+/* This is the other main table, this stores all of the delivery information
+		for the stores. It is a 1-1 relationship with StoreInformation */
+Table StoreDeliveryInformation
+{
+  StoreDeliveryInformationID int [default: 1, unique, pk]
+  
+  /* What store is the delivery for? */
+  StoreID int [not null, ref: > StoreInformation.StoreID]
+  EquipmentInformationID int [not null, ref: > EquipmentInformation.EquipmentInformationID]
+  
+  /* Does the store have a required min/max */
+  PalletMin int [null]
+  PalletMax int [null]
+  
+   /* What days of the week do the stores get deliveries */
+  DeliveryMon bool [not null]
+  DeliveryTues bool [not null] 
+  DeliveryWed bool [not null] 
+  DeliveryThur bool [not null] 
+  DeliveryFri bool [not null]
+  
+  /* Do they sell thier deliveries to others? */
+  SellToOthers bool [not null]
+}
+
+
+/* This is used when determining what equipment stores have
+		at their disposal */
+Table EquipmentInformation
+{
+  EquipmentInformationID int [default: 1, unique, pk]
+  
+  /* What equipment does the store have? */
+  LoadingDock bool [not null]
+  ForkLift bool [not null]
+  PalletJack bool [not null]
+}

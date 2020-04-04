@@ -14,14 +14,13 @@ routes between nodes on a map. An ArcGIS Online subscription is required to full
 
 ### Building && Running
 
-* Install .NET Core 3.0
+* Install .NET Core 3.1
 * Clone git repository
 * Enter repository folder
 * Run `dotnet build`
-* Run `dotnet run --project ./RuralGroceryBlazor/`
+* Run `dotnet run --project ./RuralGroceryNetwork/`
 * Navigate to `http://localhost:5001`
 
 ### Credits:
 
  * __Icons:__ https://icons8.com (Under CC BY-ND 3.0 licence)
- * __Unit Testing Package:__ https://github.com/SteveSandersonMS/BlazorUnitTestingPrototype 

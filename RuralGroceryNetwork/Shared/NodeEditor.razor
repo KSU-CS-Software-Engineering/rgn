@@ -1,6 +1,4 @@
-﻿
-@inject IJSRuntime JS
-
+﻿@inject IJSRuntime JS
 
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -25,7 +23,6 @@
             <label>Name:</label>
             <div>
                 <input @bind="NodeState.Name" />
-
             </div>
         </div>
         <div class="form-field">
@@ -57,9 +54,6 @@
             </div>
         </div>
         <br />
-
-
-
     </div>
     <div id="Btnz">
 
@@ -86,21 +80,17 @@
 </body>
 </html>
 
-
 <!-- display the Import node Page -->
 @if (ShowImportPage)
 {
     <ImportNodePage Nodes="nodes" Close="disableImportPage" />
 }
 
-
 <!-- Display the Node List  page -->
 @if (ShowNodeList)
 {
     <NodeListPage Close="disableNodeList" Nodes="nodes" />
 }
-
-
 
 @code {
 

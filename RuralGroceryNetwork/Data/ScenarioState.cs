@@ -1,5 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace RuralGroceryNetwork
 {
@@ -10,6 +9,5 @@ namespace RuralGroceryNetwork
         [Required, MaxLength(100)] public string Server_URL { get; set; }
         [Required, MaxLength(100)] public string ClientID { get; set; }
         [Required, MaxLength(100)] public string Client_Secret { get; set; }
-
     }
 }
