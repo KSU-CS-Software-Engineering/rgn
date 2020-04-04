@@ -1,4 +1,4 @@
-@page "/"
+﻿@page "/"
 @namespace RuralGroceryNetwork.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -8,14 +8,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RuralGroceryNetwork</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+
+
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <script src="/ServiceWorkerRegister.js"></script>
-    <link href="/manifest.json" rel="manifest"/>
+
+
+
+    <link href="/manifest.json" rel="manifest" />
+
+
 </head>
 <body>
     <app>
@@ -33,6 +45,11 @@
         <a class="dismiss">🗙</a>
     </div>
 
+
+
+
     <script src="_framework/blazor.server.js"></script>
+    <script src="https://js.arcgis.com/4.14/"></script>
+    <script src="Route.js"></script>
 </body>
 </html>
