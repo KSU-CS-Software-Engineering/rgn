@@ -1,6 +1,4 @@
-﻿
-
-<div class="form-field">
+﻿<div class="form-field">
     <label>Name:</label>
     <div>
         <input @bind="ScenarioState.Name" placeholder="Enter Scenario Name" />
@@ -12,8 +10,6 @@
         <textarea @bind="ScenarioState.Description" placeholder="Descripe the Scenario" />
     </div>
 </div>
-
-
 
 <div class="ArcGIS">
     <br />
@@ -38,15 +34,10 @@
         <br />
         <button title="Button to test Connection" class="btn-1">Test Connection</button>
     </div>
-
-       
 </div>
-
 
 @code {
 
-
     [Parameter] public ScenarioState ScenarioState { get; set; }
-
 
 }

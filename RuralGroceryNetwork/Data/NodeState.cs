@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace RuralGroceryNetwork
 {
     public class NodeState
@@ -11,6 +10,5 @@ namespace RuralGroceryNetwork
 
         [Required, MaxLength(100)] public string Demand { get; set; }
         [Required, MaxLength(100)] public string Supply { get; set; }
-
     }
 }
