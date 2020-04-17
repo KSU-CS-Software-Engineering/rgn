@@ -39,29 +39,19 @@ the filetype is .razor.
 
 Let us look at some examples in our project. First let us look at ScenarioPages.razor:
 
-'''
+![Scenarios Page Code](img/scenarios-page-code.PNG)
 
-@page "/scenarios"
+Razor pages use syntatic sugar to help define parts of a web page. '@page' defines the route that this page will be on the website, so the route will look like: 'https://ruralgrocerynetwork.azurewebsites.net/scenarios' when on this specific web page. @inject "injects" a dependency for the page, which in this case is a Class used to hold our Scenario data. @code is the area where we implement our C# code to make the webpage function, which for this page it currently doesn't have any additional functionality yet. Aside from that, We also build the page using HTML, while utilizing a built-in Blazor feature called 'AuthorizeView', which is a blazor HTML tag that hides parts of a web page depending on if a user is authenticated/authorized on that page or not.
 
-@inject Scenario Scenario
+Next, let us look at our NavMenu Component in NavMenu.Razor:
+![NavMenu1](img/nav-menu-code-1.PNG)
+![NavMenu2](img/nav-menu-code-2.PNG)
 
-<AuthorizeView>
-    <link rel="stylesheet" href="css/Style.css" />
-    <h1><strong>Scenarios</strong> </h1>
+This component builds the Navigation Menu for our site, which allows us to view the different pages without memorizing the page routes.
+Here we can see that it Utilizes "AuthorizeView" tags to hide it from unathorized users, and also another new feature called NavLink which is a tag that allows us to link an element to one of the other pages on the website, using the route name for that page (the element defined in @page). This Component also has C# in the @code section in order to control the Nav Menu from expanding and collapsing.
 
-    <div class="Scenarios-infos">
-
-        <ScenarioEditor ScenarioState="@Scenario.State" />
-    </div>
-</AuthorizeView>
-
-@code {
-
-}
-
-'''
-
-Razor pages use syntatic sugar to help define parts of a web page. ''@page'' defines the route that this page will be on the website, so the route will look like: 'https://ruralgrocerynetwork.azurewebsites.net/scenarios' when on this webpage.
+This page ends up looking like this:
+![Scenarios Page](img/scenarios-page.PNG)
 
 More info. on Blazor web components: https://docs.microsoft.com/en-us/aspnet/core/blazor/components?view=aspnetcore-3.1
 
