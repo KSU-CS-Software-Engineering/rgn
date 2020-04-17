@@ -1,5 +1,4 @@
-﻿
-<div class="form-field">
+﻿<div class="form-field">
     <label>Name:</label>
     <div>
         <input @bind="TruckState.Name" />
@@ -15,11 +14,10 @@
 
 <div>
     <label> Refrigerated</label>
-    <input type="checkbox"  @bind="TruckState.Refrigerated"  />   
+    <input type="checkbox" @bind="TruckState.Refrigerated" />
 </div>
 
 <div class="form-field">
-
 
     <input type="checkbox" @bind="TruckState.Start" />
     <label>Given Start Location:</label>
@@ -28,31 +26,24 @@
         <input disabled="@(!TruckState.Start)" @bind="TruckState.Start_Location_y" />
 
         <button class="btn-1"><img src="img/location.png" /></button>
-       
     </div>
 </div>
-
 
 <div class="form-field">
     <input type="checkbox" @bind="TruckState.End" />
     <label>Given End Location:</label>
     <div>
-        <input  disabled="@(!TruckState.End)" @bind="TruckState.End_Location_x" />
+        <input disabled="@(!TruckState.End)" @bind="TruckState.End_Location_x" />
         <input disabled="@(!TruckState.End)" @bind="TruckState.End_Location_y" />
 
         <button class="btn-1"><img src="img/location.png" /></button>
-       
     </div>
-
 </div>
-    <br />
-    <button class="btn-1">Add Truck</button>
-
+<br />
+<button class="btn-1">Add Truck</button>
 
 @code {
 
     [Parameter] public TruckState TruckState { get; set; }
-
-
 
 }
