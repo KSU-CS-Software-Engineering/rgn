@@ -6,7 +6,7 @@ Here is a link to the website: https://ruralgrocerynetwork.azurewebsites.net/
 When a user first gets on the website, they first encounter an about page, along with buttons to login or register
 an account for this application. 
 
-![About Page](img/about-page.png)
+![About Page](img/about-page.PNG)
 
 ### Login/Registration
 
@@ -16,17 +16,17 @@ For registering an account, just enter an email address along with a password, a
 to confirm it. We are currenlty working on account verification in order to ensure accounts are created when they
 should be. Once you are done entering the information, hit the Register button.
 
-![Register an account](img/register-account.png)
+![Register an account](img/register-account.PNG)
 
 To Login, you just enter the email and password that you provided in the registration. Once it is entered, hit the
 Log In Button
 
-![Login page](img/login.png)
+![Login page](img/login.PNG)
 
 Once you login, you should see your email along with a logout button in place of the login and register buttons
 on the upper right hand corner of the page.
 
-![Login Successful](img/login-complete.png)
+![Login Successful](img/login-complete.PNG)
 
 
 ### Web pages
@@ -36,11 +36,11 @@ Stores, Routes, and Trucks.
 
 Scenarios are used for storing different scenarios for distribution.
 
-![Scenarios Page](img/scenarios-page.png)
+![Scenarios Page](img/scenarios-page.PNG)
 
 Stores allows users to enter store locations and will allow routing of stores, along with importing data from .CSV files.
 This page also shows the routing through a map using ArcGIS.
 
-![Stores Page](img/stores-page.png)
+![Stores Page](img/stores-page.PNG)
 
-![arcGIS map](img/stores-map.png)
+![arcGIS map](img/stores-map.PNG)
