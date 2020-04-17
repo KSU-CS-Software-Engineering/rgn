@@ -34,6 +34,35 @@ ArcGIS Tutorials: https://developers.arcgis.com/labs/browse/?product=arcgis-onli
 ### Blazor Pages and Components
 A Blazor Web App is built on Components, which usually consist of a
 UI Element that can be used repeatedly throughout your application. Some examples include
-things like a single page or a web form. 
+things like a single page or a web form. Components are made using Razor markup syntax, and 
+the filetype is .razor.
 
-Click here to learn more about blazor web components: https://docs.microsoft.com/en-us/aspnet/core/blazor/components?view=aspnetcore-3.1
+Let us look at some examples in our project. First let us look at ScenarioPages.razor:
+
+'''
+
+@page "/scenarios"
+
+@inject Scenario Scenario
+
+<AuthorizeView>
+    <link rel="stylesheet" href="css/Style.css" />
+    <h1><strong>Scenarios</strong> </h1>
+
+    <div class="Scenarios-infos">
+
+        <ScenarioEditor ScenarioState="@Scenario.State" />
+    </div>
+</AuthorizeView>
+
+@code {
+
+}
+
+'''
+
+Razor pages use syntatic sugar to help define parts of a web page. ''@page'' defines the route that this page will be on the website, so the route will look like: 'https://ruralgrocerynetwork.azurewebsites.net/scenarios' when on this webpage.
+
+More info. on Blazor web components: https://docs.microsoft.com/en-us/aspnet/core/blazor/components?view=aspnetcore-3.1
+
+More info. On Razor syntax: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/razor?view=aspnetcore-3.1
