@@ -47,7 +47,7 @@ This is where users can change the password for their account. They do need to e
 ![Password Setting](img/password.PNG)
 
 #### Two-Step Authentication
-Users can add an app to do Two-Step Authentication with. After clicking the "set up authenticator app" button, you get steps to add an app like Microsoft Authenticator, using QR Code generation or through a key entry that is provided in this page.
+Users can add an app to do Two-Step Authentication with. After clicking the "set up authenticator app" button, you get steps to add an app like Microsoft Authenticator, using QR Code generation or through a key entry that is provided in this page. Users can also reset their authentication key, for when they want to stop using it or want to switch authentication apps.
 
 ![2 Step Authentication](img/authentication.PNG)
 
