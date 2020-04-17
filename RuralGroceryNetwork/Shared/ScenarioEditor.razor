@@ -1,43 +1,59 @@
-﻿<div class="form-field">
-    <label>Name:</label>
-    <div>
-        <input @bind="ScenarioState.Name" placeholder="Enter Scenario Name" />
-    </div>
+﻿<!--
+Copyright 2020 Kansas State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="form-field">
+	<label>Name:</label>
+	<div>
+		<input @bind="ScenarioState.Name" placeholder="Enter Scenario Name" />
+	</div>
 </div>
 <div class="form-text">
-    <label>Description:</label>
-    <div>
-        <textarea @bind="ScenarioState.Description" placeholder="Descripe the Scenario" />
-    </div>
+	<label>Description:</label>
+	<div>
+		<textarea @bind="ScenarioState.Description" placeholder="Descripe the Scenario" />
+	</div>
 </div>
 
 <div class="ArcGIS">
-    <br />
-    <div class="form-field">
-        <h4>ArcGIS software link</h4>
-        <label>Server_URL:</label>
-        <div>
-            <input @bind="ScenarioState.Server_URL" />
-        </div>
-    </div>
-    <div class="form-field">
-        <label>ClientID:</label>
-        <div>
-            <input @bind="ScenarioState.ClientID" />
-        </div>
-    </div>
-    <div class="form-field">
-        <label>Client_Secret:</label>
-        <div>
-            <input @bind="ScenarioState.Client_Secret" />
-        </div>
-        <br />
-        <button title="Button to test Connection" class="btn-1">Test Connection</button>
-    </div>
+	<br />
+	<div class="form-field">
+		<h4>ArcGIS software link</h4>
+		<label>Server_URL:</label>
+		<div>
+			<input @bind="ScenarioState.Server_URL" />
+		</div>
+	</div>
+	<div class="form-field">
+		<label>ClientID:</label>
+		<div>
+			<input @bind="ScenarioState.ClientID" />
+		</div>
+	</div>
+	<div class="form-field">
+		<label>Client_Secret:</label>
+		<div>
+			<input @bind="ScenarioState.Client_Secret" />
+		</div>
+		<br />
+		<button title="Button to test Connection" class="btn-1">Test Connection</button>
+	</div>
 </div>
 
 @code {
 
-    [Parameter] public ScenarioState ScenarioState { get; set; }
+	[Parameter] public ScenarioState ScenarioState { get; set; }
 
 }
