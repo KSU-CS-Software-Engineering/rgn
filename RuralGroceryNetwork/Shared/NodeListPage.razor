@@ -1,34 +1,60 @@
-﻿<div class="dialog-container">
-    <div class="dialog">
-        <div class="dialog-title">
-            <h2>Stores List</h2>
-        </div>
-        <form style="overflow-x:auto" class="dialog-body">
-            @foreach (Node s in Nodes)
-            {
-                <div class="dialog-node">
-                    <span class="mr-0">
-                        <h5>@s.State.Name</h5>
-                        @s.State.Demand / @s.State.Supply palettes
-                        <button class="Trash-Button" @onclick="@(() =>removeNodes(s))">
-                            <img src="img/trash.png" />
-                        </button>
-                    </span>
-                </div>
-            }
-        </form>
-        <div class="dialog-buttons">
-            <button @onclick="@Close" class="btn btn-secondary mr-auto">Close</button>
-        </div>
-    </div>
+﻿<!--
+Copyright 2020 Kansas State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- Lists all of the stored nodes -->
+<div class="dialog-container">
+	<div class="dialog">
+		<div class="dialog-title">
+			<h2>Stores List</h2>
+		</div>
+		<form style="overflow-x:auto" class="dialog-body">
+			@foreach (Node s in Nodes)
+			{
+				<div class="dialog-node">
+					<span class="mr-0">
+						<h5>@s.State.Name</h5>
+						@s.State.Demand / @s.State.Supply palettes
+						<button class="Trash-Button" @onclick="@(() =>removeNodes(s))">
+							<img src="img/trash.png" />
+						</button>
+					</span>
+				</div>
+			}
+		</form>
+		<div class="dialog-buttons">
+			<button @onclick="@Close" class="btn btn-secondary mr-auto">Close</button>
+		</div>
+	</div>
 </div>
 
 @code {
-    void removeNodes(Node x)
-    {
-        Nodes.Remove(x);
-    }
 
-    [Parameter] public EventCallback Close { get; set; }
-    [Parameter] public List<Node> Nodes { get; set; }
+	/// <summary>
+	/// Removes the node from the list of nodes
+	/// </summary>
+	/// <param name="x">Node to be removed from list</param>
+	void removeNodes(Node x)
+	{
+		Nodes.Remove(x);
+	}
+
+	[Parameter] public EventCallback Close { get; set; }
+
+	/// <summary>
+	/// List of stored nodes
+	/// </summary>
+	[Parameter] public List<Node> Nodes { get; set; }
 }

@@ -1,49 +1,72 @@
-﻿<div class="form-field">
-    <label>Name:</label>
-    <div>
-        <input @bind="TruckState.Name" />
-    </div>
-</div>
+﻿<!--
+Copyright 2020 Kansas State University
 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- Name field -->
 <div class="form-field">
-    <label>Capacity:</label>
-    <div>
-        <input @bind="TruckState.Capacity" />
-    </div>
+	<label>Name:</label>
+	<div>
+		<input @bind="TruckState.Name" />
+	</div>
 </div>
 
+<!-- Capacity field -->
+<div class="form-field">
+	<label>Capacity:</label>
+	<div>
+		<input @bind="TruckState.Capacity" />
+	</div>
+</div>
+
+<!-- Refridgerated checkbox -->
 <div>
-    <label> Refrigerated</label>
-    <input type="checkbox" @bind="TruckState.Refrigerated" />
+	<label> Refrigerated</label>
+	<input type="checkbox" @bind="TruckState.Refrigerated" />
 </div>
 
+<!-- Start location fields -->
 <div class="form-field">
 
-    <input type="checkbox" @bind="TruckState.Start" />
-    <label>Given Start Location:</label>
-    <div>
-        <input disabled="@(!TruckState.Start)" @bind="TruckState.Start_Location_x" />
-        <input disabled="@(!TruckState.Start)" @bind="TruckState.Start_Location_y" />
+	<input type="checkbox" @bind="TruckState.Start" />
+	<label>Given Start Location:</label>
+	<div>
+		<input disabled="@(!TruckState.Start)" @bind="TruckState.Start_Location_x" />
+		<input disabled="@(!TruckState.Start)" @bind="TruckState.Start_Location_y" />
 
-        <button class="btn-1"><img src="img/location.png" /></button>
-    </div>
+		<button class="btn-1"><img src="img/location.png" /></button>
+	</div>
 </div>
 
+<!-- End location fields -->
 <div class="form-field">
-    <input type="checkbox" @bind="TruckState.End" />
-    <label>Given End Location:</label>
-    <div>
-        <input disabled="@(!TruckState.End)" @bind="TruckState.End_Location_x" />
-        <input disabled="@(!TruckState.End)" @bind="TruckState.End_Location_y" />
+	<input type="checkbox" @bind="TruckState.End" />
+	<label>Given End Location:</label>
+	<div>
+		<input disabled="@(!TruckState.End)" @bind="TruckState.End_Location_x" />
+		<input disabled="@(!TruckState.End)" @bind="TruckState.End_Location_y" />
 
-        <button class="btn-1"><img src="img/location.png" /></button>
-    </div>
+		<button class="btn-1"><img src="img/location.png" /></button>
+	</div>
 </div>
 <br />
 <button class="btn-1">Add Truck</button>
 
 @code {
 
-    [Parameter] public TruckState TruckState { get; set; }
-
+	/// <summary>
+	/// Stores the state of the truck
+	/// </summary>
+	[Parameter] public TruckState TruckState { get; set; }
 }
