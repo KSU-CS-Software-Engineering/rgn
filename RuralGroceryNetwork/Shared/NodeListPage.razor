@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+<!-- Lists all of the stored nodes -->
 <div class="dialog-container">
 	<div class="dialog">
 		<div class="dialog-title">
@@ -40,11 +41,20 @@ limitations under the License.
 </div>
 
 @code {
+
+	/// <summary>
+	/// Removes the node from the list of nodes
+	/// </summary>
+	/// <param name="x">Node to be removed from list</param>
 	void removeNodes(Node x)
 	{
 		Nodes.Remove(x);
 	}
 
 	[Parameter] public EventCallback Close { get; set; }
+
+	/// <summary>
+	/// List of stored nodes
+	/// </summary>
 	[Parameter] public List<Node> Nodes { get; set; }
 }

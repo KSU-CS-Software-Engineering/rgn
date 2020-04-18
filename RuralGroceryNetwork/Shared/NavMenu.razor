@@ -1,5 +1,4 @@
-﻿
-<!--
+﻿<!--
 Copyright 2020 Kansas State University
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
+
 ﻿<!-- Upper Portion of the Nav Menu -->
 <div class="top-row pl-4 navbar navbar-dark">
 	<a class="navbar-brand" href="">RuralGroceryNetwork</a>
@@ -30,6 +30,7 @@ limitations under the License.
 				<span class="oi oi-info" aria-hidden="true"></span> About
 			</NavLink>
 			<AuthorizeView>
+				<!-- Only available if autheticated -->
 				<NavLink class="nav-link" href="scenarios" Match="NavLinkMatch.All">
 					<span class="oi oi-globe" aria-hidden="true"></span> Scenarios
 				</NavLink>
@@ -52,6 +53,7 @@ limitations under the License.
 
 	private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
+	//Toggles whether the nav menu is collapsed or not
 	private void ToggleNavMenu()
 	{
 		collapseNavMenu = !collapseNavMenu;

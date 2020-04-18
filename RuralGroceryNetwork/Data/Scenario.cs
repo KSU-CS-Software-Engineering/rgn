@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 Copyright 2020 Kansas State University
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/// <summary>
+/// Stores state of scenario
+/// </summary>
+
 namespace RuralGroceryNetwork
 {
-    public class Scenario
-    {
-        public ScenarioState State { get; private set; } = new ScenarioState();
-    }
+	public class Scenario
+	{
+		/// <summary>
+		/// Scenario state
+		/// </summary>
+		public ScenarioState State { get; private set; } = new ScenarioState();
+	}
 }

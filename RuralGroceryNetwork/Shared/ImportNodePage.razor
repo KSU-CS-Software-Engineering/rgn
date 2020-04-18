@@ -14,14 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+<!-- Page for importing nodes from file -->
 <div class="dialog-container">
 	<div class="dialog">
 		<div class="dialog-title">
 			<h2>Import from .csv</h2>
 		</div>
+
 		@if (showBody)
 		{
-
 			<form class="dialog-body">
 				<label> First Line Header</label>
 				<input type="checkbox" />
@@ -68,6 +69,7 @@ limitations under the License.
 			</form>
 		}
 		<div class="dialog-buttons">
+			<!-- Close button -->
 			<button @onclick="@Close" class="btn btn-secondary mr-auto">Close</button>
 
 			<InputFile OnChange="HandleFileSelected" />
@@ -81,7 +83,14 @@ limitations under the License.
 
 @code {
 
+	/// <summary>
+	/// Stores user uploaded file
+	/// </summary>
 	IFileListEntry file;
+
+	/// <summary>
+	/// List of nodes
+	/// </summary>
 	[Parameter] public List<Node> Nodes { get; set; }
 
 	bool showBody = false; //for diplaying the body of the import page
@@ -91,15 +100,22 @@ limitations under the License.
 	//the size is arbitrary.
 	string[] contants = new string[4];
 
+	/// <summary>
+	/// Handles uploaded files
+	/// </summary>
+	/// <param name="files">List of files</param>
 	void HandleFileSelected(IFileListEntry[] files)
 	{
 		file = files.FirstOrDefault();
 		showImportButton = true;
 		// Do something with the files, e.g., read them
 	}
+
+	/// <summary>
+	/// Imports data from file and creates nodes
+	/// </summary>
 	async Task ImportFile()
 	{
-
 		//read the selected file.
 		using (var reader = new System.IO.StreamReader(file.Data))
 		{
@@ -123,13 +139,19 @@ limitations under the License.
 		showBody = true;
 	}
 
+	/// <summary>
+	/// Adds node to nodes list
+	/// </summary>
+	/// <param name="x">Node to be added</param>
 	void importNodes(Node x)
 	{
 		Nodes.Add(x);
-
 	}
 
 	[Parameter] public EventCallback OnChange { get; set; }
 
+	/// <summary>
+	/// Close import page
+	/// </summary>
 	[Parameter] public EventCallback Close { get; set; }
 }

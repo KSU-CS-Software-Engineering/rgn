@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
 Copyright 2020 Kansas State University
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+/// <summary>
+/// Stores state of node
+/// </summary>
+
 namespace RuralGroceryNetwork
 {
-    public class Node
-    {
-        public NodeState State { get; private set; } = new NodeState();
-    }
+	public class Node
+	{
+		/// <summary>
+		/// Node state
+		/// </summary>
+		public NodeState State { get; private set; } = new NodeState();
+	}
 }

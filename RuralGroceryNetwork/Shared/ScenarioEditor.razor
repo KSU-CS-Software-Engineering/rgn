@@ -14,12 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+<!-- Scenario name field -->
 <div class="form-field">
 	<label>Name:</label>
 	<div>
 		<input @bind="ScenarioState.Name" placeholder="Enter Scenario Name" />
 	</div>
 </div>
+
+<!-- Scenario description -->
 <div class="form-text">
 	<label>Description:</label>
 	<div>
@@ -27,6 +30,7 @@ limitations under the License.
 	</div>
 </div>
 
+<!-- Defines ArcGIS server and login -->
 <div class="ArcGIS">
 	<br />
 	<div class="form-field">
@@ -54,6 +58,8 @@ limitations under the License.
 
 @code {
 
+	/// <summary>
+	/// Stores the scenario state
+	/// </summary>
 	[Parameter] public ScenarioState ScenarioState { get; set; }
-
 }

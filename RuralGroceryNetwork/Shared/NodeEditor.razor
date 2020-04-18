@@ -15,10 +15,10 @@ limitations under the License.
 -->
 
 @inject IJSRuntime JS
-
+<!-- Javascript ArcGIS map -->
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>ArcGIS JavaScript Tutorials: Get a route and directions</title>
+<title>ArcGIS</title>
 <style>
 
 	#viewDiv {
@@ -32,18 +32,19 @@ limitations under the License.
 <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css">
 
 <div>
-
 	<div id="Fields">
-
+		<!-- Node name field -->
 		<div class="form-field">
 			<label>Name:</label>
 			<div>
 				<input @bind="NodeState.Name" />
 			</div>
 		</div>
+		<!-- Node location field -->
 		<div class="form-field">
 			<label>Location:</label>
 		</div>
+		<!-- Node location fields -->
 		<div class="form-field">
 			<input @bind="NodeState.Location_x" />
 
@@ -53,6 +54,7 @@ limitations under the License.
 				<img src="img/location.png" />
 			</button>
 		</div>
+		<!-- Node demand field -->
 		<div class="form-field">
 			<label>Demand:</label>
 			<div>
@@ -61,6 +63,7 @@ limitations under the License.
 				<label>palettes</label>
 			</div>
 		</div>
+		<!-- Node supply field -->
 		<div class="form-field">
 			<label>Supply:</label>
 			<div>
@@ -90,6 +93,7 @@ limitations under the License.
 	</div>
 </div>
 
+<!-- Create map button -->
 <html>
 <body onload="CreateMap()">
 	<div id="viewDiv"></div>
@@ -109,19 +113,34 @@ limitations under the License.
 }
 
 @code {
-
+	/// <summary>
+	/// Loads the javascript arcgis map
+	/// </summary>
 	async Task LoadMap()
 	{
 		await JS.InvokeVoidAsync("CreateMap");
 	}
 
+	/// <summary>
+	/// List of nodes
+	/// </summary>
 	List<Node> nodes = new List<Node>();
 
+	/// <summary>
+	/// Value that stores if list of nodes is displayed
+	/// </summary>
 	bool ShowNodeList = false;
+
+	/// <summary>
+	/// Value that stores to show import nodes list
+	/// </summary>
 	bool ShowImportPage = false;
 
 	[Parameter] public NodeState NodeState { get; set; }
 
+	/// <summary>
+	/// Adds node to list of nodes from inputed data
+	/// </summary>
 	void AddNodes(string name, string demand, string supply, double longitude, double lattitude)
 	{
 		Node X = new Node();
@@ -135,28 +154,42 @@ limitations under the License.
 		//NodeState.Name = "";
 	}
 
+	/// <summary>
+	/// Clears all nodes from list
+	/// </summary>
 	void RemoveNodes()
 	{
 		nodes.Clear();
 
 	}
 
-	//functions for opening and closeing various pages.
+	/// <summary>
+	/// Hides list of nodes page
+	/// </summary>
 	void disableNodeList()
 	{
 		ShowNodeList = false;
 	}
 
+	/// <summary>
+	/// Opens node list page
+	/// </summary>
 	void enableNodeList()
 	{
 		ShowNodeList = true;
 	}
 
+	/// <summary>
+	/// Hides import page
+	/// </summary>
 	void disableImportPage()
 	{
 		ShowImportPage = false;
 	}
 
+	/// <summary>
+	/// Opens import nodes page
+	/// </summary>
 	void enableImportPage()
 	{
 		ShowImportPage = true;

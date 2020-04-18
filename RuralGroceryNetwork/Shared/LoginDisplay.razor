@@ -15,12 +15,15 @@ limitations under the License.
 -->
 
 <AuthorizeView>
+	<!-- Displays logout function if logged in -->
 	<Authorized>
 		<a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
 		<form method="post" action="Identity/Account/LogOut">
 			<button type="submit" class="nav-link btn btn-link">Log out</button>
 		</form>
 	</Authorized>
+
+	<!-- Shows register and login function if not logged in -->
 	<NotAuthorized>
 		<a href="Identity/Account/Register">Register</a>
 		<a href="Identity/Account/Login">Log in</a>

@@ -21,11 +21,17 @@ namespace RuralGroceryNetwork
 {
     public class Program
     {
+        /// <summary>
+        /// Startup function
+        /// </summary>
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
         }
 
+        /// <summary>
+        /// Creats the host for the website
+        /// </summary>
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>

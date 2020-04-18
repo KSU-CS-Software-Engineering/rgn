@@ -16,15 +16,18 @@ limitations under the License.
 
 @inherits LayoutComponentBase
 
+<!-- Displays navbar on side of page -->
 <div class="sidebar">
 	<NavMenu />
 </div>
 
 <div class="main">
+	<!-- Login display on top bar -->
 	<div class="top-row px-4 auth">
 		<LoginDisplay />
 	</div>
 
+	<!-- Body of main page -->
 	<div class="content px-4">
 		@Body
 	</div>

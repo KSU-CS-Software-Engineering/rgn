@@ -40,9 +40,12 @@ namespace RuralGroceryNetwork
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //Creates the context for the Rural Grocery DB
             services.AddDbContext<RuralGroceryDB.Data.RuralGrocery.RuralGroceryContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            //Creates the context for the Net core login
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -53,6 +56,7 @@ namespace RuralGroceryNetwork
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
+            //Creates services for each class
             services.AddSingleton<Truck>();
             services.AddSingleton<Scenario>();
             services.AddSingleton<Node>();
@@ -88,6 +92,7 @@ namespace RuralGroceryNetwork
                 endpoints.MapFallbackToPage("/_Host");
             });
 
+            //Migrates databases
             using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
