@@ -30,7 +30,6 @@ namespace RuralGroceryNetwork.Test
 									nodes (a store or distribution center), trucks, demand, and more. To accomplish the routing portion of the calculations, the application utilizes ArcGIS
 									Online, a service that can find the best routes between nodes on a map.								
 								</p>";
-
 			cut.MarkupMatches(expectedHtml);
 		}
 	}
