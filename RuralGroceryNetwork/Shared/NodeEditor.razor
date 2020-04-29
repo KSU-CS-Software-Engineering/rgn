@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,66 +15,68 @@ limitations under the License.
 -->
 
 @inject IJSRuntime JS
-<!-- Javascript ArcGIS map -->
+<!-- Javascript ArcGIS map Div setup -->
+
+
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>ArcGIS</title>
-<style>
+<style onload="CreateMap()">
 
-	#viewDiv {
-		padding: 0;
-		margin: 10px;
-		height: 500px;
-		width: 1000px;
-	}
+    #viewDiv {
+        padding: 0;
+        margin: 10px;
+        height: 500px;
+        width: 1000px;
+    }
 </style>
 
 <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css">
 
 <div>
-	<div id="Fields">
-		<!-- Node name field -->
-		<div class="form-field">
-			<label>Name:</label>
-			<div>
-				<input @bind="NodeState.Name" />
-			</div>
-		</div>
-		<!-- Node location field -->
+    <div id="Fields">
+        <!-- Node name field -->
+        <div class="form-field">
+            <label>Name:</label>
+            <div>
+                <input @bind="NodeState.Name" />
+            </div>
+        </div>
+        <!-- Node location field -->
         <div class="form-field">
             <label>Location:</label>
-            <label style="font-style: italic;">  Lat/Lon</label>
+            <label style="font-style: italic;">  Lat / Lon</label>
         </div>
-		<!-- Node location fields -->
-		<div class="form-field">
-			<input @bind="NodeState.Location_x" />
+        <!-- Node location fields -->
+        <div class="form-field">
+            <input @bind="NodeState.Location_x" />
 
-			<input @bind="NodeState.Location_y" />
+            <input @bind="NodeState.Location_y" />
 
             <button class="btn-1" @onclick="@(() =>CenterMap(NodeState.Location_x,NodeState.Location_y))">
-                <img src="img/location.png" />
+                <img src="img/location.png"  />
             </button>
-		</div>
-		<!-- Node demand field -->
-		<div class="form-field">
-			<label>Demand:</label>
-			<div>
-				<input @bind="NodeState.Demand" />
+        </div>
+        <!-- Node demand field -->
+        <div class="form-field">
+            <label>Demand:</label>
+            <div>
+                <input @bind="NodeState.Demand" />
 
-				<label>palettes</label>
-			</div>
-		</div>
-		<!-- Node supply field -->
-		<div class="form-field">
-			<label>Supply:</label>
-			<div>
-				<input @bind="NodeState.Supply" />
+                <label>palettes</label>
+            </div>
+        </div>
+        <!-- Node supply field -->
+        <div class="form-field">
+            <label>Supply:</label>
+            <div>
+                <input @bind="NodeState.Supply" />
 
-				<label>palettes</label>
-			</div>
-		</div>
-		<br />
-	</div>
+                <label>palettes</label>
+            </div>
+        </div>
+        <br />
+    </div>
     <div id="Btnz">
 
         <!-- button for adding a node  -->
@@ -90,7 +92,7 @@ limitations under the License.
         <!-- button for showing the nodelist  page -->
         <br />
         <button @onclick="enableNodeList">Stores List</button>
-        <button @onclick="LoadMap">Load Map</button>
+        <button @onclick="LoadMap">Reload Map</button>
         <button @onclick="@(() =>MapInput(NodeState.Location_x,NodeState.Location_y))">addNodes</button>
 
 
@@ -119,26 +121,28 @@ limitations under the License.
 <!-- Create map button -->
 <html>
 <body onload="CreateMap()">
-	<div id="viewDiv"></div>
+    <div id="viewDiv"></div>
 </body>
 </html>
+
 
 <!-- display the Import node Page -->
 @if (ShowImportPage)
 {
-	<ImportNodePage Nodes="nodes" Close="disableImportPage" />
+    <ImportNodePage Nodes="nodes" Close="disableImportPage" />
 }
 
 <!-- Display the Node List  page -->
 @if (ShowNodeList)
 {
-	<NodeListPage Close="disableNodeList" Nodes="nodes" />
+    <NodeListPage Close="disableNodeList" Nodes="nodes" />
 }
 
 @code {
+
     /// <summary>
     /// Change the Base Map Style for the Arcgis Map
-    /// </summary>                    
+    /// </summary>
     async Task ChangeMapBase()
     {
 
@@ -159,6 +163,8 @@ limitations under the License.
     {
         await JS.InvokeVoidAsync(identifier: "MapInput", lat, lon);
     }
+
+
 
     /// <summary>
     /// Loads the javascript Arcgis Map

@@ -6,18 +6,17 @@ require([
     "esri/tasks/support/RouteParameters",
     "esri/tasks/support/FeatureSet"
 ], function loadMap(Map, MapView, Graphic, RouteTask, RouteParameters, FeatureSet) {
-
-
-    function CreateMap() {
-
         var map = new Map({
             basemap: "streets-navigation-vector"
         });
+
+        function CreateMap() {
+
+ 
         console.log("This is a view div");
         console.log(document.getElementById("viewDiv"));
 
         var view = new MapView({
-
             container: "viewDiv",
             map: map,
             center: [-118.24532, 34.05398],
@@ -60,6 +59,7 @@ require([
 
             });
             view.graphics.add(graphic);
+
         }
 
         function getRoute() {
@@ -102,6 +102,7 @@ require([
                 view.ui.empty("top-right");
                 view.ui.add(directions, "top-right");
             });
+
         }
 
         //Add nodes on the map by a given input
@@ -146,9 +147,11 @@ require([
             var x = document.getElementById("MapBase").value;
             console.log(x);
             map.basemap = x;
+
         }
         window.ChangeMapBase = ChangeMapBase;
 
     }
-    window.CreateMap = CreateMap;
+        window.CreateMap = CreateMap;
+
 });
