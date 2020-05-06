@@ -23,4 +23,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\RuralGroceryNetworkLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

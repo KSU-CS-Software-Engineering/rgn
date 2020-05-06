@@ -17,6 +17,9 @@ limitations under the License.
 <!-- Page to display node editor -->
 @page "/StoreInformation"
 
+@using RuralGroceryNetworkLibrary
+@using RuralGroceryNetworkLibrary.Models
+
 <AuthorizeView>
 
     <link rel="stylesheet" href="css/Style.css" />
@@ -42,7 +45,7 @@ limitations under the License.
     </div>
 
     <div class="Physical-Store-Information">
-        <h1>Physical Information</h1>
+        <h2>Physical Information</h2>
         <div>
             <label>Square Footage Category: </label>
             <label>#SquareFootage</label>
@@ -124,6 +127,15 @@ limitations under the License.
     </div>
 </AuthorizeView>
 
-@code {
+@code { 
+
+    private Store s;
+
+    protected override Task OnInitializedAsync()
+    {
+        SqlDataAccess.SomeMethod();
+        return base.OnInitializedAsync();
+    }
+
 
 }

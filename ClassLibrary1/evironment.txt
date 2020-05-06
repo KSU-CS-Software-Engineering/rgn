@@ -1,0 +1,3 @@
+﻿Server=tcp:ruralgrocery.database.windows.net,1433;Initial Catalog=RuralGroceryNetwork;Persist Security Info=False;
+User_ID=ruralgrocerynetwork;
+Password=09UCWWtV!vy3b^WrTZo$

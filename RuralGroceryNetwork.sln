@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuralGroceryNetwork", "Rura
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuralGroceryNetwork.Test", "RuralGroceryNetwork.Test\RuralGroceryNetwork.Test.csproj", "{AB3EF1D8-82CE-4742-AD0D-54B4829EF6CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuralGroceryNetworkLibrary", "ClassLibrary1\RuralGroceryNetworkLibrary.csproj", "{3A11B6AC-59C7-454F-A627-89903AF85518}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AB3EF1D8-82CE-4742-AD0D-54B4829EF6CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB3EF1D8-82CE-4742-AD0D-54B4829EF6CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB3EF1D8-82CE-4742-AD0D-54B4829EF6CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A11B6AC-59C7-454F-A627-89903AF85518}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A11B6AC-59C7-454F-A627-89903AF85518}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A11B6AC-59C7-454F-A627-89903AF85518}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A11B6AC-59C7-454F-A627-89903AF85518}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
