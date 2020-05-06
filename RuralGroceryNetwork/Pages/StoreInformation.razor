@@ -17,8 +17,13 @@ limitations under the License.
 <!-- Page to display node editor -->
 @page "/StoreInformation"
 
-@using RuralGroceryNetworkLibrary
-@using RuralGroceryNetworkLibrary.Models
+@using GroceryLibrary
+@using GroceryLibrary.Models
+
+@using Microsoft.AspNetCore.Identity
+
+@inject  UserManager<IdentityUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <AuthorizeView>
 
@@ -122,6 +127,7 @@ limitations under the License.
             <div class="Pallet-Jack">
                 <label>Has Pallet Jack: </label>
                 <input type="checkbox" contenteditable="false" name="PalletJackCheckbox" value="Sunday" checked disabled />
+                
             </div>
         </div>
     </div>
@@ -130,12 +136,19 @@ limitations under the License.
 @code { 
 
     private Store s;
+    private string email;
 
-    protected override Task OnInitializedAsync()
+    private async Task LogUsername()
     {
-        SqlDataAccess.SomeMethod();
-        return base.OnInitializedAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var currentUser = await UserManager.GetUserAsync(user);
+        email = currentUser.Email.ToUpper();
     }
 
-
+    protected override async Task OnInitializedAsync()
+    {
+        await LogUsername();
+        SqlDataAccess.OnInitialize(email);
+    }
 }

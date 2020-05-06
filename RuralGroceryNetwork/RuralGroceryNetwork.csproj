@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClassLibrary1\RuralGroceryNetworkLibrary.csproj" />
+    <ProjectReference Include="..\GroceryLibrary\GroceryLibrary.csproj" />
   </ItemGroup>
 
 </Project>
