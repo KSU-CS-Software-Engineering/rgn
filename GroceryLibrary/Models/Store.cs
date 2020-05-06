@@ -13,9 +13,19 @@ namespace GroceryLibrary.Models
         public int StoreID { get; set; }
 
         /// <summary>
+        /// The email address associated with the account that is currently logged in
+        /// </summary>
+        public string StoreEmail { get; set; }
+
+        /// <summary>
         /// The Store's name
         /// </summary>
         public string StoreName { get; set; }
+
+        /// <summary>
+        /// The store's CityID
+        /// </summary>
+        public int CityID { get; set; }
 
         /// <summary>
         /// The city which the store is located in
@@ -33,9 +43,19 @@ namespace GroceryLibrary.Models
         public int NumberOfCheckoutLanes { get; set; }
 
         /// <summary>
+        /// The square footage category ID for the store
+        /// </summary>
+        public int SquareFootageCategoryID { get; set; }
+
+        /// <summary>
         /// The square footage category that the store is classified in
         /// </summary>
         public string SquareFootageCategory { get; set; }
+
+        /// <summary>
+        /// The stores DistributorID
+        /// </summary>
+        public int DistributorID { get; set; }
 
         /// <summary>
         /// The stores Distributor
