@@ -6,8 +6,8 @@ namespace GroceryLibrary.Models.Database
 {
     public static class StatesTable
     {
-        public static string STATE_ID = "StateID ";
+        public const string STATE_ID = "StateID ";
 
-        public static string STATE_NAME = "StateName ";
+        public const string STATE_NAME = "StateName ";
     }
 }

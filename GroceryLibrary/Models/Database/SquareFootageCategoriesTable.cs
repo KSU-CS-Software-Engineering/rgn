@@ -6,8 +6,8 @@ namespace GroceryLibrary.Models.Database
 {
     public static class SquareFootageCategoriesTable
     {
-        public static string SQUARE_FOOTAGE_CATEGORIES_ID = "SquareFootageCategoriesID ";
+        public const string SQUARE_FOOTAGE_CATEGORIES_ID = "SquareFootageCategoriesID ";
 
-        public static string CATEGORY_NAME = "CategoryName ";
+        public const string CATEGORY_NAME = "CategoryName ";
     }
 }

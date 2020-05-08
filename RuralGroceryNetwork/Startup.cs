@@ -24,7 +24,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RuralGroceryNetwork.Areas.Identity;
 using RuralGroceryNetwork.Data;
-
+using Syncfusion.Blazor;
 namespace RuralGroceryNetwork
 {
     public class Startup
@@ -60,6 +60,8 @@ namespace RuralGroceryNetwork
             services.AddSingleton<Truck>();
             services.AddSingleton<Scenario>();
             services.AddSingleton<Node>();
+
+            services.AddSyncfusionBlazor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

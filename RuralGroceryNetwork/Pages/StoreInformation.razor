@@ -22,6 +22,8 @@ limitations under the License.
 
 @using Microsoft.AspNetCore.Identity
 
+@using Syncfusion.Blazor.DropDowns
+
 @inject  UserManager<IdentityUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -76,31 +78,31 @@ limitations under the License.
                 <h2>Delivery Days</h2>
                 <div class="Sunday-Delivery">
                     <label>Sunday: </label>
-                    <input type="checkbox" contenteditable="false" name="SundayCheckbox" value="Sunday" checked disabled />
+                    <input type="checkbox" contenteditable="false" name="SundayCheckbox" value="Sunday" checked="@s.DeliverySunday" />
                 </div>
                 <div class="Monday-Delivery">
                     <label>Monday: </label>
-                    <input type="checkbox" contenteditable="false" name="MondayCheckbox" value="Sunday" checked disabled />
+                    <input type="checkbox" contenteditable="false" name="MondayCheckbox" value="Monday" checked="@s.DeliveryMonday" />
                 </div>
                 <div class="Tuesday-Delivery">
                     <label>Tuesday: </label>
-                    <input type="checkbox" contenteditable="false" name="TuesdayCheckbox" value="Sunday" disabled />
+                    <input type="checkbox" contenteditable="false" name="TuesdayCheckbox" value="Tuesday" checked="@s.DeliveryTuesday" />
                 </div>
                 <div class="Wednesday-Delivery">
                     <label>Wednesday: </label>
-                    <input type="checkbox" contenteditable="false" name="WednesdayCheckbox" value="Sunday" checked disabled />
+                    <input type="checkbox" contenteditable="false" name="WednesdayCheckbox" value="Wednesday" checked="@s.DeliveryWednesday" />
                 </div>
                 <div class="Thursday-Delivery">
                     <label>Thursday: </label>
-                    <input type="checkbox" contenteditable="false" name="ThursdayCheckbox" value="Sunday" checked disabled />
+                    <input type="checkbox" contenteditable="false" name="ThursdayCheckbox" value="Thursday" checked="@s.DeliveryThursday" />
                 </div>
                 <div class="Friday-Delivery">
                     <label>Friday: </label>
-                    <input type="checkbox" contenteditable="false" name="FridayCheckbox" value="Sunday" disabled />
+                    <input type="checkbox" contenteditable="false" name="FridayCheckbox" value="Friday" checked="@s.DeliveryFriday" />
                 </div>
                 <div class="Saturday-Delivery">
                     <label>Saturday: </label>
-                    <input type="checkbox" contenteditable="false" name="SaturdayCheckbox" value="Sunday" checked disabled />
+                    <input type="checkbox" contenteditable="false" name="SaturdayCheckbox" value="Saturday" checked="@s.DeliverySaturday" />
                 </div>
             }
         </div>
@@ -146,9 +148,24 @@ limitations under the License.
             }
         </div>
     </div>
+    <SfDropDownList TItem="StateData" TValue="string" DataSource="States"
+            Placeholder="Select a state">
+        <DropDownListFieldSettings Text="Name" Value="ID">
+        </DropDownListFieldSettings>
+    </SfDropDownList>
+
 </AuthorizeView>
 
+
+
 @code { 
+    public class StateData
+    {
+        public string ID { get; set; }
+        public string Name { get; set; }
+    }
+
+    List<StateData> States = new List<StateData>();
 
     private Store s = new Store();
     private string email;
@@ -159,6 +176,28 @@ limitations under the License.
     private bool CollapseToggleThree = false;
     private bool CollapseToggleFour = false;
     private bool CollapseToggleFive = false;
+
+
+
+    /// <summary>
+    /// Runs when the page is initially loaded. Sets the store equal to the information in database for current user
+    /// </summary>
+    /// <returns></returns>
+    protected override async Task OnInitializedAsync()
+    {
+        await LogUsername();
+        s = SqlDataAccess.OnInitialize(email);
+
+    }
+}
+
+@functions
+{
+    private object SaveButtonPressed()
+    {
+        SqlDataAccess.updateDeliveryDays();
+        return new object();
+    }
 
     /// <summary>
     /// Grabs the current clients email address from the authentication view
@@ -171,35 +210,4 @@ limitations under the License.
         var currentUser = await UserManager.GetUserAsync(user);
         email = currentUser.Email.ToUpper();
     }
-
-    /// <summary>
-    /// Runs when the page is initially loaded. Sets the store equal to the information in database for current user
-    /// </summary>
-    /// <returns></returns>
-    protected override async Task OnInitializedAsync()
-    {
-        await LogUsername();
-        s = SqlDataAccess.OnInitialize(email);
-    }
-
-    private void SaveButtonPressed()
-    {
-        /*
-         * Assign
-         * StoreName - Can change
-         * StoreCity - Can change
-         * Distributor - 
-         * SquareFootageCategory
-         * NumChkLanes
-         * DeliveryDays
-         * Pallet Min - Max
-         * Weekly Buy Requirement
-         * Sells to Others
-         * Loading dock
-         * fork lift
-         * pallet jack
-         * 
-         */
-    }
-
 }

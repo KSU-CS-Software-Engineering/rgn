@@ -6,10 +6,10 @@ namespace GroceryLibrary.Models.Database
 {
     public static class CitiesTable
     {
-        public static string CITY_ID = "CityID ";
+        public const string CITY_ID = "CityID ";
 
-        public static string CITY_NAME = "CityName ";
+        public const string CITY_NAME = "CityName ";
 
-        public static string STATE_ID = "StateID ";
+        public const string STATE_ID = "StateID ";
     }
 }

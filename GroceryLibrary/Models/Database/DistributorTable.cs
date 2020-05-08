@@ -6,8 +6,8 @@ namespace GroceryLibrary.Models.Database
 {
     public static class DistributorTable
     {
-        public static string DISTRIBUTOR_ID = "DistributorID ";
+        public const string DISTRIBUTOR_ID = "DistributorID ";
 
-        public static string DISTRIBUTOR_NAME = "DistributorName ";
+        public const string DISTRIBUTOR_NAME = "DistributorName ";
     }
 }

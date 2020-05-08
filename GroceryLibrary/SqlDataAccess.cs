@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.IO;
 
 using System.Data.SqlClient;
 
@@ -19,6 +20,11 @@ namespace GroceryLibrary
         /// </summary>
         private static Store store = new Store();
 
+        /// <summary>
+        /// Used to initialize connections to the database
+        /// </summary>
+        private static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+
 
         /// <summary>
         /// This method will run on initialization of the StoreInformation.razor page
@@ -27,18 +33,23 @@ namespace GroceryLibrary
         public static Store OnInitialize(string email)
         {
             store.StoreEmail = email;
-            string server = "ruralgrocery.database.windows.net";
-            string User_ID = "ruralgrocerynetwork";
-            string Password = "09UCWWtV!vy3b^WrTZo$";
-
             try
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = server;
-                builder.UserID = User_ID;
-                builder.Password = Password;
-                builder.InitialCatalog = "RuralGroceryNetwork";
+                using (StreamReader sr = new StreamReader("../GroceryLibrary/DBAccountInfo.txt"))
+                {
+                    builder.DataSource = sr.ReadLine();
+                    builder.UserID = sr.ReadLine();
+                    builder.Password = sr.ReadLine();
+                    builder.InitialCatalog = "RuralGroceryNetwork";
+                }
+            }
+            catch(IOException e)
+            {
+                store = null;
+            }
 
+            try
+            { 
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
                     connection.Open();
@@ -46,14 +57,14 @@ namespace GroceryLibrary
                     getStoreDeliveryInformation(connection);
                     getStoreDeliverySchedule(connection);
                     getStoreEquipmentInformation(connection);
+                    getRestOfInfo(connection);
                 }
-                return store;
             }
             catch (Exception e)
             {
                 store = null;
             }
-            return null;
+            return store;
         }
 
 
@@ -232,7 +243,7 @@ namespace GroceryLibrary
                             if (!reader.IsDBNull(1))
                                 store.StoreName = reader.GetString(1);
                             else
-                                store.StoreName = null;
+                                store.StoreName = "Not yet assigned";
 
                             /* Checks to see if CityID is currently NULL */
                             if (!reader.IsDBNull(2))
@@ -452,6 +463,115 @@ namespace GroceryLibrary
                     else
                         throw new MissingFieldException("There should be rows in the database!!!! Something is incorrect!!!!");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Used to get the actual city name and distributor name given they have selected one
+        /// </summary>
+        /// <param name="conn">The database connection</param>
+        private static void getRestOfInfo(SqlConnection conn)
+        {
+            if (store.CityID != -1 || store.DistributorID != -1)
+            {
+                string sqlCommand;
+                bool needsCity = false, needsDist = false;
+                StringBuilder sb = new StringBuilder();
+
+                sb.Append("SELECT ");
+
+                if (store.CityID != -1)
+                {
+                    sb.Append("C. " + CitiesTable.CITY_NAME);
+                    needsCity = true;
+                }
+                if (store.DistributorID != -1)
+                {
+                    sb.Append("D. " + DistributorTable.DISTRIBUTOR_NAME);
+                    needsDist = true;
+                }
+
+                sb.Append("FROM " + DatabaseTables.STORE_INFORMATION + "S ");
+
+                if (store.CityID != -1)
+                    sb.Append("INNER JOIN " + DatabaseTables.CITIES + "C ON C." + CitiesTable.CITY_ID + "= S." + StoreInformationTable.CITY_ID);
+                if (store.DistributorID != -1)
+                {
+                    sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "SDI ON SDI." + StoreDeliveryInformationTable.STORE_ID + "= S." + StoreInformationTable.STORE_ID);
+                    sb.Append("INNER JOIN " + DatabaseTables.DISTRIBUTOR + "D ON D." + DistributorTable.DISTRIBUTOR_ID + "= SDI." + StoreDeliveryInformationTable.DISTRIBUTOR_ID);
+                }
+
+                sb.Append("WHERE S." + StoreInformationTable.STORE_ID + "= " + store.StoreID.ToString());
+
+                sqlCommand = sb.ToString();
+                using (SqlCommand command = new SqlCommand(sqlCommand, conn))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                if (needsCity && needsDist)
+                                {
+                                    store.CityName = reader.GetString(0);
+                                    store.DistributorName = reader.GetString(1);
+                                }
+                                else
+                                {
+                                    if (needsCity)
+                                        store.CityName = reader.GetString(0);
+                                    else
+                                        store.DistributorName = reader.GetString(0);
+                                }
+                            }
+                        }
+                        else
+                            throw new MissingFieldException("There should be rows in the database!!!! Something is incorrect!!!!");
+                    }
+                }
+            }
+        }
+
+
+        /*
+         * This is where the getting information from the database stops. All SELECT and INSERT statements are above this point
+         * 
+         * Below this point are UPDATE statements which take client information and updates the DB accordingly
+         */
+        public static void updateDeliveryDays()//char mon, char tues, char wed, char thurs,
+                                                 //   char fri, char sat, char sun)
+        {
+            string sqlCommand;
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("UPDATE " + DatabaseTables.STORE_DELIVERY_SCHEDULE);
+            sb.Append("SET ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_MONDAY + "= " + store.DeliveryMonday + ", ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_TUESDAY + "= " + store.DeliveryTuesday + ", ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_WEDNESDAY + "= " + store.DeliveryWednesday + ", ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_THURSDAY + "= " + store.DeliveryThursday + ", ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_FRIDAY + "= " + store.DeliveryFriday + ", ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_SATURDAY + "= " + store.DeliverySaturday + ", ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_SUNDAY + "= " + store.DeliverySunday + " ");
+            sb.Append("WHERE " + StoreDeliveryScheduleTable.STORE_ID + "= " + store.StoreID.ToString());
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    sqlCommand = sb.ToString();
+                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    {
+                        int result = command.ExecuteNonQuery();
+                        if (result < 0)
+                            throw new Exception("Couldn't UPDATE delivery days");
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                store = null;
             }
         }
     }
