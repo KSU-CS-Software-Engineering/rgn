@@ -27,6 +27,9 @@ namespace GroceryLibrary
         public static Store OnInitialize(string email)
         {
             store.StoreEmail = email;
+            string server = "ruralgrocery.database.windows.net";
+            string User_ID = "ruralgrocerynetwork";
+            string Password = "09UCWWtV!vy3b^WrTZo$";
 
             try
             {
