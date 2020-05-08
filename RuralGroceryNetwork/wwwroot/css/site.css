@@ -186,18 +186,28 @@ app {
 
 /* Styling for collapsible menu elements */
 .menu-collapsible {
-    background-color: #bdbdbd;
-    color: black;
+    background-color: #3a0647;
+    color: white;
     cursor: pointer;
     padding: 18px;
-    width: 100%;
-    border: none;
+    width: 50%;
+    border: solid;
+    border-color: silver;
+    border-radius: 5px;
     text-align: left;
     outline: none;
     font-size: 15px;
 }
 
 /* Changes the background color of the collapsible menu when hovering over it.*/
-.active, .menu-collapsible:hover {
-    background-color: #f0f0f0;
+/*.menu-collapsible:hover {
+    background-color: rgba(58, 6, 70, 0.37);
+}*/
+
+.store-element {
+    padding: 5px 20px;
+    overflow: hidden;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    color: black;
 }
