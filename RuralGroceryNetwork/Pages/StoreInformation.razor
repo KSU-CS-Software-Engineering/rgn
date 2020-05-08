@@ -29,106 +29,121 @@ limitations under the License.
 
     <link rel="stylesheet" href="css/Style.css" />
     <h1>Store Account Information</h1>
-    <div class="Store-Geographical-Information">
-        <h2>Geographical Information</h2>
-        <div>
-            <label>StoreID: </label>
-            <label>@s.StoreID</label>
-        </div>
-        <div>
-            <label>Store Name: </label>
-            <label>@s.StoreName</label>
-        </div>
-        <div>
-            <label>City: </label>
-            <label>@s.CityName</label>
-        </div>
-        <div>
-            <label>Distributor: </label>
-            <label>@s.DistributorName</label>
-        </div>
+    <div class=menu-collapsible id="Store-Geographical-Information" @onclick="()=>CollapseToggleOne = !CollapseToggleOne">
+        @if (CollapseToggleOne)
+        {
+            <h2>Geographical Information</h2>
+            <div>
+                <label>StoreID: </label>
+                <label>@s.StoreID</label>
+            </div>
+            <div>
+                <label>Store Name: </label>
+                <label>@s.StoreName</label>
+            </div>
+            <div>
+                <label>City: </label>
+                <label>@s.CityName</label>
+            </div>
+            <div>
+                <label>Distributor: </label>
+                <label>@s.DistributorName</label>
+            </div>
+        }
     </div>
 
-    <div class="Physical-Store-Information">
-        <h2>Physical Information</h2>
-        <div>
-            <label>Square Footage Category: </label>
-            <label>@s.SquareFootageCategory</label>
-        </div>
-        <div>
-            <label>Number of Checkout Lanes: </label>
-            <label>@s.NumberOfCheckoutLanes</label>
-        </div>
+    <div class=menu-collapsible id="Physical-Store-Information" @onclick="()=>CollapseToggleTwo = !CollapseToggleTwo">
+        @if (CollapseToggleTwo)
+        {
+            <h2>Physical Information</h2>
+            <div>
+                <label>Square Footage Category: </label>
+                <label>@s.SquareFootageCategory</label>
+            </div>
+            <div>
+                <label>Number of Checkout Lanes: </label>
+                <label>@s.NumberOfCheckoutLanes</label>
+            </div>
+        }
     </div>
 
     <div>
-        <div class="Delivery-Day-Information">
-            <h1>Store Delivery Information</h1>
+        <div class=menu-collapsible id="Delivery-Day-Information" @onclick="()=>CollapseToggleThree = !CollapseToggleThree">
+            @if (CollapseToggleThree)
+            {
+                <h1>Store Delivery Information</h1>
 
-            <h2>Delivery Days</h2>
-            <div class="Sunday-Delivery">
-                <label>Sunday: </label>
-                <input type="checkbox" contenteditable="false" name="SundayCheckbox" value="Sunday" checked disabled />
-            </div>
-            <div class="Monday-Delivery">
-                <label>Monday: </label>
-                <input type="checkbox" contenteditable="false" name="MondayCheckbox" value="Sunday" checked disabled />
-            </div>
-            <div class="Tuesday-Delivery">
-                <label>Tuesday: </label>
-                <input type="checkbox" contenteditable="false" name="TuesdayCheckbox" value="Sunday" disabled />
-            </div>
-            <div class="Wednesday-Delivery">
-                <label>Wednesday: </label>
-                <input type="checkbox" contenteditable="false" name="WednesdayCheckbox" value="Sunday" checked disabled />
-            </div>
-            <div class="Thursday-Delivery">
-                <label>Thursday: </label>
-                <input type="checkbox" contenteditable="false" name="ThursdayCheckbox" value="Sunday" checked disabled />
-            </div>
-            <div class="Friday-Delivery">
-                <label>Friday: </label>
-                <input type="checkbox" contenteditable="false" name="FridayCheckbox" value="Sunday" disabled />
-            </div>
-            <div class="Saturday-Delivery">
-                <label>Saturday: </label>
-                <input type="checkbox" contenteditable="false" name="SaturdayCheckbox" value="Sunday" checked disabled />
-            </div>
+                <h2>Delivery Days</h2>
+                <div class="Sunday-Delivery">
+                    <label>Sunday: </label>
+                    <input type="checkbox" contenteditable="false" name="SundayCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Monday-Delivery">
+                    <label>Monday: </label>
+                    <input type="checkbox" contenteditable="false" name="MondayCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Tuesday-Delivery">
+                    <label>Tuesday: </label>
+                    <input type="checkbox" contenteditable="false" name="TuesdayCheckbox" value="Sunday" disabled />
+                </div>
+                <div class="Wednesday-Delivery">
+                    <label>Wednesday: </label>
+                    <input type="checkbox" contenteditable="false" name="WednesdayCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Thursday-Delivery">
+                    <label>Thursday: </label>
+                    <input type="checkbox" contenteditable="false" name="ThursdayCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Friday-Delivery">
+                    <label>Friday: </label>
+                    <input type="checkbox" contenteditable="false" name="FridayCheckbox" value="Sunday" disabled />
+                </div>
+                <div class="Saturday-Delivery">
+                    <label>Saturday: </label>
+                    <input type="checkbox" contenteditable="false" name="SaturdayCheckbox" value="Sunday" checked disabled />
+                </div>
+            }
         </div>
 
-        <div class="Pallet-Information">
-            <h2>Pallets</h2>
-            <div>
-                <label>Pallet Minimum - Maximum: </label>
-                <label>@s.PalletMinimum - @s.PalletMaximum</label>
-            </div>
+        <div class=menu-collapsible id="Pallet-Information" @onclick="()=>CollapseToggleFour = !CollapseToggleFour">
+            @if (CollapseToggleFour)
+            {
+                <h2>Pallets</h2>
+                <div>
+                    <label>Pallet Minimum - Maximum: </label>
+                    <label>@s.PalletMinimum - @s.PalletMaximum</label>
+                </div>
 
-            <div>
-                <label>Weekly Minimum Buying Requirement: </label>
-                <label>@s.HasWeeklyBuyingRequirement</label>
-            </div>
+                <div>
+                    <label>Weekly Minimum Buying Requirement: </label>
+                    <label>@s.HasWeeklyBuyingRequirement</label>
+                </div>
 
-            <div>
-                <label>Sells to Others: </label>
-                <label>@s.SellsToOthers</label>
-            </div>
+                <div>
+                    <label>Sells to Others: </label>
+                    <label>@s.SellsToOthers</label>
+                </div>
+            }
         </div>
 
-        <div>
-            <h1>Store Equipment Information</h1>
-            <div class="Loading-Dock">
-                <label>Has Loading Dock: </label>
-                <input type="checkbox" contenteditable="false" name="LoadingDockCheckbox" value="Sunday" checked disabled />
-            </div>
-            <div class="Fork-Lift">
-                <label>Has Fork Lift: </label>
-                <input type="checkbox" contenteditable="false" name="ForkLiftCheckbox" value="Sunday" checked disabled />
-            </div>
-            <div class="Pallet-Jack">
-                <label>Has Pallet Jack: </label>
-                <input type="checkbox" contenteditable="false" name="PalletJackCheckbox" value="Sunday" checked disabled />
-                
-            </div>
+        <div class=menu-collapsible @onclick="()=>CollapseToggleFive = !CollapseToggleFive">
+            @if (CollapseToggleFive)
+            {
+                <h1>Store Equipment Information</h1>
+                <div class="Loading-Dock">
+                    <label>Has Loading Dock: </label>
+                    <input type="checkbox" contenteditable="false" name="LoadingDockCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Fork-Lift">
+                    <label>Has Fork Lift: </label>
+                    <input type="checkbox" contenteditable="false" name="ForkLiftCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Pallet-Jack">
+                    <label>Has Pallet Jack: </label>
+                    <input type="checkbox" contenteditable="false" name="PalletJackCheckbox" value="Sunday" checked disabled />
+
+                </div>
+            }
         </div>
     </div>
 </AuthorizeView>
@@ -137,6 +152,13 @@ limitations under the License.
 
     private Store s = new Store();
     private string email;
+
+    //Variables used for determining whether each collapsible menu should be collapsed or not.
+    private bool CollapseToggleOne = false;
+    private bool CollapseToggleTwo = false;
+    private bool CollapseToggleThree = false;
+    private bool CollapseToggleFour = false;
+    private bool CollapseToggleFive = false;
 
     /// <summary>
     /// Grabs the current clients email address from the authentication view
