@@ -181,3 +181,23 @@ app {
         display: block;
     }
 }
+
+/* Below is styling that isn't part of blazor's default styling.*/
+
+/* Styling for collapsible menu elements */
+.menu-collapsible {
+    background-color: #bdbdbd;
+    color: black;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+/* Changes the background color of the collapsible menu when hovering over it.*/
+.active, .menu-collapsible:hover {
+    background-color: #f0f0f0;
+}
