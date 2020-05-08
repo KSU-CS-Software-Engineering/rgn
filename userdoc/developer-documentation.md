@@ -56,3 +56,16 @@ This page ends up looking like this:
 More info. on Blazor web components: https://docs.microsoft.com/en-us/aspnet/core/blazor/components?view=aspnetcore-3.1
 
 More info. On Razor syntax: https://docs.microsoft.com/en-us/aspnet/core/mvc/views/razor?view=aspnetcore-3.1
+
+### Important Files
+A major focus of this project is the individual pages, as well as the Components and Data that is associated with those pages.
+The pages can be accessed from the RuralGroceryNetwork/Pages directory like so:
+
+![Pages Directory](img/directory-pages.PNG)
+
+This directory contains 5 razor pages, along with an Error Page for when the pages don't work properly and a .cshtml for styling these pages. The 5 pages we currently have are:
+- Index.razor
+- NodesPage.razor
+- RoutesPage.razor
+- ScenariosPage.razor
+- TrucksPage.razor
