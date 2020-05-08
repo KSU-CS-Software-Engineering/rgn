@@ -1,0 +1,150 @@
+﻿<!--
+Copyright 2020 Kansas State University
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!-- Page to display node editor -->
+@page "/StoreInformation"
+
+@using GroceryLibrary
+@using GroceryLibrary.Models
+
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+    <AuthorizeView>
+
+        <link rel="stylesheet" href="css/Style.css" />
+        <h1>Store Account Information</h1>
+        <div class="Store-Geographical-Information">
+            <h2>Geographical Information</h2>
+            <div>
+                <label>StoreID: </label>
+                <label>@s.StoreID</label>
+            </div>
+            <div>
+                <label>Store Name: </label>
+                <label>@s.StoreName</label>
+            </div>
+            <div>
+                <label>City: </label>
+                <label>#StoreCity</label>
+            </div>
+            <div>
+                <label>Distributor: </label>
+                <label>#Distributor</label>
+            </div>
+        </div>
+
+        <div class="Physical-Store-Information">
+            <h2>Physical Information</h2>
+            <div>
+                <label>Square Footage Category: </label>
+                <label>#SquareFootage</label>
+            </div>
+            <div>
+                <label>Number of Checkout Lanes: </label>
+                <label>#NumChckLns</label>
+            </div>
+        </div>
+
+        <div>
+            <div class="Delivery-Day-Information">
+                <h1>Store Delivery Information</h1>
+
+                <h2>Delivery Days</h2>
+                <div class="Sunday-Delivery">
+                    <label>Sunday: </label>
+                    <input type="checkbox" contenteditable="false" name="SundayCheckbox" value="Sunday" disabled />
+                </div>
+                <div class="Monday-Delivery">
+                    <label>Monday: </label>
+                    <input type="checkbox" contenteditable="false" name="MondayCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Tuesday-Delivery">
+                    <label>Tuesday: </label>
+                    <input type="checkbox" contenteditable="false" name="TuesdayCheckbox" value="Sunday" disabled />
+                </div>
+                <div class="Wednesday-Delivery">
+                    <label>Wednesday: </label>
+                    <input type="checkbox" contenteditable="false" name="WednesdayCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Thursday-Delivery">
+                    <label>Thursday: </label>
+                    <input type="checkbox" contenteditable="false" name="ThursdayCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Friday-Delivery">
+                    <label>Friday: </label>
+                    <input type="checkbox" contenteditable="false" name="FridayCheckbox" value="Sunday" disabled />
+                </div>
+                <div class="Saturday-Delivery">
+                    <label>Saturday: </label>
+                    <input type="checkbox" contenteditable="false" name="SaturdayCheckbox" value="Sunday" checked disabled />
+                </div>
+            </div>
+
+            <div class="Pallet-Information">
+                <h2>Pallets</h2>
+                <div>
+                    <label>Pallet Minimum - Maximum: </label>
+                    <label>#PalletMin - #PalletMax</label>
+                </div>
+
+                <div>
+                    <label>Weekly Minimum Buying Requirement: </label>
+                    <label>#Y/N</label>
+                </div>
+
+                <div>
+                    <label>Sells to Others: </label>
+                    <label>#Y/N</label>
+                </div>
+            </div>
+
+            <div>
+                <h1>Store Equipment Information</h1>
+                <div class="Loading-Dock">
+                    <label>Has Loading Dock: </label>
+                    <input type="checkbox" contenteditable="false" name="LoadingDockCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Fork-Lift">
+                    <label>Has Fork Lift: </label>
+                    <input type="checkbox" contenteditable="false" name="ForkLiftCheckbox" value="Sunday" checked disabled />
+                </div>
+                <div class="Pallet-Jack">
+                    <label>Has Pallet Jack: </label>
+                    <input type="checkbox" contenteditable="false" name="PalletJackCheckbox" value="Sunday" checked disabled />
+
+                </div>
+            </div>
+        </div>
+    </AuthorizeView>
+
+@code {
+
+    private Store s;
+    private string email;
+
+    private async Task LogUsername()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var currentUser = await UserManager.GetUserAsync(user);
+        email = currentUser.Email.ToUpper();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LogUsername();
+        s = SqlDataAccess.OnInitialize(email);
+    }
+}

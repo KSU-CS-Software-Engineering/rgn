@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuralGroceryNetwork", "Rura
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuralGroceryNetwork.Test", "RuralGroceryNetwork.Test\RuralGroceryNetwork.Test.csproj", "{AB3EF1D8-82CE-4742-AD0D-54B4829EF6CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GroceryLibrary", "GroceryLibrary\GroceryLibrary.csproj", "{F7E0C82A-EB27-4FD5-8C87-A3AD55D8D396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GroceryLibrary", "GroceryLibrary\GroceryLibrary.csproj", "{F7E0C82A-EB27-4FD5-8C87-A3AD55D8D396}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
