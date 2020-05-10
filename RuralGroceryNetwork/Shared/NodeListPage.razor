@@ -20,20 +20,20 @@ limitations under the License.
 		<div class="dialog-title">
 			<h2>Stores List</h2>
 		</div>
-		<form style="overflow-x:auto" class="dialog-body">
-			@foreach (Node s in Nodes)
-			{
-				<div class="dialog-node">
-					<span class="mr-0">
-						<h5>@s.State.Name</h5>
-						@s.State.Demand / @s.State.Supply palettes
-						<button class="Trash-Button" @onclick="@(() =>removeNodes(s))">
-							<img src="img/trash.png" />
-						</button>
-					</span>
-				</div>
-			}
-		</form>
+        <form style="overflow-x:auto" class="dialog-body">
+                @foreach (Node s in Nodes)
+                {
+                    <div class="dialog-node">
+                        <span class="mr-0">
+                            <h5>@s.State.Name</h5>
+                            @s.State.Demand / @s.State.Supply palettes
+                            <button class="Trash-Button" @onclick="@(() =>removeNodes(s))">
+                                <img src="img/trash.png" />
+                            </button>
+                        </span>
+                    </div>
+                }           
+        </form>
 		<div class="dialog-buttons">
 			<button @onclick="@Close" class="btn btn-secondary mr-auto">Close</button>
 		</div>
@@ -42,19 +42,21 @@ limitations under the License.
 
 @code {
 
-	/// <summary>
-	/// Removes the node from the list of nodes
-	/// </summary>
-	/// <param name="x">Node to be removed from list</param>
-	void removeNodes(Node x)
-	{
-		Nodes.Remove(x);
-	}
+    /// <summary>
+    /// Removes the node from the list of nodes
+    /// </summary>
+    /// <param name="x">Node to be removed from list</param>
+    void removeNodes(Node x)
+    {
+        Nodes.Remove(x);
+    }
 
-	[Parameter] public EventCallback Close { get; set; }
 
-	/// <summary>
-	/// List of stored nodes
-	/// </summary>
-	[Parameter] public List<Node> Nodes { get; set; }
+    [Parameter] public EventCallback Close { get; set; }
+
+
+    /// <summary>
+    /// List of stored nodes
+    /// </summary>
+    [Parameter] public List<Node> Nodes { get; set; }
 }
