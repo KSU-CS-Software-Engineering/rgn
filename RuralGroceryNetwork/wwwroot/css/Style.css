@@ -1,13 +1,14 @@
 body {
-	background-color:#f4f4f4;
+    background-color: #f4f4f4;
+}
 
+.ArcGIS {
+    border-left: 4px silver solid;
+    padding-left: 30px;
 }
-.ArcGIS{
-border-left:4px silver solid;
-padding-left:30px;
-}
-.btn-1{
-	cursor:pointer;
+
+.btn-1 {
+    cursor: pointer;
 }
 
 .dialog-container {
@@ -33,7 +34,7 @@ padding-left:30px;
 }
 
 table, th, td {
-  border: 1px solid black;
+    border: 1px solid black;
 }
 
 .dialog {
@@ -76,7 +77,6 @@ table, th, td {
     }
 
 .dialog-body {
-	
     flex-grow: 1;
     padding: 0.5rem 3rem 1rem 0;
 }
@@ -90,45 +90,79 @@ table, th, td {
     padding: 0 1rem;
 }
 
-.Trash-Button{
-	
-    position:relative;
-	margin-left:400px;
-	top:-20px;
+.Trash-Button {
+    position: relative;
+    margin-left: 400px;
+    top: -20px;
 }
 
 .dialog-node {
-    
     flex-shrink: 0;
-    display: flex;	
+    display: flex;
     align-items: center;
     background-color: White;
-	  border-style: solid;
-	  border-width:  0.1px;
+    border-style: solid;
+    border-width: 0.1px;
     border-color: gray;
-    padding-left:1rem
+    padding-left: 1rem
 }
 
- 
 
-    .dialog-body > div {
-        display: flex;
-        margin-top: 1rem;
-        align-items: center;
-    }
 
-    .dialog-body label {
-        text-align: right;
-        width: 200px;
-        margin: 0 1.5rem;
-    }
+.dialog-body > div {
+    display: flex;
+    margin-top: 1rem;
+    align-items: center;
+}
 
-    .dialog-body input, .dialog-body select {
-        flex-grow: 1;
-        width: unset;
-    }
+.dialog-body label {
+    text-align: right;
+    width: 200px;
+    margin: 0 1.5rem;
+}
 
-    .dialog-body .size-label {
-        min-width: 110px;
-        text-align: right;
-    }
+.dialog-body input, .dialog-body select {
+    flex-grow: 1;
+    width: unset;
+}
+
+.dialog-body .size-label {
+    min-width: 110px;
+    text-align: right;
+}
+
+/* Styling for collapsible menu elements */
+.menu-accordion {
+    background-color: #3a0647;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 75%;
+    border: solid;
+    border-color: silver;
+    border-radius: 5px;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+/* Changes the background color of the collapsible menu when hovering over it.*/
+/*.menu-collapsible:hover {
+    background-color: rgba(58, 6, 70, 0.37);
+}*/
+
+.store-element {
+    padding: 5px 20px;
+    overflow: hidden;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    color: black;
+}
+
+.collapse {
+    display: none;
+}
+
+.text-align-right {
+    float: right;
+}

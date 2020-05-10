@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 using System.Data.SqlClient;
 
 using GroceryLibrary.Models;
 using GroceryLibrary.Models.Database;
-
 
 namespace GroceryLibrary
 {
@@ -25,6 +25,114 @@ namespace GroceryLibrary
         /// </summary>
         private static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
 
+        /// <summary>
+        /// This method is responsible for populating the lists that are used for editing account information
+        /// </summary>
+        /// <returns>An array of lists which hold information about the static tables</returns>
+        public static List<string>[] GetAllNames()
+        {
+            string sqlCommand;
+            StringBuilder sb = new StringBuilder();
+            List<string>[] names = new List<string>[3];
+
+            List<string> cityNames = new List<string>();
+            List<string> distributorNames = new List<string>();
+            List<string> SFCatNames = new List<string>();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    /* This part gets the city names from the DB
+                     *      Populates the cityNameList List
+                     */
+                    connection.Open();
+
+                    sb.Append("SELECT " + CitiesTable.CITY_NAME);
+                    sb.Append("FROM " + DatabaseTables.CITIES);
+                    sb.Append("ORDER BY " + CitiesTable.CITY_ID + "ASC");
+
+                    sqlCommand = sb.ToString();
+                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    cityNames.Add(reader.GetString(0));
+                                }
+                            }
+                            else
+                                throw new MissingFieldException("There should be rows in the database!!!! Something is incorrect!!!!");
+                        }
+                    }
+                    sb.Clear();
+
+
+                    /* This part populates the distributors table
+                     * 
+                     */
+                    sb.Append("SELECT " + DistributorTable.DISTRIBUTOR_NAME);
+                    sb.Append("FROM " + DatabaseTables.DISTRIBUTOR);
+                    sb.Append("ORDER BY " + DistributorTable.DISTRIBUTOR_ID + "ASC");
+
+                    sqlCommand = sb.ToString();
+                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    distributorNames.Add(reader.GetString(0));
+                                }
+                            }
+                            else
+                                throw new MissingFieldException("There should be rows in the database!!!! Something is incorrect!!!!");
+                        }
+                    }
+                    sb.Clear();
+
+
+                    /* This part populates the square footage category tables
+                     * 
+                     */
+                    sb.Append("SELECT " + SquareFootageCategoriesTable.CATEGORY_NAME);
+                    sb.Append("FROM " + DatabaseTables.SQUARE_FOOTAGE_CATEGORIES);
+                    sb.Append("ORDER BY " + SquareFootageCategoriesTable.SQUARE_FOOTAGE_CATEGORIES_ID + "ASC");
+
+                    sqlCommand = sb.ToString();
+                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    SFCatNames.Add(reader.GetString(0));
+                                }
+                            }
+                            else
+                                throw new MissingFieldException("There should be rows in the database!!!! Something is incorrect!!!!");
+                        }
+                    }
+                    sb.Clear();
+                    connection.Close();
+                }
+            }
+            catch (SqlException sqle)
+            {   
+                store = null;
+            }
+            
+            names[0] = cityNames;
+            names[1] = distributorNames;
+            names[2] = SFCatNames;
+            return names;
+        }
 
         /// <summary>
         /// This method will run on initialization of the StoreInformation.razor page
@@ -43,7 +151,7 @@ namespace GroceryLibrary
                     builder.InitialCatalog = "RuralGroceryNetwork";
                 }
             }
-            catch(IOException e)
+            catch(IOException ioe)
             {
                 store = null;
             }
@@ -58,6 +166,7 @@ namespace GroceryLibrary
                     getStoreDeliverySchedule(connection);
                     getStoreEquipmentInformation(connection);
                     getRestOfInfo(connection);
+                    connection.Close();
                 }
             }
             catch (Exception e)
@@ -199,7 +308,7 @@ namespace GroceryLibrary
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        private static bool TrueOrFalseEval(char c)
+        private static bool ConvertCharToBool(char c)
         {
             if (c == 'T')
                 return true;
@@ -216,16 +325,18 @@ namespace GroceryLibrary
         /// <param name="conn">The database connection</param>
         private static void getStoreInformation(SqlConnection conn)
         {
+            bool hasRows = false;
             StringBuilder sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            sb.Append(StoreInformationTable.STORE_ID + ", " +
-                StoreInformationTable.STORE_NAME + ", " +
-                StoreInformationTable.CITY_ID + ", " +
-                StoreInformationTable.NUMBER_OF_CHECKOUT_LANES + ", " +
-                StoreInformationTable.WEEKLY_BUYING_MIN_REQUIREMENT + ", " +
-                StoreInformationTable.SQUARE_FOOTAGE_CATEGORIES_ID + " ");
-            sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
+            sb.Append("SI." + StoreInformationTable.STORE_ID + ", " +
+                "SI." + StoreInformationTable.STORE_NAME + ", " +
+                "SI." + StoreInformationTable.CITY_ID + ", " +
+                "SI." + StoreInformationTable.NUMBER_OF_CHECKOUT_LANES + ", " +
+                "SI." + StoreInformationTable.WEEKLY_BUYING_MIN_REQUIREMENT + ", " +
+                "SFC." + SquareFootageCategoriesTable.CATEGORY_NAME + " ");
+            sb.Append("FROM " + DatabaseTables.STORE_INFORMATION + "SI ");
+            sb.Append("INNER JOIN " + DatabaseTables.SQUARE_FOOTAGE_CATEGORIES + "SFC ON SFC." + SquareFootageCategoriesTable.SQUARE_FOOTAGE_CATEGORIES_ID + " = SI." + StoreInformationTable.SQUARE_FOOTAGE_CATEGORIES_ID);
             sb.Append("WHERE " + StoreInformationTable.STORE_EMAIL_ADDRESS + "= '" + store.StoreEmail + "'");
 
             string sqlCommand = sb.ToString();
@@ -233,7 +344,7 @@ namespace GroceryLibrary
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    if (reader.HasRows)
+                    if (hasRows = reader.HasRows)
                     {
                         while (reader.Read())
                         {
@@ -259,25 +370,25 @@ namespace GroceryLibrary
 
                             /* Checks to see if weekly buying requirement is currently NULL */
                             if (!reader.IsDBNull(4))
-                                store.HasWeeklyBuyingRequirement = TrueOrFalseEval(reader.GetChar(4));
+                                store.HasWeeklyBuyingRequirement = ConvertCharToBool(reader.GetString(4)[0]);
                             else
                                 store.HasWeeklyBuyingRequirement = false;
 
 
                             /* Checks to see if square footage category ID is currently NULL */
                             if (!reader.IsDBNull(5))
-                                store.SquareFootageCategoryID = reader.GetInt32(5);
+                                store.SquareFootageCategory = reader.GetString(5);
                             else
-                                store.SquareFootageCategoryID = -1;
+                                store.SquareFootageCategory = "Not yet assigned";
                         }
                     }
-                    else
-                        /* Calls private method to create entries for the table. This method is only called once per user and it is
-                        *      called on the user's first time to the account page
-                        */
-                        CreateNewDatabaseEntries(conn);
                 }
             }
+            /* Calls private method to create entries for the table. This method is only called once per user and it is
+            *      called on the user's first time to the account page
+            */
+            if(!hasRows)
+                CreateNewDatabaseEntries(conn);
         }
 
 
@@ -295,7 +406,8 @@ namespace GroceryLibrary
             sb.Append(StoreDeliveryInformationTable.DISTRIBUTOR_ID + ", " +
                 StoreDeliveryInformationTable.PALLET_ORDER_MINIMUM + ", " +
                 StoreDeliveryInformationTable.PALLET_ORDER_MAXIMUM + ", " +
-                StoreDeliveryInformationTable.SELL_TO_OTHERS + " ");
+                StoreDeliveryInformationTable.SELL_TO_OTHERS + ", " +
+                StoreDeliveryInformationTable.WEEKLY_BUYING_MIN_REQUIREMENT);
             sb.Append("FROM " + DatabaseTables.STORE_DELIVERY_INFORMATION);
             sb.Append("WHERE " + StoreDeliveryInformationTable.STORE_ID + "= " + store.StoreID);
 
@@ -327,9 +439,14 @@ namespace GroceryLibrary
 
 
                             if (!reader.IsDBNull(3))
-                                store.SellsToOthers = TrueOrFalseEval(reader.GetChar(3));
+                                store.SellsToOthers = ConvertCharToBool(reader.GetString(3)[0]);
                             else
                                 store.SellsToOthers = false;
+
+                            if (!reader.IsDBNull(4))
+                                store.HasWeeklyBuyingRequirement = ConvertCharToBool(reader.GetString(4)[0]);
+                            else
+                                store.HasWeeklyBuyingRequirement = false;
                         }
                     }
                     else
@@ -369,43 +486,43 @@ namespace GroceryLibrary
                         while (reader.Read())
                         {
                             if (!reader.IsDBNull(0))
-                                store.DeliveryMonday = TrueOrFalseEval(reader.GetChar(0));
+                                store.DeliveryMonday = ConvertCharToBool(reader.GetString(0)[0]);
                             else
                                 store.DeliveryMonday = false;
 
 
                             if (!reader.IsDBNull(1))
-                                store.DeliveryTuesday = TrueOrFalseEval(reader.GetChar(1));
+                                store.DeliveryTuesday = ConvertCharToBool(reader.GetString(1)[0]);
                             else
                                 store.DeliveryTuesday = false;
 
 
                             if (!reader.IsDBNull(2))
-                                store.DeliveryWednesday = TrueOrFalseEval(reader.GetChar(2));
+                                store.DeliveryWednesday = ConvertCharToBool(reader.GetString(2)[0]);
                             else
                                 store.DeliveryWednesday = false;
 
 
                             if (!reader.IsDBNull(3))
-                                store.DeliveryThursday = TrueOrFalseEval(reader.GetChar(3));
+                                store.DeliveryThursday = ConvertCharToBool(reader.GetString(3)[0]);
                             else
                                 store.DeliveryThursday = false;
 
 
                             if (!reader.IsDBNull(4))
-                                store.DeliveryFriday = TrueOrFalseEval(reader.GetChar(4));
+                                store.DeliveryFriday = ConvertCharToBool(reader.GetString(4)[0]);
                             else
                                 store.DeliveryFriday = false;
 
 
                             if (!reader.IsDBNull(5))
-                                store.DeliverySaturday = TrueOrFalseEval(reader.GetChar(5));
+                                store.DeliverySaturday = ConvertCharToBool(reader.GetString(5)[0]);
                             else
                                 store.DeliverySaturday = false;
 
 
                             if (!reader.IsDBNull(6))
-                                store.DeliverySunday = TrueOrFalseEval(reader.GetChar(6));
+                                store.DeliverySunday = ConvertCharToBool(reader.GetString(6)[0]);
                             else
                                 store.DeliverySunday = false;
                         }
@@ -443,19 +560,19 @@ namespace GroceryLibrary
                         while (reader.Read())
                         {
                             if (!reader.IsDBNull(0))
-                                store.HasLoadingDock = TrueOrFalseEval(reader.GetChar(0));
+                                store.HasLoadingDock = ConvertCharToBool(reader.GetString(0)[0]);
                             else
                                 store.HasLoadingDock = false;
 
 
                             if (!reader.IsDBNull(1))
-                                store.HasForkLift = TrueOrFalseEval(reader.GetChar(1));
+                                store.HasForkLift = ConvertCharToBool(reader.GetString(1)[0]);
                             else
                                 store.HasForkLift = false;
 
 
                             if (!reader.IsDBNull(2))
-                                store.HasPalletJack = TrueOrFalseEval(reader.GetChar(2));
+                                store.HasPalletJack = ConvertCharToBool(reader.GetString(2)[0]);
                             else
                                 store.HasPalletJack = false;
                         }
@@ -482,14 +599,22 @@ namespace GroceryLibrary
 
                 if (store.CityID != -1)
                 {
-                    sb.Append("C. " + CitiesTable.CITY_NAME);
+                    sb.Append("C." + CitiesTable.CITY_NAME);
                     needsCity = true;
                 }
+                else
+                    store.CityName = "Not yet assigned";
+
                 if (store.DistributorID != -1)
                 {
-                    sb.Append("D. " + DistributorTable.DISTRIBUTOR_NAME);
+                    if (needsCity)
+                        sb.Append(", ");
+
+                    sb.Append("D." + DistributorTable.DISTRIBUTOR_NAME);
                     needsDist = true;
                 }
+                else
+                    store.DistributorName = "Not yet assigned";
 
                 sb.Append("FROM " + DatabaseTables.STORE_INFORMATION + "S ");
 
@@ -533,33 +658,44 @@ namespace GroceryLibrary
             }
         }
 
+        /// <summary>
+        /// Handles conversions to chars
+        /// </summary>
+        /// <param name="var">Some boolean</param>
+        /// <returns>'T' if var is true, 'F' if var is false</returns>
+        private static char ConvertBoolToChar(bool var)
+        {
+            if (var)
+                return 'T';
+            else
+                return 'F';
+        }
 
         /*
          * This is where the getting information from the database stops. All SELECT and INSERT statements are above this point
          * 
          * Below this point are UPDATE statements which take client information and updates the DB accordingly
          */
-        public static void updateDeliveryDays()//char mon, char tues, char wed, char thurs,
-                                                 //   char fri, char sat, char sun)
+
+        /// <summary>
+        /// Responsible for update the store information table with geo information
+        /// </summary>
+        public static void updateGeoInformation(string StoreName, int CityID, int DistID)
         {
             string sqlCommand;
             StringBuilder sb = new StringBuilder();
 
-            sb.Append("UPDATE " + DatabaseTables.STORE_DELIVERY_SCHEDULE);
+            sb.Append("UPDATE " + DatabaseTables.STORE_INFORMATION);
             sb.Append("SET ");
-            sb.Append(StoreDeliveryScheduleTable.DELIVERY_MONDAY + "= " + store.DeliveryMonday + ", ");
-            sb.Append(StoreDeliveryScheduleTable.DELIVERY_TUESDAY + "= " + store.DeliveryTuesday + ", ");
-            sb.Append(StoreDeliveryScheduleTable.DELIVERY_WEDNESDAY + "= " + store.DeliveryWednesday + ", ");
-            sb.Append(StoreDeliveryScheduleTable.DELIVERY_THURSDAY + "= " + store.DeliveryThursday + ", ");
-            sb.Append(StoreDeliveryScheduleTable.DELIVERY_FRIDAY + "= " + store.DeliveryFriday + ", ");
-            sb.Append(StoreDeliveryScheduleTable.DELIVERY_SATURDAY + "= " + store.DeliverySaturday + ", ");
-            sb.Append(StoreDeliveryScheduleTable.DELIVERY_SUNDAY + "= " + store.DeliverySunday + " ");
+            sb.Append(StoreInformationTable.STORE_NAME + "= '" + StoreName + "', ");
+            sb.Append(StoreInformationTable.CITY_ID + "= " + (CityID + 1).ToString() + " ");
             sb.Append("WHERE " + StoreDeliveryScheduleTable.STORE_ID + "= " + store.StoreID.ToString());
 
             try
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
+                    connection.Open();
                     sqlCommand = sb.ToString();
                     using (SqlCommand command = new SqlCommand(sqlCommand, connection))
                     {
@@ -567,9 +703,204 @@ namespace GroceryLibrary
                         if (result < 0)
                             throw new Exception("Couldn't UPDATE delivery days");
                     }
+                    connection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                store = null;
+            }
+
+
+            sb.Clear();
+
+            sb.Append("UPDATE " + DatabaseTables.STORE_DELIVERY_INFORMATION);
+            sb.Append("SET ");
+            sb.Append(StoreDeliveryInformationTable.DISTRIBUTOR_ID + "= " + (DistID + 1).ToString() + " ");
+            sb.Append("WHERE " + StoreDeliveryInformationTable.STORE_ID + "= " + store.StoreID.ToString());
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    sqlCommand = sb.ToString();
+                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    {
+                        int result = command.ExecuteNonQuery();
+                        if (result < 0)
+                            throw new Exception("Couldn't UPDATE delivery days");
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                store = null;
+            }
+        }
+
+        /// <summary>
+        /// Responsible for updating the physical information
+        /// </summary>
+        /// <param name="SFCat"></param>
+        /// <param name="NumChkLns"></param>
+        public static void updatePhysInformation(int SFCat, int NumChkLns)
+        {
+            string sqlCommand;
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("UPDATE " + DatabaseTables.STORE_INFORMATION);
+            sb.Append("SET ");
+            sb.Append(StoreInformationTable.NUMBER_OF_CHECKOUT_LANES + "= " + NumChkLns + ", ");
+            sb.Append(StoreInformationTable.SQUARE_FOOTAGE_CATEGORIES_ID + "= " + (SFCat + 1) + " ");
+            sb.Append("WHERE " + StoreDeliveryScheduleTable.STORE_ID + "= " + store.StoreID.ToString());
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    sqlCommand = sb.ToString();
+                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    {
+                        int result = command.ExecuteNonQuery();
+                        if (result < 0)
+                            throw new Exception("Couldn't UPDATE delivery days");
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                store = null;
+            }
+        }
+
+
+        /// <summary>
+        /// Responsible for update the delivery schedule table
+        /// </summary>
+        /// <param name="mon">Does Monday have delivery?</param>
+        /// <param name="tues"></param>
+        /// <param name="wed"></param>
+        /// <param name="thurs"></param>
+        /// <param name="fri"></param>
+        /// <param name="sat"></param>
+        /// <param name="sun"></param>
+        public static void updateDeliveryDays(bool mon, bool tues, bool wed, bool thurs,
+                                                    bool fri, bool sat, bool sun)
+        {
+            string sqlCommand;
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("UPDATE " + DatabaseTables.STORE_DELIVERY_SCHEDULE);
+            sb.Append("SET ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_MONDAY + "= '" + ConvertBoolToChar(mon) + "', ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_TUESDAY + "= '" + ConvertBoolToChar(tues) + "', ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_WEDNESDAY + "= '" + ConvertBoolToChar(wed) + "', ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_THURSDAY + "= '" + ConvertBoolToChar(thurs) + "', ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_FRIDAY + "= '" + ConvertBoolToChar(fri) + "', ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_SATURDAY + "= '" + ConvertBoolToChar(sat) + "', ");
+            sb.Append(StoreDeliveryScheduleTable.DELIVERY_SUNDAY + "= '" + ConvertBoolToChar(sun) + "' ");
+            sb.Append("WHERE " + StoreDeliveryScheduleTable.STORE_ID + "= " + store.StoreID.ToString());
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    sqlCommand = sb.ToString();
+                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    {
+                        int result = command.ExecuteNonQuery();
+                        if (result < 0)
+                            throw new Exception("Couldn't UPDATE delivery days");
+                    }
+                    connection.Close();
                 }
             }
             catch(Exception e)
+            {
+                store = null;
+            }
+        }
+
+        /// <summary>
+        /// Responsible for update the pallet infomation
+        /// </summary>
+        /// <param name="palletMin"></param>
+        /// <param name="palletMax"></param>
+        /// <param name="weeklyBuyMin"></param>
+        /// <param name="sellsToOthers"></param>
+        public static void updatePalletInformation(int palletMin, int palletMax, bool weeklyBuyMin, bool sellsToOthers)
+        {
+            string sqlCommand;
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("UPDATE " + DatabaseTables.STORE_DELIVERY_INFORMATION);
+            sb.Append("SET ");
+            sb.Append(StoreDeliveryInformationTable.PALLET_ORDER_MINIMUM + "= " + palletMin + ", ");
+            sb.Append(StoreDeliveryInformationTable.PALLET_ORDER_MAXIMUM + "= " + palletMax + ", ");
+            sb.Append(StoreDeliveryInformationTable.WEEKLY_BUYING_MIN_REQUIREMENT + "= '" + ConvertBoolToChar(weeklyBuyMin) + "', ");
+            sb.Append(StoreDeliveryInformationTable.SELL_TO_OTHERS + "= '" + ConvertBoolToChar(sellsToOthers) + "' ");
+            sb.Append("WHERE " + StoreDeliveryInformationTable.STORE_ID + "= " + store.StoreID.ToString());
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    sqlCommand = sb.ToString();
+                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    {
+                        int result = command.ExecuteNonQuery();
+                        if (result < 0)
+                            throw new Exception("Couldn't UPDATE store equipment");
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                store = null;
+            }
+        }
+
+        /// <summary>
+        /// Responsible for updating the equipment information table
+        /// </summary>
+        /// <param name="fork">Does store have a forklift?</param>
+        /// <param name="pallet"></param>
+        /// <param name="loading"></param>
+        public static void updateStoreEquipmentInformation(bool fork, bool pallet, bool loading)
+        {
+            string sqlCommand;
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("UPDATE " + DatabaseTables.STORE_EQUIPMENT_INFORMATION);
+            sb.Append("SET ");
+            sb.Append(StoreEquipmentInformationTable.FORK_LIFT + "= '" + ConvertBoolToChar(fork) + "', "); 
+            sb.Append(StoreEquipmentInformationTable.PALLET_JACK + "= '" + ConvertBoolToChar(pallet) + "', ");
+            sb.Append(StoreEquipmentInformationTable.LOADING_DOCK + "= '" + ConvertBoolToChar(loading) + "' ");
+            sb.Append("WHERE " + StoreEquipmentInformationTable.STORE_ID + "= " + store.StoreID.ToString());
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    sqlCommand = sb.ToString();
+                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    {
+                        int result = command.ExecuteNonQuery();
+                        if (result < 0)
+                            throw new Exception("Couldn't UPDATE store equipment");
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception e)
             {
                 store = null;
             }

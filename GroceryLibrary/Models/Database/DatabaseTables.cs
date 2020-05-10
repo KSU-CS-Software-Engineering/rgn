@@ -16,7 +16,7 @@ namespace GroceryLibrary.Models.Database
 
         public const string STORE_DELIVERY_INFORMATION = "[dbo].[StoreDeliveryInformation] ";
 
-        public const string STORE_DELIVERY_SCHEDULE = "[dbo].[StoreDeliverySchedule]";
+        public const string STORE_DELIVERY_SCHEDULE = "[dbo].[StoreDeliverySchedule] ";
 
         public const string STORE_EQUIPMENT_INFORMATION = "[dbo].[StoreEquipmentInformation] ";
 

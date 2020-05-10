@@ -21,130 +21,648 @@ limitations under the License.
 @inject UserManager<IdentityUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-    <AuthorizeView>
+<AuthorizeView>
 
-        <link rel="stylesheet" href="css/Style.css" />
-        <h1>Store Account Information</h1>
-        <div class="Store-Geographical-Information">
-            <h2>Geographical Information</h2>
+    <link rel="stylesheet" href="css/Style.css" />
+    <h1>Store Account Information</h1>
+    <div class="menu-accordion" id="Store-Geographical-Information">
+        <h2 @onclick="e => this.collapsedOne = !this.collapsedOne">Geographical Information</h2>
+        <div class="store-element @( this.collapsedOne ? "collapse" : "")">
+            
+            <!--Store ID-->
             <div>
                 <label>StoreID: </label>
                 <label>@s.StoreID</label>
             </div>
+
+            <!--Store Name-->
             <div>
                 <label>Store Name: </label>
-                <label>@s.StoreName</label>
+                @if (!geographicInfoEdit)
+                {
+                    <label>@s.StoreName</label>
+                }
+                else
+                {
+                    <input class="text-align-right @( !this.geographicInfoEdit ? "collapse" : "")" placeholder="@s.StoreName" @bind="storeName" />
+                }
             </div>
+
+            <!--City Name-->
             <div>
                 <label>City: </label>
-                <label>#StoreCity</label>
+                @if (!geographicInfoEdit)
+                {
+                    <label>@s.CityName</label>
+                }
+                else
+                {
+                    <select id="StoreDropDownID" name="StoreDropDown" class="form-control" @onchange="CityNameClicked">
+                        @if (@s.CityName == "Not yet assigned")
+                        {
+                            <option value="">-- Select a City --</option>
+                        }
+                        else
+                        {
+                            <option value="">@s.CityName</option>
+                        }
+                        @foreach (var cityName in CityNamesList)
+                        {
+                            <option value="@cityName">@cityName</option>
+                        }
+                    </select>
+                }
             </div>
+
+            <!--Store Distributor-->
             <div>
                 <label>Distributor: </label>
-                <label>#Distributor</label>
+                @if (!geographicInfoEdit)
+                {
+                    <label>@s.DistributorName</label>
+                }
+                else
+                {
+                    <select id="DistributorDropDownID" name="DistributorDropDown" class="form-control" @onchange="DistributorNameClicked">
+                        @if (@s.DistributorName == "Not yet assigned")
+                        {
+                            <option value="">-- Select a Distributor --</option>
+                        }
+                        else
+                        {
+                            <option value="">@s.DistributorName</option>
+                        }
+                        @foreach (var dist in DistributorNamesList)
+                        {
+                            <option value="@dist">@dist</option>
+                        }
+                    </select>
+                }
             </div>
-        </div>
 
-        <div class="Physical-Store-Information">
-            <h2>Physical Information</h2>
+            <!--Edit and Save Buttons-->
+            <button class="btn-primary" @onclick="e => this.geographicInfoEdit = !this.geographicInfoEdit">Edit</button>
+            <button class="btn-primary" @onclick="UpdateGeographicInfo">Save</button>
+        </div>
+    </div>
+
+    <!--Physical Information Category-->
+    <div class="menu-accordion" id="Physical-Store-Information">
+        <h2 @onclick="e => this.collapsedTwo = !this.collapsedTwo">Physical Information</h2>
+        <div class="store-element @( this.collapsedTwo ? "collapse" : "")">
+
+            <!--Square Footage-->
             <div>
                 <label>Square Footage Category: </label>
-                <label>#SquareFootage</label>
+                @if (!physicalInfoEdit)
+                {
+                    <label>@s.SquareFootageCategory</label>
+                }
+                else
+                {
+                    <select id="SFDropDownID" name="SFDropDown" class="form-control" @onchange="SFNameClicked">
+                        @if (@s.SquareFootageCategory == "Not yet assigned")
+                        {
+                            <option value="">-- Select a Square Footage Category --</option>
+                        }
+                        else
+                        {
+                            <option value="">@s.SquareFootageCategory</option>
+                        }
+                        @foreach (var sf in SFCatNamesList)
+                        {
+                            <option value="@sf">@sf</option>
+                        }
+                    </select>
+                }
             </div>
+
+            <!--Number of checkout lanes-->
             <div>
                 <label>Number of Checkout Lanes: </label>
-                <label>#NumChckLns</label>
+                @if (s.NumberOfCheckoutLanes == -1)
+                {
+                    <label>Not Yet Assigned</label>
+                }
+                else
+                {
+                    <label>@s.NumberOfCheckoutLanes</label>
+                }
+                <input class="text-align-right @( !this.physicalInfoEdit? "collapse" : "")" @bind="checkoutLanes" />
             </div>
+            <button class="btn-primary" @onclick="e => this.physicalInfoEdit = !this.physicalInfoEdit">Edit</button>
+            <button class="btn-primary" @onclick="UpdatePhysicalInfo">Save</button>
         </div>
+    </div>
 
-        <div>
-            <div class="Delivery-Day-Information">
-                <h1>Store Delivery Information</h1>
+    <!--Delivery Day Information Section-->
+    <div class="menu-accordion" id="Delivery-Day-Information">
+        <h2 @onclick="e => this.collapsedThree = !this.collapsedThree">Store Delivery Information</h2>
+        <div class="store-element @( this.collapsedThree ? "collapse" : "")">
+            <h2>Delivery Days</h2>
 
-                <h2>Delivery Days</h2>
-                <div class="Sunday-Delivery">
-                    <label>Sunday: </label>
-                    <input type="checkbox" contenteditable="false" name="SundayCheckbox" value="Sunday" disabled />
-                </div>
-                <div class="Monday-Delivery">
-                    <label>Monday: </label>
-                    <input type="checkbox" contenteditable="false" name="MondayCheckbox" value="Sunday" checked disabled />
-                </div>
-                <div class="Tuesday-Delivery">
-                    <label>Tuesday: </label>
-                    <input type="checkbox" contenteditable="false" name="TuesdayCheckbox" value="Sunday" disabled />
-                </div>
-                <div class="Wednesday-Delivery">
-                    <label>Wednesday: </label>
-                    <input type="checkbox" contenteditable="false" name="WednesdayCheckbox" value="Sunday" checked disabled />
-                </div>
-                <div class="Thursday-Delivery">
-                    <label>Thursday: </label>
-                    <input type="checkbox" contenteditable="false" name="ThursdayCheckbox" value="Sunday" checked disabled />
-                </div>
-                <div class="Friday-Delivery">
-                    <label>Friday: </label>
-                    <input type="checkbox" contenteditable="false" name="FridayCheckbox" value="Sunday" disabled />
-                </div>
-                <div class="Saturday-Delivery">
-                    <label>Saturday: </label>
-                    <input type="checkbox" contenteditable="false" name="SaturdayCheckbox" value="Sunday" checked disabled />
-                </div>
+            <!--Sunday-->
+            <div class="Sunday-Delivery">
+                <label>Sunday: </label>
+                <input type="checkbox" contenteditable="false" name="SundayCheckbox" value="Sunday" checked="@SundayCheckbox"
+                       disabled="@(!storeDeliveryEdit)" @onchange="SunCheckChange"/>
             </div>
 
-            <div class="Pallet-Information">
-                <h2>Pallets</h2>
-                <div>
-                    <label>Pallet Minimum - Maximum: </label>
-                    <label>#PalletMin - #PalletMax</label>
-                </div>
+            <!--Monday-->
+            <div class="Monday-Delivery">
+                <label>Monday: </label>
+                <input type="checkbox" contenteditable="false" name="MondayCheckbox" value="Monday" checked="@MondayCheckbox"
+                       disabled="@(!storeDeliveryEdit)" @onchange="MonCheckChange"/>
+            </div>
 
-                <div>
-                    <label>Weekly Minimum Buying Requirement: </label>
-                    <label>#Y/N</label>
-                </div>
+            <!--Tuesday-->
+            <div class="Tuesday-Delivery">
+                <label>Tuesday: </label>
+                <input type="checkbox" contenteditable="false" name="TuesdayCheckbox" value="Tuesday" checked="@TuesdayCheckbox"
+                       disabled="@(!storeDeliveryEdit)" @onchange="TuesCheckChange"/>
+            </div>
 
-                <div>
-                    <label>Sells to Others: </label>
-                    <label>#Y/N</label>
-                </div>
+            <!--Wednesday-->
+            <div class="Wednesday-Delivery">
+                <label>Wednesday: </label>
+                <input type="checkbox" contenteditable="false" name="WednesdayCheckbox" value="Wednesday" checked="@WednesdayCheckbox"
+                       disabled="@(!storeDeliveryEdit)" @onchange="WedCheckChange"/>
+            </div>
+
+            <!--Thursday-->
+            <div class="Thursday-Delivery">
+                <label>Thursday: </label>
+                <input type="checkbox" contenteditable="false" name="ThursdayCheckbox" value="Thursday" checked="@ThursdayCheckbox"
+                       disabled="@(!storeDeliveryEdit)" @onchange="ThursCheckChange"/>
+            </div>
+
+            <!--Friday-->
+            <div class="Friday-Delivery">
+                <label>Friday: </label>
+                <input type="checkbox" contenteditable="false" name="FridayCheckbox" value="Friday" checked="@FridayCheckbox"
+                       disabled="@(!storeDeliveryEdit)" @onchange="FriCheckChange"/>
+            </div>
+
+            <!--Saturday-->
+            <div class="Saturday-Delivery">
+                <label>Saturday: </label>
+                <input type="checkbox" contenteditable="false" name="SaturdayCheckbox" value="Saturday" checked="@SaturdayCheckbox"
+                       disabled="@(!storeDeliveryEdit)" @onchange="SatCheckChange"/>
+            </div>
+
+            <!--Edit and Save Buttons-->
+            <button class="btn-primary" @onclick="e => this.storeDeliveryEdit = !this.storeDeliveryEdit">Edit</button>
+            <button class="btn-primary" @onclick="UpdateStoreDeliveryInfo">Save</button>
+        </div>
+    </div>
+
+    <!--Pallet Information-->
+    <div class="menu-accordion" id="Pallet-Information">
+        <h2 @onclick="e => this.collapsedFour = !this.collapsedFour">Pallet Information</h2>
+        <div class="store-element @( this.collapsedFour ? "collapse" : "")">
+            <div>
+                <label>Pallet Minimum - Maximum: @s.PalletMinimum - @s.PalletMaximum</label>
+                <input class="text-align-right @( !this.palletInfoEdit ? "collapse" : "")" placeholder="PalletMin" @bind="palletMin" />
+                <br>
+                <input class="text-align-right @( !this.palletInfoEdit ? "collapse" : "")" placeholder="PalletMax" @bind="palletMax" />
             </div>
 
             <div>
-                <h1>Store Equipment Information</h1>
-                <div class="Loading-Dock">
-                    <label>Has Loading Dock: </label>
-                    <input type="checkbox" contenteditable="false" name="LoadingDockCheckbox" value="Sunday" checked disabled />
-                </div>
-                <div class="Fork-Lift">
-                    <label>Has Fork Lift: </label>
-                    <input type="checkbox" contenteditable="false" name="ForkLiftCheckbox" value="Sunday" checked disabled />
-                </div>
-                <div class="Pallet-Jack">
-                    <label>Has Pallet Jack: </label>
-                    <input type="checkbox" contenteditable="false" name="PalletJackCheckbox" value="Sunday" checked disabled />
-
-                </div>
+                <label>Weekly Minimum Buying Requirement: </label>
+                <input type="checkbox" contenteditable="false" name="WeeklyMinCheckbox" value="WeeklyMin" checked="@WeeklyMinCheckbox"
+                       disabled="@(!palletInfoEdit)" @onchange="WeeklyMinCheckChange" />
             </div>
+
+            <div>
+                <label>Sells to Others: </label>
+                <input type="checkbox" contenteditable="false" name="SellToOthersCheckbox" value="SellToOthers" checked="@SellToOthersCheckbox"
+                       disabled="@(!palletInfoEdit)" @onchange="SellToOthersCheckChange" />
+            </div>
+            <button class="btn-primary" @onclick="e => this.palletInfoEdit = !this.palletInfoEdit">Edit</button>
+            <button class="btn-primary" @onclick="UpdatePalletInfo">Save</button>
         </div>
-    </AuthorizeView>
+    </div>
 
-@code {
+    <!--Store Equipment Information Section-->
+    <div class="menu-accordion" id="Store-Equipment">
+        <h2 @onclick="e => this.collapsedFive = !this.collapsedFive">Store Equipment Information</h2>
+        <div class="store-element @( this.collapsedFive ? "collapse" : "")">
 
+            <!--Loading Dock-->
+            <div class="Loading-Dock">
+                <label>Has Loading Dock: </label>
+                <input type="checkbox" contenteditable="false" name="LoadingDockCheckbox" value="LoadingDock" checked="@HasLoadingDockCheckbox"
+                       disabled="@(!storeEquipmentEdit)" @onchange="LoadingDockCheckChange" />
+            </div>
+
+            <!--Fork Lift-->
+            <div class="Fork-Lift">
+                <label>Has Fork Lift: </label>
+                <input type="checkbox" contenteditable="false" name="ForkLiftCheckbox" value="ForkLift" checked="@HasForkLiftCheckbox"
+                       disabled="@(!storeEquipmentEdit)" @onchange="ForkLiftCheckChange" />
+            </div>
+
+            <!--Pallet Jack-->
+            <div class="Pallet-Jack">
+                <label>Has Pallet Jack: </label>
+                <input type="checkbox" contenteditable="false" name="PalletJackCheckbox" value="PalletJack" checked="@HasPalletJackCheckbox"
+                       disabled="@(!storeEquipmentEdit)" @onchange="PalletJackCheckChange"/>
+            </div>
+
+            <!--Edit and Save buttons-->
+            <button class="btn-primary" @onclick="e => this.storeEquipmentEdit = !this.storeEquipmentEdit">Edit</button>
+            <button class="btn-primary" @onclick="UpdateStoreEquipment">Save</button>
+        </div>
+    </div>
+</AuthorizeView>
+
+
+
+@functions {
+    //Values used to see if current sections are being edited
+    private bool geographicInfoEdit { get; set; } = false;
+    private bool physicalInfoEdit { get; set; } = false;
+    private bool storeDeliveryEdit { get; set; } = false;
+    private bool palletInfoEdit { get; set; } = false;
+    private bool storeEquipmentEdit { get; set; } = false;
+
+    //Values used for determining whether each collapsible menu should be collapsed or not.
+    private bool collapsedOne { get; set; } = false;
+    private bool collapsedTwo { get; set; } = false;
+    private bool collapsedThree { get; set; } = false;
+    private bool collapsedFour { get; set; } = false;
+    private bool collapsedFive { get; set; } = false;
+
+    //Lists used to populate drop downs
+    private List<string> CityNamesList = new List<string>();
+    private List<string> DistributorNamesList = new List<string>();
+    private List<string> SFCatNamesList = new List<string>();
+
+    //The store the html is populated with
     private Store s;
-    private string email;
 
-    private async Task LogUsername()
+    //Store specific information
+    private string email;
+    private string storeName = "";
+
+    //Fields for population and data modification
+    private int checkoutLanes = 0;
+    private int palletMin = 0;
+    private int palletMax = 0;
+    private bool weeklyBuy = false;
+    private bool sellToOthers = false;
+
+
+    /******************* PROPERTIES BELOW HERE ***************************/
+
+    /// <summary>
+    /// Binds to the Sunday Checkbox
+    /// </summary>
+    private bool SundayCheckbox
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        var currentUser = await UserManager.GetUserAsync(user);
-        email = currentUser.Email.ToUpper();
+        get { return s.DeliverySunday; }
+        set { s.DeliverySunday = !s.DeliverySunday; }
     }
 
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void SunCheckChange()
+    {
+        SundayCheckbox = !SundayCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Monday Checkbox
+    /// </summary>
+    private bool MondayCheckbox
+    {
+        get { return s.DeliveryMonday; }
+        set { s.DeliveryMonday = !s.DeliveryMonday; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void MonCheckChange()
+    {
+        MondayCheckbox = !MondayCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Tuesday Checkbox
+    /// </summary>
+    private bool TuesdayCheckbox
+    {
+        get { return s.DeliveryTuesday; }
+        set { s.DeliveryTuesday = !s.DeliveryTuesday; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void TuesCheckChange()
+    {
+        TuesdayCheckbox = !TuesdayCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Wednesday Checkbox
+    /// </summary>
+    private bool WednesdayCheckbox
+    {
+        get { return s.DeliveryWednesday; }
+        set { s.DeliveryWednesday = !s.DeliveryWednesday; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void WedCheckChange()
+    {
+        WednesdayCheckbox = !WednesdayCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Thursday Checkbox
+    /// </summary>
+    private bool ThursdayCheckbox
+    {
+        get { return s.DeliveryThursday; }
+        set { s.DeliveryThursday = value; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void ThursCheckChange()
+    {
+        ThursdayCheckbox = !ThursdayCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Friday Checkbox
+    /// </summary>
+    private bool FridayCheckbox
+    {
+        get { return s.DeliveryFriday; }
+        set { s.DeliveryFriday = value; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void FriCheckChange()
+    {
+        FridayCheckbox = !FridayCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Saturday Checkbox
+    /// </summary>
+    private bool SaturdayCheckbox
+    {
+        get { return s.DeliverySaturday; }
+        set { s.DeliverySaturday = value; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void SatCheckChange()
+    {
+        SaturdayCheckbox = !SaturdayCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Weekly Buying Requirement Checkbox.
+    /// </summary>
+    private bool WeeklyMinCheckbox
+    {
+        get { return s.HasWeeklyBuyingRequirement; }
+        set { s.HasWeeklyBuyingRequirement = value; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void WeeklyMinCheckChange()
+    {
+        WeeklyMinCheckbox = !WeeklyMinCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Sell to Others Checkbox.
+    /// </summary>
+    private bool SellToOthersCheckbox
+    {
+        get { return s.SellsToOthers; }
+        set { s.SellsToOthers = value; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void SellToOthersCheckChange()
+    {
+        SellToOthersCheckbox = !SellToOthersCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Loading Dock Checkbox
+    /// </summary>
+    private bool HasLoadingDockCheckbox
+    {
+        get { return s.HasLoadingDock; }
+        set { s.HasLoadingDock = value; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void LoadingDockCheckChange()
+    {
+        HasLoadingDockCheckbox = !HasLoadingDockCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Fork Lift Checkbox
+    /// </summary>
+    private bool HasForkLiftCheckbox
+    {
+        get { return s.HasForkLift; }
+        set { s.HasForkLift = value; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void ForkLiftCheckChange()
+    {
+        HasForkLiftCheckbox = !HasForkLiftCheckbox;
+    }
+
+    /// <summary>
+    /// Binds to the Pallet Jack Checkbox
+    /// </summary>
+    private bool HasPalletJackCheckbox
+    {
+        get { return s.HasPalletJack; }
+        set { s.HasPalletJack = value; }
+    }
+
+    /// <summary>
+    /// Allows us to change the value of the checkbox
+    /// </summary>
+    private void PalletJackCheckChange()
+    {
+        HasPalletJackCheckbox = !HasPalletJackCheckbox;
+    }
+
+    /************************ METHODS THAT DO NOT REFER TO PROPERTIES ***************************/
+
+    /// <summary>
+    /// Handles the changing of the city
+    /// </summary>
+    /// <param name="e">The event</param>
+    private void CityNameClicked(ChangeEventArgs e)
+    {
+        s.CityName = e.Value.ToString();
+    }
+
+    /// <summary>
+    /// Handles the changing of SFCate
+    /// </summary>
+    /// <param name="e">The event</param>
+    private void SFNameClicked(ChangeEventArgs e)
+    {
+        s.SquareFootageCategory = e.Value.ToString();
+    }
+
+    /// <summary>
+    /// Handles the changing of the distributor
+    /// </summary>
+    /// <param name="e">The event</param>
+    private void DistributorNameClicked(ChangeEventArgs e)
+    {
+        s.DistributorName = e.Value.ToString();
+    }
+
+    /// <summary>
+    /// Updates the Store's Geographic Information when the edits are saved.
+    /// </summary>
+    private void UpdateGeographicInfo()
+    {
+        if (geographicInfoEdit)
+        {
+            s.StoreName = storeName;
+            if(s.StoreName == "")
+            {
+                s.StoreName = "Not yet assigned";
+            }
+            int CityID = CityNamesList.IndexOf(s.CityName);
+            int DistID = DistributorNamesList.IndexOf(s.DistributorName);
+
+            SqlDataAccess.updateGeoInformation(s.StoreName, CityID, DistID);
+
+            //reset edit state
+            geographicInfoEdit = !geographicInfoEdit;
+        }
+    }
+
+    /// <summary>
+    /// Updates the Store's Physical Information when the edits are saved.
+    /// </summary>
+    private void UpdatePhysicalInfo()
+    {
+        if (physicalInfoEdit)
+        {
+            int SFCatID = SFCatNamesList.IndexOf(s.SquareFootageCategory);
+            int NumChkLanes = checkoutLanes;
+
+            s.NumberOfCheckoutLanes = NumChkLanes;
+            SqlDataAccess.updatePhysInformation(SFCatID, NumChkLanes);
+
+            //reset edit state
+            physicalInfoEdit = !physicalInfoEdit;
+        }
+    }
+
+    /// <summary>
+    /// Updates the Store's Delivery Information when the edits are saved.
+    /// </summary>
+    private void UpdateStoreDeliveryInfo()
+    {
+        if (storeDeliveryEdit)
+        {
+            SqlDataAccess.updateDeliveryDays(MondayCheckbox, TuesdayCheckbox, WednesdayCheckbox, ThursdayCheckbox,
+                                                FridayCheckbox, SaturdayCheckbox, SundayCheckbox);
+
+            //reset edit state
+            storeDeliveryEdit = !storeDeliveryEdit;
+        }
+    }
+
+    /// <summary>
+    /// Updates the Store's Pallet Information when the edits are saved.
+    /// </summary>
+    private void UpdatePalletInfo()
+    {
+        if (palletInfoEdit)
+        {
+            //TO-DO: Update Info here
+            s.PalletMinimum = palletMin;
+            s.PalletMaximum = palletMax;
+            SqlDataAccess.updatePalletInformation(palletMin, palletMax, WeeklyMinCheckbox, SellToOthersCheckbox);
+            
+            //reset edit state
+            palletInfoEdit = !palletInfoEdit;
+        }
+    }
+
+    /// <summary>
+    /// Updates the Store's Equipment Information when the edits are saved.
+    /// </summary>
+    private void UpdateStoreEquipment()
+    {
+        if (storeEquipmentEdit)
+        {
+            SqlDataAccess.updateStoreEquipmentInformation(HasForkLiftCheckbox, HasPalletJackCheckbox, HasLoadingDockCheckbox);
+
+            //reset edit state
+            storeEquipmentEdit = !storeEquipmentEdit;
+        }
+    }
+
+    /// <summary>
+    /// Gets the current logged in user's email address and initializes the components
+    /// </summary>
+    /// <returns>I am not sure. DO NOT TOUCH</returns>
+    private async Task LogUsername()
+    {
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+            s = SqlDataAccess.OnInitialize(user.Identity.Name.ToUpper());
+        }
+        catch (Exception e)
+        {
+            e = null;
+        }
+    }
+
+
+    /// <summary>
+    /// Initial population of the information on the page
+    /// </summary>
+    /// <returns>I am not sure but this method needs to be written like this. DO NOT TOUCH</returns>
     protected override async Task OnInitializedAsync()
     {
         await LogUsername();
-        s = SqlDataAccess.OnInitialize(email);
+        List<string>[] names = SqlDataAccess.GetAllNames();
+        CityNamesList = names[0];
+        DistributorNamesList = names[1];
+        SFCatNamesList = names[2];
     }
 }
