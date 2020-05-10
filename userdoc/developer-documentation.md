@@ -9,6 +9,13 @@ since it is useful for building web applications.
 
 Link to blazor installation guide: https://docs.microsoft.com/en-us/aspnet/core/blazor/get-started?view=aspnetcore-3.1&tabs=visual-studio
 
+### Website Deployment
+
+Our Web Application is currently setup to deploy using Microsoft's Azure App Service.
+
+Click here for a guide on Deployment: https://docs.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment
+
+
 ### SQL Server
 For storing data for the website, we are using a SQL Server that is stored locally with the project, then deployed
 with the project through Microsoft Azure onto the web. You will need to download SQL Server in order to run
@@ -41,14 +48,22 @@ Let us look at some examples in our project. First let us look at ScenarioPages.
 
 ![Scenarios Page Code](img/scenarios-page-code.PNG)
 
-Razor pages use syntatic sugar to help define parts of a web page. '@page' defines the route that this page will be on the website, so the route will look like: 'https://ruralgrocerynetwork.azurewebsites.net/scenarios' when on this specific web page. @inject "injects" a dependency for the page, which in this case is a Class used to hold our Scenario data. @code is the area where we implement our C# code to make the webpage function, which for this page it currently doesn't have any additional functionality yet. Aside from that, We also build the page using HTML, while utilizing a built-in Blazor feature called 'AuthorizeView', which is a blazor HTML tag that hides parts of a web page depending on if a user is authenticated/authorized on that page or not.
+Razor pages use syntatic sugar to help define parts of a web page. '@page' defines the route that this page will be on the website, 
+so the route will look like: 'https://ruralgrocerynetwork.azurewebsites.net/scenarios' when on this specific web page. 
+@inject "injects" a dependency for the page, which in this case is a Class used to hold our Scenario data. 
+@code is the area where we implement our C# code to make the webpage function, which for this page 
+it currently doesn't have any additional functionality yet. Aside from that, We also build the page using HTML, 
+while utilizing a built-in Blazor feature called 'AuthorizeView', which is a blazor HTML tag that hides parts of a web page 
+depending on if a user is authenticated/authorized on that page or not.
 
 Next, let us look at our NavMenu Component in NavMenu.Razor:
 ![NavMenu1](img/nav-menu-code-1.PNG)
 ![NavMenu2](img/nav-menu-code-2.PNG)
 
 This component builds the Navigation Menu for our site, which allows us to view the different pages without memorizing the page routes.
-Here we can see that it Utilizes "AuthorizeView" tags to hide it from unathorized users, and also another new feature called NavLink which is a tag that allows us to link an element to one of the other pages on the website, using the route name for that page (the element defined in @page). This Component also has C# in the @code section in order to control the Nav Menu from expanding and collapsing.
+Here we can see that it Utilizes "AuthorizeView" tags to hide it from unathorized users, and also another new feature called NavLink 
+which is a tag that allows us to link an element to one of the other pages on the website, using the route name for that page 
+(the element defined in @page). This Component also has C# in the @code section in order to control the Nav Menu from expanding and collapsing.
 
 This page ends up looking like this:
 ![Scenarios Page](img/scenarios-page.PNG)
@@ -59,13 +74,54 @@ More info. On Razor syntax: https://docs.microsoft.com/en-us/aspnet/core/mvc/vie
 
 ### Important Files
 A major focus of this project is the individual pages, as well as the Components and Data that is associated with those pages.
-The pages can be accessed from the RuralGroceryNetwork/Pages directory like so:
+The pages can be accessed from the RuralGroceryNetwork/Pages directory:
 
 ![Pages Directory](img/directory-pages.PNG)
 
-This directory contains 5 razor pages, along with an Error Page for when the pages don't work properly and a .cshtml for styling these pages. The 5 pages we currently have are:
+This directory contains 6 razor pages, along with an Error Page for when the pages don't work properly and a .cshtml for styling these pages. 
+The pages we currently have are:
 - Index.razor
 - NodesPage.razor
 - RoutesPage.razor
 - ScenariosPage.razor
 - TrucksPage.razor
+- StoreInformationPage.razor
+
+Our pages also integrate other components within them. Some examples of these kinds of components include the Website's Navigation Menu, 
+The website's main layout, among other things. These components can be found in the RuralGroceryNetwork/Shared Directory:
+
+![Shared Directory](img/directory-shared.PNG)
+
+### Data Binding and Event Handling:
+
+Click these links for detailed explanations for data binding and event handling in blazor:
+data binding: https://docs.microsoft.com/en-us/aspnet/core/blazor/data-binding?view=aspnetcore-3.1
+event handling: https://docs.microsoft.com/en-us/aspnet/core/blazor/event-handling?view=aspnetcore-3.1
+
+An important aspect of blazor is that you can bind variables, methods, and events to various html elements.
+This allows us to have modifiable data within HTML, from input data to even changing the attributes/css within
+different tags.
+
+Here are some examples from StoreInformationPage.razor:
+
+HTML Element:
+![html binding](img/binding-html.PNG)
+![Collapse State](img/binding-fieldsTwo
+
+Text Input:
+![Text Input](img/binding-text.PNG)
+![Text Field](img/binding-textField.PNG)
+![Edit States](img/binding-fieldsOne.PNG)
+
+Checkbox Input:
+![Checkbox Input](img/binding-checkbox.PNG)
+![Checkbox Field & Update](img/binding-checkboxField.PNG)
+
+### Other Helpful Resources:
+
+HTML/CSS:
+- w3schools: https://www.w3schools.com/
+
+
+
+
