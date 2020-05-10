@@ -1,6 +1,4 @@
 # Rural Grocery Network
-https://ruralgrocerynetwork.azurewebsites.net/
-
 
 ### About:
 
