@@ -1,171 +1,177 @@
-
-
 .float-container {
-
- 
 }
 
 .float-child1 {
-    width: 25%;
-    float: left;
-  
+	width: 25%;
+	float: left;
+}
 
-}  
 .float-child2 {
-    width: 75%;
-    float: left;
-
-
-}  
-
-
+	width: 75%;
+	float: left;
+}
 
 body {
-    background-color: #f4f4f4;
+	background-color: #f4f4f4;
+	.float-container
+
+{
+}
+
+.float-child1 {
+	width: 25%;
+	float: left;
+}
+
+.float-child2 {
+	width: 75%;
+	float: left;
+}
+
+body {
+	background-color: #f4f4f4;
 }
 
 .ArcGIS {
-    border-left: 4px silver solid;
-    padding-left: 30px;
+	border-left: 4px silver solid;
+	padding-left: 30px;
 }
 
 .btn-1 {
-    cursor: pointer;
+	cursor: pointer;
 }
 
 .dialog-container {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2000;
-    display: flex;
-    animation: dialog-container-entry 1s;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0,0,0,0.5);
+	z-index: 2000;
+	display: flex;
+	animation: dialog-container-entry 1s;
 }
 
 @keyframes dialog-container-entry {
-    0% {
-        opacity: 0;
-    }
+	0% {
+		opacity: 0;
+	}
 
-    100% {
-        opacity: 1;
-    }
+	100% {
+		opacity: 1;
+	}
 }
 
 table, th, td {
-    border: 1px solid black;
+	border: 1px solid black;
 }
 
 .dialog {
-    background-color: #f4f4f4;
-    box-shadow: 0 0 12px rgba(0,0,0,0.6);
-    display: flex;
-    flex-direction: column;
-    z-index: 2000;
-    align-self: center;
-    margin: auto;
-    width: 700px;
-    max-height: calc(100% - 3rem);
-    animation: dialog-entry 0.4s;
-    animation-timing-function: cubic-bezier(0.075, 0.820, 0.165, 1.000);
+	background-color: #f4f4f4;
+	box-shadow: 0 0 12px rgba(0,0,0,0.6);
+	display: flex;
+	flex-direction: column;
+	z-index: 2000;
+	align-self: center;
+	margin: auto;
+	width: 700px;
+	max-height: calc(100% - 3rem);
+	animation: dialog-entry 0.4s;
+	animation-timing-function: cubic-bezier(0.075, 0.820, 0.165, 1.000);
 }
 
 @keyframes dialog-entry {
-    0% {
-        transform: translateY(30px) scale(0.95);
-    }
+	0% {
+		transform: translateY(30px) scale(0.95);
+	}
 
-    100% {
-        transform: translateX(0px) scale(1.0);
-    }
+	100% {
+		transform: translateX(0px) scale(1.0);
+	}
 }
 
 .dialog-title {
-    background-color: #444;
-    color: #fff2cc;
-    padding: 1.3rem 2rem;
+	background-color: #444;
+	color: #fff2cc;
+	padding: 1.3rem 2rem;
 }
 
-    .dialog-title h2 {
-        color: white;
-        font-size: 1.4rem;
-        margin: 0;
-        font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
-        text-transform: uppercase;
-        line-height: 1.3rem;
-    }
+	.dialog-title h2 {
+		color: white;
+		font-size: 1.4rem;
+		margin: 0;
+		font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
+		text-transform: uppercase;
+		line-height: 1.3rem;
+	}
 
 .dialog-body {
-    flex-grow: 1;
-    padding: 0.5rem 3rem 1rem 0;
+	flex-grow: 1;
+	padding: 0.5rem 3rem 1rem 0;
 }
 
 .dialog-buttons {
-    height: 4rem;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    background-color: #eee;
-    padding: 0 1rem;
+	height: 4rem;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	background-color: #eee;
+	padding: 0 1rem;
 }
 
 .Trash-Button {
-    position: relative;
-    margin-left: 400px;
-    top: -20px;
+	position: relative;
+	margin-left: 400px;
+	top: -20px;
 }
 
 .dialog-node {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    background-color: White;
-    border-style: solid;
-    border-width: 0.1px;
-    border-color: gray;
-    padding-left: 1rem
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	background-color: White;
+	border-style: solid;
+	border-width: 0.1px;
+	border-color: gray;
+	padding-left: 1rem
 }
 
-
-
 .dialog-body > div {
-    display: flex;
-    margin-top: 1rem;
-    align-items: center;
+	display: flex;
+	margin-top: 1rem;
+	align-items: center;
 }
 
 .dialog-body label {
-    text-align: right;
-    width: 200px;
-    margin: 0 1.5rem;
+	text-align: right;
+	width: 200px;
+	margin: 0 1.5rem;
 }
 
 .dialog-body input, .dialog-body select {
-    flex-grow: 1;
-    width: unset;
+	flex-grow: 1;
+	width: unset;
 }
 
 .dialog-body .size-label {
-    min-width: 110px;
-    text-align: right;
+	min-width: 110px;
+	text-align: right;
 }
 
 /* Styling for collapsible menu elements */
 .menu-accordion {
-    background-color: #3a0647;
-    color: white;
-    cursor: pointer;
-    padding: 18px;
-    width: 75%;
-    border: solid;
-    border-color: silver;
-    border-radius: 5px;
-    text-align: left;
-    outline: none;
-    font-size: 15px;
+	background-color: #3a0647;
+	color: white;
+	cursor: pointer;
+	padding: 18px;
+	width: 75%;
+	border: solid;
+	border-color: silver;
+	border-radius: 5px;
+	text-align: left;
+	outline: none;
+	font-size: 15px;
 }
 
 /* Changes the background color of the collapsible menu when hovering over it.*/
@@ -174,17 +180,17 @@ table, th, td {
 }*/
 
 .store-element {
-    padding: 5px 20px;
-    overflow: hidden;
-    background-color: #f1f1f1;
-    border-radius: 5px;
-    color: black;
+	padding: 5px 20px;
+	overflow: hidden;
+	background-color: #f1f1f1;
+	border-radius: 5px;
+	color: black;
 }
 
 .collapse {
-    display: none;
+	display: none;
 }
 
 .text-align-right {
-    float: right;
+	float: right;
 }
