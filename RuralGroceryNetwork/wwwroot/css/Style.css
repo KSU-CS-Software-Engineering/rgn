@@ -1,3 +1,25 @@
+
+
+.float-container {
+
+ 
+}
+
+.float-child1 {
+    width: 25%;
+    float: left;
+  
+
+}  
+.float-child2 {
+    width: 75%;
+    float: left;
+
+
+}  
+
+
+
 body {
     background-color: #f4f4f4;
 }
