@@ -10,18 +10,16 @@ since it is useful for building web applications.
 Link to blazor installation guide: https://docs.microsoft.com/en-us/aspnet/core/blazor/get-started?view=aspnetcore-3.1&tabs=visual-studio
 
 ### Website Deployment
-
 Our Web Application is currently setup to deploy using Microsoft's Azure App Service.
 
 Click here for a guide on Deployment: https://docs.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment
-
 
 ### SQL Server
 For storing data for the website, we are using a SQL Server that is stored locally with the project, then deployed
 with the project through Microsoft Azure onto the web. You will need to download SQL Server in order to run
 a local Database in Visual Studio.
 
-Link to SQL Server Download (2019): https://www.microsoft.com/en-us/sql-server/sql-server-downloads
+SQL Server Download (2019): https://www.microsoft.com/en-us/sql-server/sql-server-downloads
 
 NOTE: When choosing a version, choose the "Developer" Version.
 
@@ -34,7 +32,11 @@ barebones so we are using Javascript since it has more features and tutorials on
 for our web application. We are still trying to work on the .NET version of a map, but the javascript implementation
 has more priority at this point in time.
 
-Link to ArcGIS Website: https://www.arcgis.com/home/index.html
+Users will need an ArcGIS account to use the map, though we have found useful information for setting up authentication such that the log in isn't needed. Click the following link to learn more about it.
+
+ArcGIS Authenticated Services: https://developers.arcgis.com/labs/arcgisonline/set-up-authenticated-services/
+
+ArcGIS Website: https://www.arcgis.com/home/index.html
 
 ArcGIS Tutorials: https://developers.arcgis.com/labs/browse/?product=arcgis-online&topic=any
 
@@ -84,19 +86,33 @@ The pages we currently have are:
 - NodesPage.razor
 - RoutesPage.razor
 - ScenariosPage.razor
-- TrucksPage.razor
 - StoreInformationPage.razor
+- TrucksPage.razor
 
 Our pages also integrate other components within them. Some examples of these kinds of components include the Website's Navigation Menu, 
 The website's main layout, among other things. These components can be found in the RuralGroceryNetwork/Shared Directory:
 
 ![Shared Directory](img/directory-shared.PNG)
 
+We have also defined a few classes for keeping track of data in the RuralGroceryNetwork/Data directory:
+
+![Data Directory](img/directory-data.PNG)
+
+And some javascript and css files in the RuralGroceryNetwork/wwwroot directory:
+
+![wwwroot Directory](img/directory.wwwroot.PNG)
+
+We also implemented some Database Interaction thorugh a separate project within our solution. Here is where you can find the table models and data layouts. These things can be found in the GroceryLibrary directory:
+
+![Grocery Library](img/directory-GroceryLibrary.PNG)
+
 ### Data Binding and Event Handling:
 
 Click these links for detailed explanations for data binding and event handling in blazor:
-data binding: https://docs.microsoft.com/en-us/aspnet/core/blazor/data-binding?view=aspnetcore-3.1
-event handling: https://docs.microsoft.com/en-us/aspnet/core/blazor/event-handling?view=aspnetcore-3.1
+
+Data Binding: https://docs.microsoft.com/en-us/aspnet/core/blazor/data-binding?view=aspnetcore-3.1
+
+Event Handling: https://docs.microsoft.com/en-us/aspnet/core/blazor/event-handling?view=aspnetcore-3.1
 
 An important aspect of blazor is that you can bind variables, methods, and events to various html elements.
 This allows us to have modifiable data within HTML, from input data to even changing the attributes/css within
@@ -106,16 +122,22 @@ Here are some examples from StoreInformationPage.razor:
 
 HTML Element:
 ![html binding](img/binding-html.PNG)
-![Collapse State](img/binding-fieldsTwo
+![Collapse State](img/binding-fieldsTwo.PNG)
+
+This page has an Accordion Menu, which is a menu that collapses and either reveals or hide information when you click on the menu panels. The boolean collapse properties are used for determining whether or not each panel is collapsed or not. The collapse state gets toggled when that panel's header get's clicked on, which is set with the razor @onclick event that is set to a lambda expression for event "e". And based on what the state of the collapse properity, in the "store-element" div we then use a conditional string binding that appends the "collapse" css style to it (defined in www/Style.css) or nothing depending on what the state is.
 
 Text Input:
 ![Text Input](img/binding-text.PNG)
 ![Text Field](img/binding-textField.PNG)
 ![Edit States](img/binding-fieldsOne.PNG)
 
+Here we have a conditional statement that shows different html elements depending on the state of whether we can edit this field or not (edit state is is toggled by hitting this panel's edit button, similary done to the collapse states. If it isn't in an edit state then it shows the current value for that field, otherwise it reveals a a text input that binds to a private string in the co when the input is modified, which can then be processed into our databased when we click the save button.
+
 Checkbox Input:
 ![Checkbox Input](img/binding-checkbox.PNG)
 ![Checkbox Field & Update](img/binding-checkboxField.PNG)
+
+Checkboxes work a bit differently, in that we can set it a boolean when it changes using the @onchange event, which triggers a method to toggle the current state for that checkbox (which is initially set based on values in our Database). We then show if it is checked by using that expression and binding it the checkbox's "checked" attribute.
 
 ### Other Helpful Resources:
 
