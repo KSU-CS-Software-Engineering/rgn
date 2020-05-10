@@ -1,4 +1,3 @@
-![Azure Deploy](https://github.com/Colin1224/rgn/workflows/Azure%20Deploy/badge.svg) [![BCH compliance](https://bettercodehub.com/edge/badge/Colin1224/rgn?branch=master)](https://bettercodehub.com/) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/26d7b54ca4d045d7b6770740bc7efce3)](https://www.codacy.com/manual/colin.cope/rgn?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Colin1224/rgn&amp;utm_campaign=Badge_Grade)
 # Rural Grocery Network
 https://ruralgrocerynetwork.azurewebsites.net/
 
@@ -20,7 +19,3 @@ routes between nodes on a map. An ArcGIS Online subscription is required to full
 * Run `dotnet build`
 * Run `dotnet run --project ./RuralGroceryNetwork/`
 * Navigate to `http://localhost:5001`
-
-### Credits:
-
- * __Icons:__ https://icons8.com (Under CC BY-ND 3.0 licence)

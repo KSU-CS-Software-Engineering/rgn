@@ -60,6 +60,7 @@ namespace RuralGroceryNetwork
             services.AddSingleton<Truck>();
             services.AddSingleton<Scenario>();
             services.AddSingleton<Node>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
