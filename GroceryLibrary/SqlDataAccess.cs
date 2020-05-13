@@ -197,16 +197,7 @@ namespace GroceryLibrary
             sb.Append(" VALUES ");
             sb.Append("('" + store.StoreEmail + "');");
 
-            string SqlCommand = sb.ToString();
-            using (SqlCommand command = new SqlCommand(SqlCommand, conn))
-            {
-                /* Tries really hard to make the new table */
-                int result = -1, tries = 0;
-                while (result < 0 && tries < 3)
-                {
-                    result = command.ExecuteNonQuery();
-                }
-            }
+            ExecuteNonQuery(sb.ToString(), conn);
             sb.Clear();
 
 
@@ -217,8 +208,7 @@ namespace GroceryLibrary
             sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
             sb.Append("WHERE " + StoreInformationTable.STORE_EMAIL_ADDRESS + "='" + store.StoreEmail + "';");
 
-            SqlCommand = sb.ToString();
-            using (SqlCommand command = new SqlCommand(SqlCommand, conn))
+            using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -244,16 +234,7 @@ namespace GroceryLibrary
             sb.Append(" VALUES ");
             sb.Append("(" + StoreID + ");");
 
-            SqlCommand = sb.ToString();
-            using (SqlCommand command = new SqlCommand(SqlCommand, conn))
-            {
-                /* Tries really hard to make the new table */
-                int result = -1, tries = 0;
-                while (result < 0 && tries < 3)
-                {
-                    result = command.ExecuteNonQuery();
-                }
-            }
+            ExecuteNonQuery(sb.ToString(), conn);
             sb.Clear();
 
 
@@ -265,16 +246,7 @@ namespace GroceryLibrary
             sb.Append("VALUES");
             sb.Append("(" + StoreID + ");");
 
-            SqlCommand = sb.ToString();
-            using (SqlCommand command = new SqlCommand(SqlCommand, conn))
-            {
-                /* Tries really hard to make the new table */
-                int result = -1, tries = 0;
-                while (result < 0 && tries < 3)
-                {
-                    result = command.ExecuteNonQuery();
-                }
-            }
+            ExecuteNonQuery(sb.ToString(), conn);
             sb.Clear();
 
 
@@ -286,16 +258,7 @@ namespace GroceryLibrary
             sb.Append("VALUES");
             sb.Append("(" + StoreID + ");");
 
-            SqlCommand = sb.ToString();
-            using (SqlCommand command = new SqlCommand(SqlCommand, conn))
-            {
-                /* Tries really hard to make the new table */
-                int result = -1, tries = 0;
-                while (result < 0 && tries < 3)
-                {
-                    result = command.ExecuteNonQuery();
-                }
-            }
+            ExecuteNonQuery(sb.ToString(), conn);
             sb.Clear();
 
             /* Set the store's ID equal to the ID that was auto assigned by the DB */
@@ -339,8 +302,7 @@ namespace GroceryLibrary
             sb.Append("INNER JOIN " + DatabaseTables.SQUARE_FOOTAGE_CATEGORIES + "SFC ON SFC." + SquareFootageCategoriesTable.SQUARE_FOOTAGE_CATEGORIES_ID + " = SI." + StoreInformationTable.SQUARE_FOOTAGE_CATEGORIES_ID);
             sb.Append("WHERE " + StoreInformationTable.STORE_EMAIL_ADDRESS + "= '" + store.StoreEmail + "'");
 
-            string sqlCommand = sb.ToString();
-            using (SqlCommand command = new SqlCommand(sqlCommand, conn))
+            using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -399,7 +361,6 @@ namespace GroceryLibrary
         /// <param name="conn">The database connection</param>
         private static void getStoreDeliveryInformation(SqlConnection conn)
         {
-            string sqlCommand;
             StringBuilder sb = new StringBuilder();
 
             sb.Append("SELECT ");
@@ -411,8 +372,7 @@ namespace GroceryLibrary
             sb.Append("FROM " + DatabaseTables.STORE_DELIVERY_INFORMATION);
             sb.Append("WHERE " + StoreDeliveryInformationTable.STORE_ID + "= " + store.StoreID);
 
-            sqlCommand = sb.ToString();
-            using (SqlCommand command = new SqlCommand(sqlCommand, conn))
+            using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -462,7 +422,6 @@ namespace GroceryLibrary
         /// <param name="conn">The database connection</param>
         private static void getStoreDeliverySchedule(SqlConnection conn)
         {
-            string sqlCommand;
             StringBuilder sb = new StringBuilder();
 
             sb.Append("SELECT ");
@@ -476,8 +435,7 @@ namespace GroceryLibrary
             sb.Append("FROM " + DatabaseTables.STORE_DELIVERY_SCHEDULE);
             sb.Append("WHERE " + StoreDeliveryScheduleTable.STORE_ID + "= " + store.StoreID);
 
-            sqlCommand = sb.ToString();
-            using (SqlCommand command = new SqlCommand(sqlCommand, conn))
+            using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -540,7 +498,6 @@ namespace GroceryLibrary
         /// <param name="conn">The database connection</param>
         private static void getStoreEquipmentInformation(SqlConnection conn)
         {
-            string sqlCommand;
             StringBuilder sb = new StringBuilder();
 
             sb.Append("SELECT ");
@@ -550,8 +507,7 @@ namespace GroceryLibrary
             sb.Append("FROM " + DatabaseTables.STORE_EQUIPMENT_INFORMATION);
             sb.Append("WHERE " + StoreDeliveryScheduleTable.STORE_ID + "= " + store.StoreID);
 
-            sqlCommand = sb.ToString();
-            using (SqlCommand command = new SqlCommand(sqlCommand, conn))
+            using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
             {
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -591,7 +547,6 @@ namespace GroceryLibrary
         {
             if (store.CityID != -1 || store.DistributorID != -1)
             {
-                string sqlCommand;
                 bool needsCity = false, needsDist = false;
                 StringBuilder sb = new StringBuilder();
 
@@ -628,8 +583,7 @@ namespace GroceryLibrary
 
                 sb.Append("WHERE S." + StoreInformationTable.STORE_ID + "= " + store.StoreID.ToString());
 
-                sqlCommand = sb.ToString();
-                using (SqlCommand command = new SqlCommand(sqlCommand, conn))
+                using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
                 {
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -682,7 +636,6 @@ namespace GroceryLibrary
         /// </summary>
         public static void updateGeoInformation(string StoreName, int CityID, int DistID)
         {
-            string sqlCommand;
             StringBuilder sb = new StringBuilder();
 
             sb.Append("UPDATE " + DatabaseTables.STORE_INFORMATION);
@@ -695,15 +648,7 @@ namespace GroceryLibrary
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                    connection.Open();
-                    sqlCommand = sb.ToString();
-                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
-                    {
-                        int result = command.ExecuteNonQuery();
-                        if (result < 0)
-                            throw new Exception("Couldn't UPDATE delivery days");
-                    }
-                    connection.Close();
+                    ExecuteNonQuery(sb.ToString(), connection);
                 }
             }
             catch (Exception e)
@@ -723,20 +668,12 @@ namespace GroceryLibrary
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                    connection.Open();
-                    sqlCommand = sb.ToString();
-                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
-                    {
-                        int result = command.ExecuteNonQuery();
-                        if (result < 0)
-                            throw new Exception("Couldn't UPDATE delivery days");
-                    }
-                    connection.Close();
+                    ExecuteNonQuery(sb.ToString(), connection);
                 }
             }
-            catch (Exception e)
+            catch (SqlException sqle)
             {
-                store = null;
+                /* Error Handling Here */
             }
         }
 
@@ -747,7 +684,6 @@ namespace GroceryLibrary
         /// <param name="NumChkLns"></param>
         public static void updatePhysInformation(int SFCat, int NumChkLns)
         {
-            string sqlCommand;
             StringBuilder sb = new StringBuilder();
 
             sb.Append("UPDATE " + DatabaseTables.STORE_INFORMATION);
@@ -760,20 +696,12 @@ namespace GroceryLibrary
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                    connection.Open();
-                    sqlCommand = sb.ToString();
-                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
-                    {
-                        int result = command.ExecuteNonQuery();
-                        if (result < 0)
-                            throw new Exception("Couldn't UPDATE delivery days");
-                    }
-                    connection.Close();
+                    ExecuteNonQuery(sb.ToString(), connection);
                 }
             }
-            catch (Exception e)
+            catch (SqlException sqle)
             {
-                store = null;
+                /* Error Handling Here */
             }
         }
 
@@ -791,7 +719,6 @@ namespace GroceryLibrary
         public static void updateDeliveryDays(bool mon, bool tues, bool wed, bool thurs,
                                                     bool fri, bool sat, bool sun)
         {
-            string sqlCommand;
             StringBuilder sb = new StringBuilder();
 
             sb.Append("UPDATE " + DatabaseTables.STORE_DELIVERY_SCHEDULE);
@@ -809,33 +736,24 @@ namespace GroceryLibrary
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                    connection.Open();
-                    sqlCommand = sb.ToString();
-                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
-                    {
-                        int result = command.ExecuteNonQuery();
-                        if (result < 0)
-                            throw new Exception("Couldn't UPDATE delivery days");
-                    }
-                    connection.Close();
+                    ExecuteNonQuery(sb.ToString(), connection);
                 }
             }
-            catch(Exception e)
+            catch(SqlException sqle)
             {
-                store = null;
+                /* Error Handling Here */
             }
         }
 
         /// <summary>
         /// Responsible for update the pallet infomation
         /// </summary>
-        /// <param name="palletMin"></param>
-        /// <param name="palletMax"></param>
-        /// <param name="weeklyBuyMin"></param>
-        /// <param name="sellsToOthers"></param>
+        /// <param name="palletMin">The new pallet minimum</param>
+        /// <param name="palletMax">The new pallet maximum</param>
+        /// <param name="weeklyBuyMin">Is there a weekly buying minimum per pallet?></param>
+        /// <param name="sellsToOthers">Does the store sell to others?</param>
         public static void updatePalletInformation(int palletMin, int palletMax, bool weeklyBuyMin, bool sellsToOthers)
         {
-            string sqlCommand;
             StringBuilder sb = new StringBuilder();
 
             sb.Append("UPDATE " + DatabaseTables.STORE_DELIVERY_INFORMATION);
@@ -850,20 +768,12 @@ namespace GroceryLibrary
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                    connection.Open();
-                    sqlCommand = sb.ToString();
-                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
-                    {
-                        int result = command.ExecuteNonQuery();
-                        if (result < 0)
-                            throw new Exception("Couldn't UPDATE store equipment");
-                    }
-                    connection.Close();
+                    ExecuteNonQuery(sb.ToString(), connection);
                 }
             }
-            catch (Exception e)
+            catch (SqlException sqle)
             {
-                store = null;
+                /* Error Handling Here */
             }
         }
 
@@ -875,7 +785,6 @@ namespace GroceryLibrary
         /// <param name="loading"></param>
         public static void updateStoreEquipmentInformation(bool fork, bool pallet, bool loading)
         {
-            string sqlCommand;
             StringBuilder sb = new StringBuilder();
 
             sb.Append("UPDATE " + DatabaseTables.STORE_EQUIPMENT_INFORMATION);
@@ -889,21 +798,30 @@ namespace GroceryLibrary
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                    connection.Open();
-                    sqlCommand = sb.ToString();
-                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
-                    {
-                        int result = command.ExecuteNonQuery();
-                        if (result < 0)
-                            throw new Exception("Couldn't UPDATE store equipment");
-                    }
-                    connection.Close();
+                    ExecuteNonQuery(sb.ToString(), connection);
                 }
             }
-            catch (Exception e)
+            catch (SqlException sqle)
             {
-                store = null;
+                /* Error Handling Here */
             }
+        }
+
+        /// <summary>
+        /// Used for executing update queries within the database
+        /// </summary>
+        /// <param name="sqlCommand">The command that needs to be executed</param>
+        /// <param name="conn">The database connection</param>
+        private static void ExecuteNonQuery(string sqlCommand, SqlConnection conn)
+        {
+            conn.Open();
+            using (SqlCommand command = new SqlCommand(sqlCommand, conn))
+            {
+                int result = command.ExecuteNonQuery();
+                if (result < 0)
+                    throw new Exception("Could not update table");
+            }
+            conn.Close();
         }
     }
 }
