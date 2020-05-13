@@ -103,4 +103,4 @@ has an accordion-style menu that collapses when each section's header is clicked
 section having it's own save and edit buttons, and being edited via a text entry or checkbox toggle (for the fields that are editable).
 This page has database interactions, as well as functioning editing/saving of each field, but still is a WIP due
 
-![Store Info Page](img/storeinfo-page.PNG)
+![Store Info Page](img/storeInformation-page.png)
