@@ -1,0 +1,65 @@
+﻿<!--
+Copyright 2020 Kansas State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<div class="top-row pl-4 navbar navbar-dark">
+	﻿<!-- Upper Portion of the Nav Menu -->
+	<a class="navbar-brand" href="">RuralGroceryNetwork</a>
+	<button class="navbar-toggler" @onclick="ToggleNavMenu">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+</div>
+
+<!-- Bottom Portion of Nav Menu -->
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+	<ul class="nav flex-column">
+		<li class="nav-item px-3">
+			<NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+				<span class="oi oi-info" aria-hidden="true"></span> About
+			</NavLink>
+			<AuthorizeView>
+				<!-- Only available if autheticated -->
+				<NavLink class="nav-link" href="scenarios" Match="NavLinkMatch.All">
+					<span class="oi oi-globe" aria-hidden="true"></span> Scenarios
+				</NavLink>
+				<NavLink class="nav-link" href="nodes" Match="NavLinkMatch.All">
+					<span class="oi oi-home" aria-hidden="true"></span> Stores
+				</NavLink>
+				<NavLink class="nav-link" href="routes" Match="NavLinkMatch.All">
+					<span class="oi oi-loop" aria-hidden="true"></span> Routes
+				</NavLink>
+				<NavLink class="nav-link" href="trucks" Match="NavLinkMatch.All">
+					<span class="oi oi-vertical-align-top" aria-hidden="true"></span> Trucks
+				</NavLink>
+				<NavLink class="nav-link" href="StoreInformation" Match="NavLinkMatch.All">
+					<span class="oi oi-vertical-align-top" aria-hidden="true"></span> Store Information
+				</NavLink>
+			</AuthorizeView>
+		</li>
+	</ul>
+</div>
+
+@code {
+	private bool collapseNavMenu = true;
+
+	private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+	//Toggles whether the nav menu is collapsed or not
+	private void ToggleNavMenu()
+	{
+		collapseNavMenu = !collapseNavMenu;
+	}
+
+}

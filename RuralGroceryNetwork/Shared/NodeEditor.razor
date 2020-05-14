@@ -1,0 +1,289 @@
+﻿<!--
+Copyright 2020 Kansas State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+@inject IJSRuntime JS
+
+<!-- Javascript ArcGIS map Div setup -->
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>ArcGIS</title>
+<style onload="CreateMap()">
+
+    #viewDiv {
+        padding: 0;
+        margin: 5px;
+        height: 475px;
+        width: 800px;
+    }
+</style>
+
+
+<link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css">
+
+
+<!-- The Main Div that contains everything in the map; used in this way to display the map components next to eachothers.-->
+
+<div class="float-container">
+
+    <div class="float-child1">
+        <body id="row1" onload="CreateMap()">
+            <div>
+                <div id="Fields">
+                    <!-- Node name field -->
+                    <div class="form-field">
+                        <label>Name:</label>
+                        <div>
+                            <input @bind="NodeState.Name" />
+                        </div>
+                    </div>
+                    <!-- Node location field -->
+                    <div class="form-field">
+                        <label>Location:</label>
+
+                    </div>
+                    <!-- Node location fields -->
+                    <div class="form-field">
+                        <input />
+
+                        <input />
+
+                        <button class="btn-1" @onclick="@(() =>CenterMap(NodeState.Location_x,NodeState.Location_y))">
+                            <img src="img/location.png" />
+                        </button>
+                    </div>
+                    <!-- Node demand field -->
+                    <div class="form-field">
+                        <label>Demand:</label>
+                        <div>
+                            <input @bind="NodeState.Demand" />
+
+                            <label>palettes</label>
+                        </div>
+                    </div>
+                    <!-- Node supply field -->
+                    <div class="form-field">
+                        <label>Supply:</label>
+                        <div>
+                            <input @bind="NodeState.Supply" />
+
+                            <label>palettes</label>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <div id="Btnz">
+
+                    <!-- button for adding a node  -->
+                    <button type="submit" @onclick="@(() =>@AddNodes(NodeState.Name,NodeState.Demand,NodeState.Supply,NodeState.Location_x,NodeState.Location_x))" class="btn-1">Add Stores</button>
+
+                    <!-- button for opening the import page -->
+                    <br />
+                    <button @onclick="enableImportPage" class="btn-1">Import Stores from .csv</button>
+                    <!-- button for removing the nodes from list -->
+                    <br />
+                    <button @onclick="RemoveNodes" class="btn-1">Remove All Stores</button>
+
+                    <!-- button for showing the nodelist  page -->
+                    <br />
+                    <button @onclick="enableNodeList">Stores List</button>
+                    <!-- Reload the map if needed -->
+                    <button @onclick="LoadMap">Reload Map</button>
+
+                </div>
+            </div>
+
+
+
+
+        </body>
+
+    </div>
+    <div class="float-child2">
+
+
+
+        <div id="MapDiv">
+
+            <!-- The div that the map get displayed inside of -->
+            <div id="viewDiv"></div>
+
+            <!-- Button for adding a node on the map -->
+            <button style="float:left" @onclick="@(() =>MapInput(NodeState.Location_x,NodeState.Location_y))">Add a Nodes</button>
+            <!-- The Lat/Lon Fields -->
+            <input type="number" style="width:50px" @bind="NodeState.Location_x" /> <input type="number" style="width:50px" @bind="NodeState.Location_y" />
+
+
+
+
+            <!-- Various options for changing the MapBase -->
+
+            <label for="Map" display="float:right">Choose a MapBase:</label>
+
+            <select id="MapBase" @onchange="ChangeMapBase" display="float:right">
+                <option value="streets-navigation-vector">streets navigation vector</option>
+                <option value="streets">streets</option>
+                <option value="topo">topo</option>
+                <option value="satellite">satellite</option>
+                <option value="hybrid">hybrid</option>
+                <option value="dark-gray">dark-gray</option>
+                <option value="national-geographic">national-geographic</option>
+                <option value="oceans">oceans</option>
+                <option value="osm">osm</option>
+                <option value="streets-night-vector">streets-night-vector</option>
+                <option value="topo-vector">topo-vector</option>
+            </select>
+            <br />
+            <label style="font-style: italic;">  Lat / Lon</label>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+<!-- display the Import node Page -->
+@if (ShowImportPage)
+{
+    <ImportNodePage Nodes="nodes" Close="disableImportPage" />
+}
+
+<!-- Display the Node List  page -->
+@if (ShowNodeList)
+{
+    <NodeListPage Close="disableNodeList" Nodes="nodes" />
+}
+
+
+
+@code {
+
+
+
+    /// <summary>
+    /// List of nodes
+    /// </summary>
+    List<Node> nodes = new List<Node>();
+
+    /// <summary>
+    /// Change the Base Map Style for the Arcgis Map
+    /// </summary>
+    async Task ChangeMapBase()
+    {
+
+        await JS.InvokeVoidAsync(identifier: "ChangeMapBase");
+    }
+    /// <summary>
+    /// Recenter the map on a given latitude  and longitude
+    /// </summary>
+    async Task CenterMap(double lat, double lon)
+    {
+        await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
+    }
+
+    /// <summary>
+    /// Add a node on the map on a given latitude  and longitude
+    /// </summary>
+    async Task MapInput(double lat, double lon)
+    {
+        await JS.InvokeVoidAsync(identifier: "MapInput", lat, lon);
+        await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
+    }
+
+
+
+    /// <summary>
+    /// Loads the javascript Arcgis Map
+    /// </summary>
+    async Task LoadMap()
+    {
+        await JS.InvokeVoidAsync("CreateMap");
+    }
+
+
+
+    /// <summary>
+    /// Value that stores if list of nodes is displayed
+    /// </summary>
+    bool ShowNodeList = false;
+
+    /// <summary>
+    /// Value that stores to show import nodes list
+    /// </summary>
+    bool ShowImportPage = false;
+
+    [Parameter] public NodeState NodeState { get; set; }
+
+    /// <summary>
+    /// Adds node to list of nodes from inputed data
+    /// </summary>
+    void AddNodes(string name, string demand, string supply, double longitude, double lattitude)
+    {
+        Node X = new Node();
+        X.State.Name = name;
+        X.State.Demand = demand;
+        X.State.Supply = supply;
+        X.State.Location_x = longitude;
+        X.State.Location_y = lattitude;
+        nodes.Add(X);
+
+        //NodeState.Name = "";
+    }
+
+    /// <summary>
+    /// Clears all nodes from list
+    /// </summary>
+    void RemoveNodes()
+    {
+        nodes.Clear();
+
+    }
+
+    /// <summary>
+    /// Hides list of nodes page
+    /// </summary>
+    void disableNodeList()
+    {
+        ShowNodeList = false;
+    }
+
+    /// <summary>
+    /// Opens node list page
+    /// </summary>
+    void enableNodeList()
+    {
+        ShowNodeList = true;
+    }
+
+    /// <summary>
+    /// Hides import page
+    /// </summary>
+    void disableImportPage()
+    {
+        ShowImportPage = false;
+    }
+
+    /// <summary>
+    /// Opens import nodes page
+    /// </summary>
+    void enableImportPage()
+    {
+        ShowImportPage = true;
+    }
+}

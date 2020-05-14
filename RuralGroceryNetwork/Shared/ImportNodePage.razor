@@ -1,0 +1,157 @@
+﻿<!--
+Copyright 2020 Kansas State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!-- Page for importing nodes from file -->
+<div class="dialog-container">
+	<div class="dialog">
+		<div class="dialog-title">
+			<h2>Import from .csv</h2>
+		</div>
+
+		@if (showBody)
+		{
+			<form class="dialog-body">
+				<label> First Line Header</label>
+				<input type="checkbox" />
+				<br />
+				<br />
+
+				<div style="overflow-x:auto" class="dialog-body">
+					<!-- Create a table for the info of the file  -->
+					<table>
+						<tr>
+							<th>Name</th>
+							<th>Longtitude</th>
+							<th>Latitude</th>
+							<th>Supply</th>
+							<th>Demand</th>
+						</tr>
+						<tr>
+							@for (int i = 0; i < contants.Length; i++)
+							{
+								<td>@contants[i]</td>
+							}
+						</tr>
+					</table>
+
+					<table>
+					</table>
+				</div>
+
+				<!-- for loops to create the 1-17 buttons  -->
+				@for (int i = 1; i < 18; i++)
+				{<button>@i</button>}Name
+				<br />
+				@for (int i = 1; i < 18; i++)
+				{<button>@i</button>}Latitude
+				<br />
+				@for (int i = 1; i < 18; i++)
+				{<button>@i</button>}Longitude
+				<br />
+				@for (int i = 1; i < 18; i++)
+				{<button>@i</button>}Demand[palettes]
+				<br />
+				@for (int i = 1; i < 18; i++)
+				{<button>@i</button>}Supply[palettes]
+			</form>
+		}
+		<div class="dialog-buttons">
+			<!-- Close button -->
+			<button @onclick="@Close" class="btn btn-secondary mr-auto">Close</button>
+
+			<InputFile OnChange="HandleFileSelected" />
+			@if (showImportButton)
+			{
+				<button @onclick="@ImportFile" class="btn btn-success ml-auto">OK, Import</button>
+			}
+		</div>
+	</div>
+</div>
+
+@code {
+
+	/// <summary>
+	/// Stores user uploaded file
+	/// </summary>
+	IFileListEntry file;
+
+	/// <summary>
+	/// List of nodes
+	/// </summary>
+	[Parameter] public List<Node> Nodes { get; set; }
+
+	bool showBody = false; //for diplaying the body of the import page
+
+	bool showImportButton = false; // for displaying the import button
+
+	//the size is arbitrary.
+	string[] contants = new string[4];
+
+	/// <summary>
+	/// Handles uploaded files
+	/// </summary>
+	/// <param name="files">List of files</param>
+	void HandleFileSelected(IFileListEntry[] files)
+	{
+		file = files.FirstOrDefault();
+		showImportButton = true;
+		// Do something with the files, e.g., read them
+	}
+
+	/// <summary>
+	/// Imports data from file and creates nodes
+	/// </summary>
+	async Task ImportFile()
+	{
+		//read the selected file.
+		using (var reader = new System.IO.StreamReader(file.Data))
+		{
+			while (await reader.ReadLineAsync() != null)
+			{
+
+				contants = reader.ReadLineAsync().Result.Split(',');
+			}
+		}
+
+		//Create a new Node with read information and add to the nodelist.
+		Node x = new Node();
+		x.State.Name = contants[0];
+		x.State.Location_x = Int32.Parse(contants[1]);
+		x.State.Location_y = Int32.Parse(contants[2]);
+		x.State.Demand = contants[3];
+		x.State.Supply = contants[4];
+		importNodes(x);
+
+		//show the Body of the imported info.
+		showBody = true;
+	}
+
+	/// <summary>
+	/// Adds node to nodes list
+	/// </summary>
+	/// <param name="x">Node to be added</param>
+	void importNodes(Node x)
+	{
+		Nodes.Add(x);
+	}
+
+	[Parameter] public EventCallback OnChange { get; set; }
+
+	/// <summary>
+	/// Close import page
+	/// </summary>
+	[Parameter] public EventCallback Close { get; set; }
+}

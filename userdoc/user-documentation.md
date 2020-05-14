@@ -1,85 +1,106 @@
-# Rural Grocery Network Optimizer
-## User Documentation
+# Rural Grocery Network Web Application - User Documentation
 ***
-### Connecting to the Database
 
-Open the application and click the “Connect to Database” button 
+Here is a link to the website: https://ruralgrocerynetwork.azurewebsites.net/
 
-![Connect to Database](img/connect-to-database.png)
+When a user first gets on the website, they first encounter an about page, along with buttons to login or register
+an account for this application. 
 
-On the ensuing popup, enter your credentials as well as the database name and server URL. Click the connect button to make the connection.
+![About Page](img/about-page.PNG)
 
-![Database Login](img/database-login-credentials.png)
+### Login/Registration
+Click one of the buttons on the upper right hand corner of the page to either create an account or login to it.
 
-If you are successfully connected, you should be presented with the main menu of the application with your connection information in the top right corner. Click the red X button to close the connection.
+For registering an account, just enter an email address along with a password, and then enter the password again
+to confirm it. We are currenlty working on account verification in order to ensure accounts are created when they
+should be. Once you are done entering the information, hit the "Register" button.
 
-![Home](img/home-page.png)
+![Register an account](img/register-account.PNG)
 
-### Scenarios
+To Login, you just enter the email and password that you provided in the registration. Once it is entered, hit the
+"Log In" Button. Users can also click "Forgot Password" to change the password through email, or "Register as a new user" 
+to redirect to the registration page. Currently the functionality for recovering/changing passwords through email is a Work-In Progress (WIP).
 
-Scenarios are used to store and manipulate data about a network of grocery stores. The application will use this data to determine optimal distribution networks.
+![Login page](img/login.PNG)
 
-#### Creating a Scenario
+Once you login, you should see your email along with a logout button in place of the login and register buttons
+on the upper right hand corner of the page.
 
-To create a scenario, click the green plus button on the upper left corner of the main page.
+![Login Successful](img/login-complete.PNG)
 
-![New Scenario](img/new-scenario.png)
+### Account Settings
+When logged in, click on the email on the upper right hand corner to access Account Settings. To navigate back to the main web pages, 
+just click on the "RuralGroceryNetwork" Banner at the top of the page. Currently we have the following settings for user accounts:
 
-Name the scenario and press OK to create it. This will take you to the Scenario page .
+#### Profile information
+Users can change username and add/change the phone number for the account.
 
-#### Opening a Scenario
+![Profile Setting](img/profile.PNG)
 
-To open an existing scenario, click the folder button to open the Select Scenario screen. Click the blue arrow to the right of a scenario to open it.
+#### Email
+This is where users can see the email associated with their account, as well as change it to a different email address. Verification
+emails can also be sent as well.
 
-![Select Scenario](img/select-scenario.png)
+![Email Setting](img/email.PNG)
 
-#### Scenario Overview
+#### Password
+This is where users can change the password for their account. They do need to enter their previous password in this page in order to change it. 
 
-![Scenario Overview](img/scenario-overview.png)
+![Password Setting](img/password.PNG)
 
-When a scenario is loaded, this screen will be displayed to provide the user the with an overview of the scenario.
+#### Two-Step Authentication
+Users can add an app to do Two-Step Authentication with. After clicking the "set up authenticator app" button, 
+you get steps to add an app like Microsoft Authenticator, using QR Code generation or through a key entry that is provided in this page. 
+Users can also reset their authentication key, for when they want to stop using it or want to switch authentication apps.
 
-#### ArcGIS Software Link
+![2 Step Authentication](img/authentication.PNG)
 
-![ArcGIS](img/arcgis-software-link.png)
+![Add Authentication](img/add-authentication.PNG)
 
-ArcGIS is the technology behind the routing capabilities of the application. The application uses a web interface to interact with ArcGIS, and a client ID and client secret token are required to access the ArcGIS server. Enter the ArcGIS web server along with those credentials here and click the Test Connection button to see if your connection is functioning properly. It tests this by using the Client ID and Client Secret to retrieve an ArcGIS temporary token from the main ArcGIS API. 
+#### Personal Data
+Any personal data associated with users can either be downloaded or deleted through this page. 
+Account Information is downloaded as a JSON file. Note that deleting data does delete the account, 
+but it needs password confirmation in order to accomplish it.
 
-### Nodes
+![Personal Data](img/personal-data.PNG)
 
-A node represents a grocery store or distribution center to be used in the calculations for the application. One can manually enter nodes via the main nodes page or mass import node data from a .csv file. 
+### Web pages
+Aside from the about page, we currently have 4 pages, which are called Scenarios, 
+Stores, Routes, and Trucks.
 
-![Node Overview](img/node-overview.png)
+#### Scenarios Page
+Scenarios are used for storing different scenarios for distribution. It allows user to name and describe scenarios, which will be saved
+with the User. This page also has a form to enter arcGIS information, since the mapping portion requires a arcGIS account/license to use. 
+Currently this page is a WIP.
 
-To import nodes from a .csv file, click the Import nodes from .csv button, which will open a file selection prompt. Select the .csv file you wish to import data from.
+![Scenarios Page](img/scenarios-page.PNG)
 
-![Import Node Dialog](img/import-node-data.png)
+#### Stores Page
+Stores allows users to enter store locations and will allow routing between stores, along with importing store data from .CSV files.
+This page also shows the routing through a map using ArcGIS. Currently the map can be clicked on to add nodes, then you also add nodes
+using either latitude/longitude coordinates or actuall addresses, and routes can be drawn for those nodes. The store locations can't be pulled from
+the Database as of now though, so this page is still a WIP.
 
-Clicking the open button when you have your data selected will prompt you with the Import from .csv dialogue. In this you can select which columns correspond to the data needed for a node object. 
+![Stores Page](img/stores-page.PNG)
 
-![Import from CSV](img/import-from-csv.png)
+![arcGIS map](img/stores-map.PNG)
 
-Once the desired columns are selected, a message will appear to the user indicating either failure:
+#### Routes Page
+Routes are where the calculations take place and will calculate the optimal route to take for distribution. This
+information will be based on what is entered/retrieved in the Stores Page. Hit the "Calculate" Button to run the calculation. This page is still a WIP.
 
-![Import Warning from CSV](img/node-import-warning.png)
+![Routes Page](img/routes-page.PNG)
 
-Or success: 
+#### Trucks Page
+Trucks are where truck information can be, such as the start and end location for the truck, as well as the truck name and carrying capacity. 
+Hit "Add Truck" to save the truck information. This page is still a WIP.
 
-![Import Success from CSV](img/node-import-success.png)
+![Trucks Page](img/trucks-page.PNG)
 
-A scrollable list of the different nodes will appear in the left sidebar of the nodes page. Click on a node to load/edit it's data.
+#### Store Information Page.
+This is where all the store information is currently stored, and it can also be modified and saved into the site's database. This page
+has an accordion-style menu that collapses when each section's header is clicked on. We divide the information into 5 different sections, with each
+section having it's own save and edit buttons, and being edited via a text entry or checkbox toggle (for the fields that are editable).
+This page has database interactions, as well as functioning editing/saving of each field, but still is a WIP due
 
-![Node List](img/node-list.png)
-
-### Trucks
-
-This page outlines a truck that is available to transport groceries. Enter the information for a truck and click the Add Truck button to add it to the database.
-
-![Trucks Overview](img/trucks-overview.png)
-
-### Routes
-
-Click the calculate button on this page to calculate the best route to take while distributing groceries in your network.
-
-![Routing Overview](img/routes-overview.png)
-
+![Store Info Page](img/storeInformation-page.png)

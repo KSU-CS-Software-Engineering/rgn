@@ -1,0 +1,24 @@
+name: .NET Core Build and Test
+
+on: 
+  pull_request:
+    branches: 
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.102'
+    - name: Build with dotnet
+      run: dotnet build -c Release
+    - name: Test with dotnet
+      run: dotnet test -c Release
