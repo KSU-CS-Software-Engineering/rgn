@@ -1,0 +1,144 @@
+﻿<!--
+Copyright 2020 Kansas State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+@inject IJSRuntime JS
+
+<!-- Javascript ArcGIS map Div setup -->
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>ArcGIS</title>
+<style onload="CreateMap()">
+
+    #viewDiv {
+        padding: 0;
+        margin: 5px;
+        height: 475px;
+        width: 800px;
+    }
+</style>
+
+
+<link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css">
+
+
+<!-- The Main Div that contains everything in the map; used in this way to display the map components next to eachothers.-->
+
+<div class="float-container">
+
+    <div class="float-child1">
+        <body id="row1" onload="CreateMap()">
+            <div>
+                <div id="Fields">
+                    <!-- Route Radius Size field -->
+                    <div class="form-field">
+                        <label>Radius Size:</label>
+                        <div>
+                            <input @bind ="RouteState.Radius_Size" />
+                        </div>
+                    </div>
+                    <!-- Node supply field -->
+                    <div class="form-field">
+                        <label>Radius Center:</label>
+                        <div>
+                            <input @bind="RouteState.Radius_Start_x" />
+                            <input @bind="RouteState.Radius_Start_y" />
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </body>
+    </div>
+
+    <div class="float-child2">
+
+        <div id="MapDiv">
+
+            <!-- The div that the map get displayed inside of -->
+            <div id="viewDiv"></div>
+
+            <!-- Various options for changing the MapBase -->
+
+            <label for="Map" display="float:right">Choose a MapBase:</label>
+
+            <select id="MapBase" @onchange="ChangeMapBase" display="float:right">
+                <option value="streets-navigation-vector">streets navigation vector</option>
+                <option value="streets">streets</option>
+                <option value="topo">topo</option>
+                <option value="satellite">satellite</option>
+                <option value="hybrid">hybrid</option>
+                <option value="dark-gray">dark-gray</option>
+                <option value="national-geographic">national-geographic</option>
+                <option value="oceans">oceans</option>
+                <option value="osm">osm</option>
+                <option value="streets-night-vector">streets-night-vector</option>
+                <option value="topo-vector">topo-vector</option>
+            </select>
+            <br />
+            <label style="font-style: italic;">  Lat / Lon</label>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+@code {
+
+
+
+    /// <summary>
+    /// Stores the state of the truck
+    /// </summary>
+    [Parameter] public RouteState RouteState { get; set; }
+
+    /// <summary>
+    /// Change the Base Map Style for the Arcgis Map
+    /// </summary>
+    async Task ChangeMapBase()
+    {
+
+        await JS.InvokeVoidAsync(identifier: "ChangeMapBase");
+    }
+    /// <summary>
+    /// Recenter the map on a given latitude  and longitude
+    /// </summary>
+    async Task CenterMap(double lat, double lon)
+    {
+        await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
+    }
+
+    /// <summary>
+    /// Add a node on the map on a given latitude  and longitude
+    /// </summary>
+    async Task MapInput(double lat, double lon)
+    {
+        await JS.InvokeVoidAsync(identifier: "MapInput", lat, lon);
+        await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
+    }
+
+
+
+    /// <summary>
+    /// Loads the javascript Arcgis Map
+    /// </summary>
+    async Task LoadMap()
+    {
+        await JS.InvokeVoidAsync("CreateMap");
+    }
+}

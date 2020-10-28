@@ -1,4 +1,4 @@
-﻿<!--
+﻿/*
 Copyright 2020 Kansas State University
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,20 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
--->
-<!-- Page that calcuates routes based off of imported nodes -->
-@page "/routes"
+*/
 
-@inject Route Route 
+/// <summary>
+/// Stores state of node
+/// </summary>
 
-<AuthorizeView>
-    <link rel="stylesheet" href="css/Style.css" />
-    <h1>Routes</h1>
-
-    <!-- Calculate button -->
-    <!--<button class="btn-1">Calculate</button>-->
-
-    <div class="Routes-infos">
-        <!-- Display route editor -->
-        <NodeEditor RouteState="Route.State" />
-    </div>
-</AuthorizeView>
-
-@code {
-
+namespace RuralGroceryNetwork
+{
+	public class Route
+	{
+		/// <summary>
+		/// Node state
+		/// </summary>
+		public RouteState State { get; private set; } = new RouteState();
+	}
 }
+
