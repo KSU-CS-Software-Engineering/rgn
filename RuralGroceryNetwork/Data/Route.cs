@@ -23,7 +23,7 @@ namespace RuralGroceryNetwork
 	public class Route
 	{
 		/// <summary>
-		/// Node state
+		/// Route state
 		/// </summary>
 		public RouteState State { get; private set; } = new RouteState();
 	}

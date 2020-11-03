@@ -60,6 +60,7 @@ namespace RuralGroceryNetwork
             services.AddSingleton<Truck>();
             services.AddSingleton<Scenario>();
             services.AddSingleton<Node>();
+            services.AddSingleton<Route>();
 
         }
 
