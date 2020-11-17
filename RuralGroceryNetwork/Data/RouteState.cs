@@ -17,7 +17,7 @@ limitations under the License.
 /*
 Stores Route information
 */
-
+ 
 using System.ComponentModel.DataAnnotations;
 
 namespace RuralGroceryNetwork
