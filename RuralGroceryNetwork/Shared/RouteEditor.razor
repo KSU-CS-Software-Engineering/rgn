@@ -34,6 +34,7 @@ limitations under the License.
 <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css">
 
 
+
 <!-- The Main Div that contains everything in the map; used in this way to display the map components next to eachothers.-->
 
 <div class="float-container">
@@ -72,7 +73,7 @@ limitations under the License.
 
             <!-- Various options for changing the MapBase -->
 
-            <label for="Map" display="float:right">Choose a MapBase:</label>
+           <label for="Map" display="float:right">Choose a MapBase:</label>
 
             <select id="MapBase" @onchange="ChangeMapBase" display="float:right">
                 <option value="streets-navigation-vector">streets navigation vector</option>
@@ -94,8 +95,9 @@ limitations under the License.
 
     </div>
 
-
 </div>
+
+
 
 
 @code {
@@ -110,11 +112,11 @@ limitations under the License.
     /// <summary>
     /// Change the Base Map Style for the Arcgis Map
     /// </summary>
-    async Task ChangeMapBase()
+    new async Task ChangeMapBase()
     {
 
         await JS.InvokeVoidAsync(identifier: "ChangeMapBase");
-    }
+    } 
     /// <summary>
     /// Recenter the map on a given latitude  and longitude
     /// </summary>
@@ -122,7 +124,7 @@ limitations under the License.
     {
         await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
     }
-
+    
     /// <summary>
     /// Add a node on the map on a given latitude  and longitude
     /// </summary>
