@@ -4,8 +4,9 @@ require([
     "esri/Map",
     "esri/views/MapView",
     "esri/widgets/Directions",
-    "esri/Graphic"
-], function loadMap(Map, MapView, Directions, Graphic) {
+    "esri/Graphic",
+    "esri/geometry/Point"
+], function loadMap(Map, MapView, Directions, Graphic, Point) {
     var map = new Map({
         basemap: "streets-navigation-vector"
     });
@@ -44,18 +45,18 @@ require([
                 };
                 if (view.graphics.length === 0) {
                     console.log(view.graphics.length);
-                    addGraphic("start", Point);
+                    addGraphicClick("start", Point);
 
 
                 } else if (view.graphics.length === 1) {
                     console.log(view.graphics.length);
-                    addGraphic("finish", Point);
+                    addGraphicClick("finish", Point);
                     // Call the route service
                     //getRoute();
                 } else {
                     console.log(view.graphics.length);
                     view.graphics.removeAll();
-                    addGraphic("start", Point);
+                    addGraphicClick("start", Point);
                 }
                 console.log("MapFromInput lon: " + lon + " lat: " + lat);
             }
@@ -65,26 +66,39 @@ require([
             view.on("click", function (event) {
             if (view.graphics.length === 0) {
                 console.log(view.graphics.length);
-                addGraphic("start", event.mapPoint);
+                addGraphicClick("start", event.mapPoint);
 
 
             } else if (view.graphics.length === 1) {
                 console.log(view.graphics.length);
-                addGraphic("finish", event.mapPoint);
+                addGraphicClick("end", event.mapPoint);
                 // Call the route service
                 //getRoute();
             } else {
                 console.log(view.graphics.length);
                 view.graphics.removeAll();
-                addGraphic("start", event.mapPoint);
+                addGraphicClick("start", event.mapPoint);
             }
         });
 
-            function addGraphic(type, point) {
+            function addGraphic(lat, lon) {
                 var graphic = new Graphic({
                     symbol: {
                         type: "simple-marker",
                         color: "blue",
+                        size: "10px"
+                    },
+                    geometry: new Point(lon, lat)
+
+                });
+                view.graphics.add(graphic);
+            }
+
+            function addGraphicClick(type, point) {
+                var graphic = new Graphic({
+                    symbol: {
+                        type: "simple-marker",
+                        color: (type === "start") ? "green" : "red",
                         size: "10px"
                     },
                     geometry: point
