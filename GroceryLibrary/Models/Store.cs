@@ -33,6 +33,16 @@ namespace GroceryLibrary.Models
         public string CityName { get; set; }
 
         /// <summary>
+        /// The y coordinate for the store
+        /// </summary>
+        public decimal YLAT { get; set; }
+
+        /// <summary>
+        /// The x coordinate for the store
+        /// </summary>
+        public decimal XLONG { get; set; }
+
+        /// <summary>
         /// The state which the store is located in
         /// </summary>
         public string StateName { get; set; }

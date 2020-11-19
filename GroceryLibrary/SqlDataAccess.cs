@@ -823,5 +823,45 @@ namespace GroceryLibrary
             }
             conn.Close();
         }
+
+        public static List<Store> getAllStores()
+        {
+            List<Store> allStores = new List<Store>();
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("SELECT *");
+            sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Store tempStore = new Store();
+                                store.StoreID = Convert.ToInt32(reader["StoreID"]);
+                                store.StoreName = reader["StoreName"].ToString();
+                                store.YLAT = Convert.ToDecimal(reader["YLAT"]);
+                                store.XLONG = Convert.ToDecimal(reader["XLONG"]);
+
+                                allStores.Add(tempStore);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException sqle)
+            {
+                /* Error Handling Here */
+            }
+
+            return allStores;
+        }
+
+
     }
 }

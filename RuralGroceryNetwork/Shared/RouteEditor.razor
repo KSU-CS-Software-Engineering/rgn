@@ -1,6 +1,6 @@
 ﻿<!--
 Copyright 2020 Kansas State University
-     
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -14,8 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-@inject IJSRuntime JS
+@using GroceryLibrary
+@using GroceryLibrary.Models
+ 
 
+@inject IJSRuntime JS
 <!-- Javascript ArcGIS map Div setup -->
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -47,7 +50,7 @@ limitations under the License.
                     <div class="form-field">
                         <label>Radius Size:</label>
                         <div>
-                            <input @bind ="RouteState.Radius_Size" />
+                            <input @bind="RouteState.Radius_Size" />
                         </div>
                     </div>
                     <!-- Node supply field -->
@@ -73,7 +76,7 @@ limitations under the License.
 
             <!-- Various options for changing the MapBase -->
 
-           <label for="Map" display="float:right">Choose a MapBase:</label>
+            <label for="Map" display="float:right">Choose a MapBase:</label>
 
             <select id="MapBase" @onchange="ChangeMapBase" display="float:right">
                 <option value="streets-navigation-vector">streets navigation vector</option>
@@ -104,9 +107,9 @@ limitations under the License.
 
 
 
-    /// <summary>
-    /// Stores the state of the Route
-    /// </summary>
+        /// <summary>
+        /// Stores the state of the Route
+        /// </summary>
     [Parameter] public RouteState RouteState { get; set; }
 
     /// <summary>
@@ -116,7 +119,7 @@ limitations under the License.
     {
 
         await JS.InvokeVoidAsync(identifier: "ChangeMapBase");
-    } 
+    }
     /// <summary>
     /// Recenter the map on a given latitude  and longitude
     /// </summary>
@@ -124,7 +127,7 @@ limitations under the License.
     {
         await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
     }
-    
+
     /// <summary>
     /// Add a node on the map on a given latitude  and longitude
     /// </summary>
@@ -143,4 +146,30 @@ limitations under the License.
     {
         await JS.InvokeVoidAsync("CreateMap");
     }
+
+    /* First attempt, maybe useful still
+    async Task addStoresToMap()
+    {
+        List<Store> allStores = SqlDataAccess.getAllStores();
+
+        foreach(Store s in allStores)
+        {
+            await JS.InvokeVoidAsync(identifier: "addGraphic", s.XLONG, s.YLAT);
+        }
+    }
+    */
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            List<Store> allStores = SqlDataAccess.getAllStores();
+
+            foreach (Store s in allStores)
+            {
+                JS.InvokeVoidAsync(identifier: "addGraphic", s.YLAT, s.XLONG);
+            }
+        }
+    }
+
 }
