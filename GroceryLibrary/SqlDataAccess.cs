@@ -831,11 +831,13 @@ namespace GroceryLibrary
 
             sb.Append("SELECT *");
             sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
+            builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
 
             try
             {
                 using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
+                    connection.Open();
                     using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
                     {
                         using (var reader = command.ExecuteReader())
@@ -843,15 +845,16 @@ namespace GroceryLibrary
                             while (reader.Read())
                             {
                                 Store tempStore = new Store();
-                                store.StoreID = Convert.ToInt32(reader["StoreID"]);
-                                store.StoreName = reader["StoreName"].ToString();
-                                store.YLAT = Convert.ToDecimal(reader["YLAT"]);
-                                store.XLONG = Convert.ToDecimal(reader["XLONG"]);
+                                tempStore.StoreID = Convert.ToInt32(reader["StoreID"]);
+                                tempStore.StoreName = reader["StoreName"].ToString();
+                                tempStore.YLAT = Convert.ToDecimal(reader["YLAT"]);
+                                tempStore.XLONG = Convert.ToDecimal(reader["XLONG"]);
 
                                 allStores.Add(tempStore);
                             }
                         }
                     }
+                    connection.Close();
                 }
             }
             catch (SqlException sqle)

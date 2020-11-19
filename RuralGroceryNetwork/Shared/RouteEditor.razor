@@ -59,6 +59,7 @@ limitations under the License.
                         <div>
                             <input @bind="RouteState.Radius_Start_x" />
                             <input @bind="RouteState.Radius_Start_y" />
+                            <button @onclick="LoadStores">Load All Stores</button>
                         </div>
                     </div>
                     <br />
@@ -147,6 +148,15 @@ limitations under the License.
         await JS.InvokeVoidAsync("CreateMap");
     }
 
+    async void LoadStores() {
+       List<Store> allStores = SqlDataAccess.getAllStores();
+
+       foreach (Store s in allStores)
+       {
+         await JS.InvokeVoidAsync("addGraphic", s.StoreName, s.YLAT, s.XLONG);
+       }
+    }
+
     /* First attempt, maybe useful still
     async Task addStoresToMap()
     {
@@ -159,7 +169,7 @@ limitations under the License.
     }
     */
 
-    protected override void OnAfterRender(bool firstRender)
+    /*protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
@@ -170,6 +180,6 @@ limitations under the License.
                 JS.InvokeVoidAsync(identifier: "addGraphic", s.YLAT, s.XLONG);
             }
         }
-    }
+    }*/
 
 }
