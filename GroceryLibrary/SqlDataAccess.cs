@@ -865,6 +865,45 @@ namespace GroceryLibrary
             return allStores;
         }
 
+        public static List<Distributor> getAllDistributors()
+        {
+            List<Distributor> allDist = new List<Distributor>();
+            StringBuilder sb = new StringBuilder();
 
+            sb.Append("SELECT *");
+            sb.Append("FROM " + DatabaseTables.DISTRIBUTOR);
+            builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Distributor tempDist = new Distributor();
+                                tempDist.DistributorID = Convert.ToInt32(reader["DistributorID"]);
+                                tempDist.DistributorName = reader["DistributorName"].ToString();
+                                tempDist.YLAT = Convert.ToDecimal(reader["YLAT"]);
+                                tempDist.XLONG = Convert.ToDecimal(reader["XLONG"]);
+
+                                allDist.Add(tempDist);
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (SqlException sqle)
+            {
+                /* Error Handling Here */
+            }
+
+            return allDist;
+        }
     }
 }
