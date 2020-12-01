@@ -108,9 +108,9 @@ limitations under the License.
 
 
 
-        /// <summary>
-        /// Stores the state of the Route
-        /// </summary>
+    /// <summary>
+    /// Stores the state of the Route
+    /// </summary>
     [Parameter] public RouteState RouteState { get; set; }
 
     /// <summary>
@@ -149,12 +149,17 @@ limitations under the License.
     }
 
     async void LoadStores() {
-       List<Store> allStores = SqlDataAccess.getAllStores();
+        List<Store> allStores = SqlDataAccess.getAllStores();
+        List<Distributor> allDist = SqlDataAccess.getAllDistributors();
 
-       foreach (Store s in allStores)
-       {
-         await JS.InvokeVoidAsync("addGraphic", s.StoreName, s.YLAT, s.XLONG, "blue");
-       }
+        foreach (Store s in allStores)
+        {
+            await JS.InvokeVoidAsync("addGraphic", s.StoreName, s.YLAT, s.XLONG);
+        }
+        foreach (Distributor d in allDist)
+        {
+            await JS.InvokeVoidAsync("addDistributors", d.DistributorName, d.YLAT, d.XLONG);
+        }
     }
 
     /* First attempt, maybe useful still
