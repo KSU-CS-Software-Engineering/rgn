@@ -86,11 +86,11 @@ require([
             content: "I am located at <b>{Lat}, {Lon}</b>."
         };
 
-        function addGraphic(name, lat, lon) {
+        function addGraphic(name, lat, lon, color) {
             var graphic = new Graphic({
                 symbol: {
                     type: "simple-marker",
-                    color: "blue",
+                    color: color,
                     size: "10px"
                 },
                 geometry: new Point(lon, lat),
