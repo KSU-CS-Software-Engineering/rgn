@@ -57,8 +57,11 @@ limitations under the License.
                     <div class="form-field">
                         <label>Radius Center:</label>
                         <div>
-                            <input @bind="RouteState.Radius_Start_x" />
-                            <input @bind="RouteState.Radius_Start_y" />
+                            <input id="x-long-input" @bind="RouteState.Radius_Start_x" />
+                            <input id="y-lat-input" @bind="RouteState.Radius_Start_y" />
+                        </div>
+                        <div>
+                            <button @onclick="LoadStores">Get Radius</button>
                             <button @onclick="LoadStores">Load All Stores and Distributors</button>
                         </div>
                     </div>

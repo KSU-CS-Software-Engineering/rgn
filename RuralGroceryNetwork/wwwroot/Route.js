@@ -63,8 +63,8 @@ require([
 
         window.MapInput = MapInput;
 
-        /*view.on("click", function (event) {
-            if (view.graphics.length === 0) {
+        view.on("click", function (event) {
+            /*if (view.graphics.length === 0) {
                 console.log(view.graphics.length);
                 addGraphicClick("start", event.mapPoint);
 
@@ -78,12 +78,48 @@ require([
                 console.log(view.graphics.length);
                 //view.graphics.removeAll();
                 addGraphicClick("start", event.mapPoint);
-            }
-        });*/
+            }*/
+
+            var screenPoint = {
+                x: event.x,
+                y: event.y
+            };
+
+            // Search for graphics at the clicked location
+            view.hitTest(screenPoint).then(function (response) {
+                if (response.results.length == 2) {
+                    var graphic = response.results[0].graphic.geometry
+                    var latitude = graphic.latitude
+                    var longitude = graphic.longitude
+                    document.getElementById("x-long-input").value = longitude;
+                    document.getElementById("y-lat-input").value = latitude;
+
+                    var direction_inputs = document.getElementsByClassName("esri-search__input");
+                    if (direction_inputs[0].value === "") {
+                        direction_inputs[0].value = longitude + ", " + latitude;
+                    }
+                    else if (direction_inputs[1].value === "") {
+                        direction_inputs[1].value = longitude + ", " + latitude;
+                    }
+                    else {
+                        direction_inputs[1].value = "";
+                        direction_inputs[0].value = longitude + ", " + latitude;
+                    }
+                }
+            });
+        });
+
+        function enter1(obj) {
+            console.log("here");
+            var keyboardEvent = new KeyboardEvent('keydown');
+            delete keyboardEvent.which;
+            keyboardEvent.which = 9;
+            obj.dispatchEvent(keyboardEvent);
+        }
 
         var popupTemplate = {
             title: "{Name}",
-            content: "I am located at <b>{Lat}, {Lon}</b>."
+            content: "I am located at <b>{Lon}, {Lat}</b>."
         };
 
         function addGraphic(name, lat, lon, color) {
