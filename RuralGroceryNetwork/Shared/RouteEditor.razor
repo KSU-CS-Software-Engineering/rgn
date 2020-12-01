@@ -59,7 +59,7 @@ limitations under the License.
                         <div>
                             <input @bind="RouteState.Radius_Start_x" />
                             <input @bind="RouteState.Radius_Start_y" />
-                            <button @onclick="LoadStores">Load All Stores</button>
+                            <button @onclick="LoadStores">Load All Stores and Distributors</button>
                         </div>
                     </div>
                     <br />
@@ -154,11 +154,11 @@ limitations under the License.
 
         foreach (Store s in allStores)
         {
-            await JS.InvokeVoidAsync("addGraphic", s.StoreName, s.YLAT, s.XLONG);
+            await JS.InvokeVoidAsync("addGraphic", s.StoreName, s.YLAT, s.XLONG, "blue");
         }
         foreach (Distributor d in allDist)
         {
-            await JS.InvokeVoidAsync("addDistributors", d.DistributorName, d.YLAT, d.XLONG);
+            await JS.InvokeVoidAsync("addGraphic", d.DistributorName, d.YLAT, d.XLONG, "yellow");
         }
     }
 
