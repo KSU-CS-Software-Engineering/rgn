@@ -50,7 +50,7 @@ limitations under the License.
                     <div class="form-field">
                         <label>Radius Size:</label>
                         <div>
-                            <input @bind="RouteState.Radius_Size" />
+                            <input id="radius" @bind="RouteState.Radius_Size" />
                         </div>
                     </div>
                     <!-- Node supply field -->
@@ -61,7 +61,7 @@ limitations under the License.
                             <input id="y-lat-input" @bind="RouteState.Radius_Start_y" />
                         </div>
                         <div>
-                            <button @onclick="LoadStores">Get Radius</button>
+                            <button @onclick="GetRadius">Get Radius</button>
                             <button @onclick="LoadStores">Load All Stores and Distributors</button>
                         </div>
                     </div>
@@ -149,6 +149,11 @@ limitations under the License.
     async Task LoadMap()
     {
         await JS.InvokeVoidAsync("CreateMap");
+    }
+
+    async Task GetRadius()
+    {
+        await JS.InvokeVoidAsync("GetRadius");
     }
 
     async void LoadStores() {

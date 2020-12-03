@@ -5,8 +5,10 @@ require([
     "esri/views/MapView",
     "esri/widgets/Directions",
     "esri/Graphic",
-    "esri/geometry/Point"
-], function loadMap(Map, MapView, Directions, Graphic, Point) {
+    "esri/geometry/Point",
+    "esri/geometry/Circle",
+    "esri/symbols/SimpleFillSymbol"
+], function loadMap(Map, MapView, Directions, Graphic, Point, Circle, SimpleFillSymbol) {
     var map = new Map({
         basemap: "streets-navigation-vector"
     });
@@ -116,6 +118,19 @@ require([
             keyboardEvent.which = 9;
             obj.dispatchEvent(keyboardEvent);
         }
+
+        function GetRadius() {
+            var longitude = document.getElementById("x-long-input").value;
+            var latitude = document.getElementById("y-lat-input").value;
+            var radius = document.getElementById("radius").value
+
+            var symbol = new SimpleFillSymbol({ color: null, style: "solid", outline: { color: "blue", width: 1 } });
+            var cir = new Circle({ center: new Point([longitude, latitude]), radius: radius, geodesic: true, radiusUnit: "miles" })
+            var graphic = new Graphic(cir, symbol);
+            console.log(graphic);
+            view.graphics.add(graphic);
+        }
+        window.GetRadius = GetRadius;
 
         var popupTemplate = {
             title: "{Name}",
