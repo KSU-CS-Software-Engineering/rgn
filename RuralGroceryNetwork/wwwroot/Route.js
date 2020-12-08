@@ -5,14 +5,13 @@ require([
     "esri/views/MapView",
     "esri/widgets/Directions",
     "esri/Graphic",
-    //"esri/geometry/mathUtils",
     "esri/geometry/Point",
     "esri/geometry/Circle",
     "esri/symbols/SimpleFillSymbol",
     "esri/tasks/RouteTask",
     "esri/tasks/support/RouteParameters",
     "esri/tasks/support/FeatureSet"
-], function loadMap(Map, MapView, Directions, Graphic, Point, Circle, SimpleFillSymbol) {
+], function loadMap(Map, MapView, Directions, Graphic, Point, Circle, SimpleFillSymbol, RouteTask, RouteParameters, FeatureSet) {
     var map = new Map({
         basemap: "streets-navigation-vector"
     });
@@ -31,6 +30,10 @@ require([
             routeServiceUrl: "https://utility.arcgis.com/usrsvcs/appservices/6g6tiL0fLOmFllkm/rest/services/World/Route/NAServer/Route_World"
         });
         view.ui.add(directions, "top-right");
+
+        var routeTask = new RouteTask({
+            url: "https://utility.arcgis.com/usrsvcs/appservices/6g6tiL0fLOmFllkm/rest/services/World/Route/NAServer/Route_World/solve"
+        });
 
         function ChangeMapBase() {
 
@@ -175,6 +178,7 @@ require([
         }
         window.GetRadius = GetRadius;
 
+        // Used to calculate distance between points -- Haversine Formula
         function distance(lat1, lon1, lat2, lon2) {
             var p = 0.017453292519943295;    // Math.PI / 180
             var c = Math.cos;
@@ -182,12 +186,11 @@ require([
                 c(lat1 * p) * c(lat2 * p) *
                 (1 - c((lon2 - lon1) * p)) / 2;
 
-            return ((12742 * Math.asin(Math.sqrt(a))) / 1.60934); // 2 * R; R = 6371 km
+            return ((12742 * Math.asin(Math.sqrt(a))) / 1.60934); // 2 * R; R = 6371 km -- This is converted to miles
         }
         window.distance = distance;
-        
+
         function getRouteInCircle(points) {
-            console.log(points);
             var routeParams = new RouteParameters({
                 stops: new FeatureSet({
                     features: points
