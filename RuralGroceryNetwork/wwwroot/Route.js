@@ -123,10 +123,20 @@ require([
             var longitude = document.getElementById("x-long-input").value;
             var latitude = document.getElementById("y-lat-input").value;
             var radius = document.getElementById("radius").value
-
+            
+            view.graphics.items.forEach(function (g, i) {
+                
+                if (g.id === "circle1") {
+                    view.graphics.remove(g);
+                }
+                
+                console.log(g);
+            });
+            
             var symbol = new SimpleFillSymbol({ color: null, style: "solid", outline: { color: "blue", width: 1 } });
             var cir = new Circle({ center: new Point([longitude, latitude]), radius: radius, geodesic: true, radiusUnit: "miles" })
             var graphic = new Graphic(cir, symbol);
+            graphic.id = "circle1";
             console.log(graphic);
             view.graphics.add(graphic);
         }
