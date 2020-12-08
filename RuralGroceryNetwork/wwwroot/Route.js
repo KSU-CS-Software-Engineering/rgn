@@ -162,18 +162,18 @@ require([
             allStores.forEach(function (store) {
                 var x = store.xlong;
                 var y = store.ylat;
-                var point = {
+                var point = new Graphic({
+                    geometry: new Point(x, y),
                     type: "point",
                     longitude: x,
                     latitude: y
-                };
+                });
 
                 if (distance(point.latitude, point.longitude, circleCenter.latitude, circleCenter.longitude) <= cir.radius) {
                     console.log("Entered Loop")
                     inCircle.push(point);
                 }               
             });
-            console.log(inCircle);
             getRouteInCircle(inCircle);
         }
         window.GetRadius = GetRadius;
@@ -199,7 +199,7 @@ require([
             });
             routeTask.solve(routeParams).then(function (data) {
                 data.routeResults.forEach(function (result) {
-                    results.route.symbol = {
+                    result.route.symbol = {
                         type: "simple-line",
                         color: [5, 150, 255],
                         width: 3
