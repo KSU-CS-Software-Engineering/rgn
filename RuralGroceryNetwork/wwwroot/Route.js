@@ -5,9 +5,13 @@ require([
     "esri/views/MapView",
     "esri/widgets/Directions",
     "esri/Graphic",
+    //"esri/geometry/mathUtils",
     "esri/geometry/Point",
     "esri/geometry/Circle",
-    "esri/symbols/SimpleFillSymbol"
+    "esri/symbols/SimpleFillSymbol",
+    "esri/tasks/RouteTask",
+    "esri/tasks/support/RouteParameters",
+    "esri/tasks/support/FeatureSet"
 ], function loadMap(Map, MapView, Directions, Graphic, Point, Circle, SimpleFillSymbol) {
     var map = new Map({
         basemap: "streets-navigation-vector"
@@ -124,7 +128,7 @@ require([
             obj.dispatchEvent(keyboardEvent);
         }
 
-        function GetRadius() {
+        function GetRadius(allStores) {
             var longitude = document.getElementById("x-long-input").value;
             var latitude = document.getElementById("y-lat-input").value;
             var radius = document.getElementById("radius").value
@@ -144,9 +148,65 @@ require([
             graphic.id = "circle1";
             console.log(graphic);
             view.graphics.add(graphic);
+
+            var inCircle = new Array();
+            var circleCenter = {
+                type: "point",
+                longitude: cir.center.longitude,
+                latitude: cir.center.latitude
+            };
+            
+            allStores.forEach(function (store) {
+                var x = store.xlong;
+                var y = store.ylat;
+                var point = {
+                    type: "point",
+                    longitude: x,
+                    latitude: y
+                };
+
+                if (distance(point.latitude, point.longitude, circleCenter.latitude, circleCenter.longitude) <= cir.radius) {
+                    console.log("Entered Loop")
+                    inCircle.push(point);
+                }               
+            });
+            console.log(inCircle);
+            getRouteInCircle(inCircle);
         }
         window.GetRadius = GetRadius;
 
+        function distance(lat1, lon1, lat2, lon2) {
+            var p = 0.017453292519943295;    // Math.PI / 180
+            var c = Math.cos;
+            var a = 0.5 - c((lat2 - lat1) * p) / 2 +
+                c(lat1 * p) * c(lat2 * p) *
+                (1 - c((lon2 - lon1) * p)) / 2;
+
+            return ((12742 * Math.asin(Math.sqrt(a))) / 1.60934); // 2 * R; R = 6371 km
+        }
+        window.distance = distance;
+        
+        function getRouteInCircle(points) {
+            console.log(points);
+            var routeParams = new RouteParameters({
+                stops: new FeatureSet({
+                    features: points
+                }),
+                returnDirections: true
+            });
+            routeTask.solve(routeParams).then(function (data) {
+                data.routeResults.forEach(function (result) {
+                    results.route.symbol = {
+                        type: "simple-line",
+                        color: [5, 150, 255],
+                        width: 3
+                    };
+                    view.graphics.add(result.route);
+                });
+            });
+        }
+        window.getRouteInCircle = getRouteInCircle;
+        
         var popupTemplate = {
             title: "{Name}",
             content: "I am located at <b>{Lon}, {Lat}</b>."

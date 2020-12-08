@@ -153,7 +153,9 @@ limitations under the License.
 
     async Task GetRadius()
     {
-        await JS.InvokeVoidAsync("GetRadius");
+        List<Store> allStores = SqlDataAccess.getAllStores();
+
+        await JS.InvokeVoidAsync("GetRadius", allStores);
     }
 
     async void LoadStores() {
