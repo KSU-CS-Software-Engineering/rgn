@@ -82,6 +82,11 @@ require([
                 addGraphicClick("start", event.mapPoint);
             }*/
 
+            //set clicked part as lat and long in textboxes
+            document.getElementById("x-long-input").value = event.mapPoint.longitude;
+            document.getElementById("y-lat-input").value = event.mapPoint.latitude;
+
+
             var screenPoint = {
                 x: event.x,
                 y: event.y
