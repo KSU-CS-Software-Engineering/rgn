@@ -119,10 +119,16 @@ require([
             var longitude = document.getElementById("x-long-input").value;
             var latitude = document.getElementById("y-lat-input").value;
             var radius = document.getElementById("radius").value
-            
+
             view.graphics.items.forEach(function (g, i) {
                 
                 if (g.id === "circle1") {
+                    view.graphics.remove(g);
+                }
+            });
+
+            view.graphics.items.forEach(function (g, i) {
+                if (g.id === "route1") {
                     view.graphics.remove(g);
                 }
             });
@@ -202,6 +208,8 @@ require([
                         color: [5, 150, 255],
                         width: 3
                     };
+                    result.route.id = "route1";
+                    console.log(result.route);
                     view.graphics.add(result.route);
                 });
             });
