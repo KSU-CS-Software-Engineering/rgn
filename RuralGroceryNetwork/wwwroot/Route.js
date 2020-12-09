@@ -29,7 +29,7 @@ require([
             view: view,
             routeServiceUrl: "https://utility.arcgis.com/usrsvcs/appservices/6g6tiL0fLOmFllkm/rest/services/World/Route/NAServer/Route_World"
         });
-        view.ui.add(directions, "top-right");
+        //view.ui.add(directions, "top-right");
 
         var routeTask = new RouteTask({
             url: "https://utility.arcgis.com/usrsvcs/appservices/6g6tiL0fLOmFllkm/rest/services/World/Route/NAServer/Route_World/solve"
@@ -38,7 +38,6 @@ require([
         function ChangeMapBase() {
 
             var x = document.getElementById("MapBase").value;
-            console.log(x);
             map.basemap = x;
 
         }
@@ -53,38 +52,31 @@ require([
                 latitude: lat,
             };
             if (view.graphics.length === 0) {
-                console.log(view.graphics.length);
                 addGraphicClick("start", Point);
 
 
             } else if (view.graphics.length === 1) {
-                console.log(view.graphics.length);
                 addGraphicClick("finish", Point);
                 // Call the route service
                 //getRoute();
             } else {
-                console.log(view.graphics.length);
                 //view.graphics.removeAll();
                 addGraphicClick("start", Point);
             }
-            console.log("MapFromInput lon: " + lon + " lat: " + lat);
         }
 
         window.MapInput = MapInput;
 
         view.on("click", function (event) {
             /*if (view.graphics.length === 0) {
-                console.log(view.graphics.length);
                 addGraphicClick("start", event.mapPoint);
 
 
             } else if (view.graphics.length === 1) {
-                console.log(view.graphics.length);
                 addGraphicClick("end", event.mapPoint);
                 // Call the route service
                 //getRoute();
             } else {
-                console.log(view.graphics.length);
                 //view.graphics.removeAll();
                 addGraphicClick("start", event.mapPoint);
             }*/
@@ -123,14 +115,6 @@ require([
             });
         });
 
-        function enter1(obj) {
-            console.log("here");
-            var keyboardEvent = new KeyboardEvent('keydown');
-            delete keyboardEvent.which;
-            keyboardEvent.which = 9;
-            obj.dispatchEvent(keyboardEvent);
-        }
-
         function GetRadius(allStores) {
             var longitude = document.getElementById("x-long-input").value;
             var latitude = document.getElementById("y-lat-input").value;
@@ -141,15 +125,12 @@ require([
                 if (g.id === "circle1") {
                     view.graphics.remove(g);
                 }
-                
-                console.log(g);
             });
             
             var symbol = new SimpleFillSymbol({ color: null, style: "solid", outline: { color: "blue", width: 1 } });
             var cir = new Circle({ center: new Point([longitude, latitude]), radius: radius, geodesic: true, radiusUnit: "miles" })
             var graphic = new Graphic(cir, symbol);
             graphic.id = "circle1";
-            console.log(graphic);
             view.graphics.add(graphic);
 
             var inCircle = new Array();
@@ -170,7 +151,6 @@ require([
                 });
 
                 if (distance(point.latitude, point.longitude, circleCenter.latitude, circleCenter.longitude) <= cir.radius) {
-                    console.log("Entered Loop")
                     inCircle.push(point);
                 }               
             });
@@ -246,7 +226,6 @@ require([
         function centerMap(lat, lon) {
 
             view.center = [lon, lat];
-            console.log("Centered the Map:  lon:" + lon + " lat:" + lat);
 
         }
         window.centerMap = centerMap;
