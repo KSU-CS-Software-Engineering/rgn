@@ -145,15 +145,33 @@ require([
                 var y = store.ylat;
                 var point = new Graphic({
                     geometry: new Point(x, y),
-                    type: "point",
                     longitude: x,
-                    latitude: y
+                    latitude: y,
+                    attributes: {distanceToCenter: 0}
                 });
 
-                if (distance(point.latitude, point.longitude, circleCenter.latitude, circleCenter.longitude) <= cir.radius) {
+                var dis = distance(point.latitude, point.longitude, circleCenter.latitude, circleCenter.longitude)
+
+                if (dis <= cir.radius) {
+                    point.attributes.distanceToCenter = dis;
                     inCircle.push(point);
                 }               
             });
+
+            //sort by length
+            var len = inCircle.length;
+            for (i = 0; i < len; i++) {
+                for (j = 0; j < len - 1; j++) {
+                    if (inCircle[j].attributes.distanceToCenter > inCircle[j + 1].attributes.distanceToCenter) {
+                        var tmp = inCircle[j];
+                        inCircle[j] = inCircle[j + 1];
+                        inCircle[j + 1] = tmp;
+                    }
+                }
+            }
+
+            console.log(inCircle);
+
             getRouteInCircle(inCircle);
         }
         window.GetRadius = GetRadius;
