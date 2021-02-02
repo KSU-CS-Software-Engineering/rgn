@@ -153,7 +153,7 @@ require([
                     geometry: new Point(x, y),
                     longitude: x,
                     latitude: y,
-                    attributes: {distanceToCenter: 0}
+                    attributes: { distanceToCenter: 0, name: store.storeName }
                 });
 
                 var dis = distance(point.latitude, point.longitude, circleCenter.latitude, circleCenter.longitude)
@@ -174,6 +174,15 @@ require([
                         inCircle[j + 1] = tmp;
                     }
                 }
+            }
+
+            document.getElementById("secondary-provider").innerHTML = inCircle[0].attributes["name"];
+
+            for (i = 1; i < inCircle.length; i++) {
+                var node = document.createElement("div");
+                var textnode = document.createTextNode(inCircle[i].attributes["name"]);
+                node.appendChild(textnode);
+                document.getElementById("radius-stores").appendChild(node);
             }
 
             console.log(inCircle);
@@ -209,7 +218,6 @@ require([
                         width: 3
                     };
                     result.route.id = "route1";
-                    console.log(result.route);
                     view.graphics.add(result.route);
                 });
             });
