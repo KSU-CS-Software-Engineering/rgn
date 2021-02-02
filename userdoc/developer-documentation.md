@@ -98,7 +98,7 @@ We have also defined a few classes for keeping track of data in the RuralGrocery
 
 ![Data Directory](img/DataFolderNew.PNG)
 
-And some javascript and css files in the RuralGroceryNetwork/wwwroot directory. The Route.js file is the new file that controls the map on the pages that have one. The methods in this file are also the ones called to do varius things on the map for the diffrent pages:
+And some javascript and css files in the RuralGroceryNetwork/wwwroot directory. The Route.js file is the new file that controls the map on the pages that have one. The methods in this file are also the ones called to do varius things on the map for the diffrent pages. The RouteOld.js file is the old version of the Route.js file:
 
 ![wwwroot Directory](img/wwwrootNew.PNG)
 
