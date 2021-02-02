@@ -94,11 +94,11 @@ The website's main layout, among other things. These components can be found in 
 
 ![Shared Directory](img/SharedFolderNew.PNG)
 
-We have also defined a few classes for keeping track of data in the RuralGroceryNetwork/Data directory:
+We have also defined a few classes for keeping track of data in the RuralGroceryNetwork/Data directory. They consist of State.cs classes and .cs classes for Nodes, Routes, Scenario, StoreInformation, and Trucks pages. The .cs file stores the state of the node and the State.cs file stores the informtion for that page:
 
 ![Data Directory](img/DataFolderNew.PNG)
 
-And some javascript and css files in the RuralGroceryNetwork/wwwroot directory:
+And some javascript and css files in the RuralGroceryNetwork/wwwroot directory. The Route.js file is the new file that controls the map on the pages that have one. The methods in this file are also the ones called to do varius things on the map for the diffrent pages:
 
 ![wwwroot Directory](img/wwwrootNew.PNG)
 
