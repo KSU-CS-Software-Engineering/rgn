@@ -92,15 +92,15 @@ The pages we currently have are:
 Our pages also integrate other components within them. Some examples of these kinds of components include the Website's Navigation Menu, 
 The website's main layout, among other things. These components can be found in the RuralGroceryNetwork/Shared Directory:
 
-![Shared Directory](img/directory-shared.PNG)
+![Shared Directory](img/SharedFolderNew.PNG)
 
 We have also defined a few classes for keeping track of data in the RuralGroceryNetwork/Data directory:
 
-![Data Directory](img/directory-data.PNG)
+![Data Directory](img/DataFolderNew.PNG)
 
 And some javascript and css files in the RuralGroceryNetwork/wwwroot directory:
 
-![wwwroot Directory](img/directory.wwwroot.PNG)
+![wwwroot Directory](img/wwwrootNew.PNG)
 
 We also implemented some Database Interaction thorugh a separate project within our solution. Here is where you can find the table models and data layouts. These things can be found in the GroceryLibrary directory:
 
