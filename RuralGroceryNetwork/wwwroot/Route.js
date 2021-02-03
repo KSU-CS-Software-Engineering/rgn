@@ -153,7 +153,13 @@ require([
                     geometry: new Point(x, y),
                     longitude: x,
                     latitude: y,
-                    attributes: { distanceToCenter: 0, name: store.storeName }
+                    attributes: {
+                        distanceToCenter: 0,
+                        name: store.storeName,
+                        address: store.address,
+                        city: store.cityName,
+                        zip: store.zipCode
+                    }
                 });
 
                 var dis = distance(point.latitude, point.longitude, circleCenter.latitude, circleCenter.longitude)
@@ -164,7 +170,7 @@ require([
                 }               
             });
 
-            //sort by length
+            //sort by distance to the center
             var len = inCircle.length;
             for (i = 0; i < len; i++) {
                 for (j = 0; j < len - 1; j++) {
@@ -176,13 +182,27 @@ require([
                 }
             }
 
-            document.getElementById("secondary-provider").innerHTML = inCircle[0].attributes["name"];
+            for (i = 0; i < inCircle.length; i++) {
+                var div = document.createElement("div");
 
-            for (i = 1; i < inCircle.length; i++) {
-                var node = document.createElement("div");
-                var textnode = document.createTextNode(inCircle[i].attributes["name"]);
-                node.appendChild(textnode);
-                document.getElementById("radius-stores").appendChild(node);
+                if (i != 0) {
+                    var checkbox = document.createElement("input");
+                    checkbox.setAttribute("type", "checkbox");
+                    checkbox.setAttribute("class", "scenarios-checkbox");
+                    div.appendChild(checkbox);
+                }
+
+                createAndAppendTo("h3", inCircle[i].attributes["name"], div);
+
+                if (i == 0)
+                    createAndAppendTo("p", "(Secondary Distributor)", div);
+
+                createAndAppendTo("p", inCircle[i].attributes["address"] + " " + inCircle[i].attributes["city"] + ", KS " + inCircle[i].attributes["zip"], div)
+
+                if (i != 0)
+                    createAndAppendTo("p", displayDistanceToCenter(inCircle[0], inCircle[i]), div)
+
+                document.getElementById("radius-stores").appendChild(div);
             }
 
             console.log(inCircle);
@@ -190,6 +210,17 @@ require([
             getRouteInCircle(inCircle);
         }
         window.GetRadius = GetRadius;
+
+        function createAndAppendTo(element, text, append_to) {
+            var name = document.createElement(element);
+            var textnode = document.createTextNode(text);
+            name.appendChild(textnode);
+            append_to.appendChild(name);
+        }
+
+        function displayDistanceToCenter(centerStore, store) {
+            return "Straight Line Distance to " + centerStore.attributes["name"] + ": " + Math.round(store.attributes["distanceToCenter"] * 10) / 10 + " miles"
+        }
 
         // Used to calculate distance between points -- Haversine Formula
         function distance(lat1, lon1, lat2, lon2) {
@@ -225,11 +256,11 @@ require([
         window.getRouteInCircle = getRouteInCircle;
         
         var popupTemplate = {
-            title: "{Name}",
-            content: "I am located at <b>{Lon}, {Lat}</b>."
+            title: "<b>{name}</b>",
+            content: "{address}<br>{city}, {state} {zip}"
         };
 
-        function addGraphic(name, lat, lon, color) {
+        function addGraphic(store, lat, lon, color) {
             var graphic = new Graphic({
                 symbol: {
                     type: "simple-marker",
@@ -237,7 +268,13 @@ require([
                     size: "10px"
                 },
                 geometry: new Point(lon, lat),
-                attributes: { Name: name, Lat: lat, Lon: lon },
+                attributes: {
+                    name: store.storeName,
+                    address: store.address,
+                    city: store.cityName,
+                    state: "KS",
+                    zip: store.zipCode
+                },
                 popupTemplate: popupTemplate
             });
             view.graphics.add(graphic);

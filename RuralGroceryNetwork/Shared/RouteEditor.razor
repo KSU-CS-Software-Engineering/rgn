@@ -65,7 +65,7 @@ limitations under the License.
                             <button @onclick="LoadStores">Load All Stores and Distributors</button>
                         </div>
                     </div>
-                    <div id="secondary-provider"></div>
+                    <br />
                     <div id="radius-stores"></div>
                     <br />
                 </div>
@@ -166,11 +166,11 @@ limitations under the License.
 
         foreach (Store s in allStores)
         {
-            await JS.InvokeVoidAsync("addGraphic", s.StoreName, s.YLAT, s.XLONG, "blue");
+            await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "blue");
         }
         foreach (Distributor d in allDist)
         {
-            await JS.InvokeVoidAsync("addGraphic", d.DistributorName, d.YLAT, d.XLONG, "yellow");
+            await JS.InvokeVoidAsync("addGraphic", d, d.YLAT, d.XLONG, "yellow");
         }
     }
 

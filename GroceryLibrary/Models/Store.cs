@@ -23,14 +23,24 @@ namespace GroceryLibrary.Models
         public string StoreName { get; set; }
 
         /// <summary>
-        /// The store's CityID
+        /// The Store's address
         /// </summary>
-        public int CityID { get; set; }
+        public string Address { get; set; }
 
         /// <summary>
         /// The city which the store is located in
         /// </summary>
         public string CityName { get; set; }
+
+        /// <summary>
+        /// The state which the store is located in
+        /// </summary>
+        public string StateName { get; set; }
+
+        /// <summary>
+        /// The zip code where the store is located in
+        /// </summary>
+        public string ZipCode { get; set; }
 
         /// <summary>
         /// The y coordinate for the store
@@ -41,11 +51,6 @@ namespace GroceryLibrary.Models
         /// The x coordinate for the store
         /// </summary>
         public decimal XLONG { get; set; }
-
-        /// <summary>
-        /// The state which the store is located in
-        /// </summary>
-        public string StateName { get; set; }
 
         /// <summary>
         /// The number of checkout lanes that the store has

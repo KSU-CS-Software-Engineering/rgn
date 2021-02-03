@@ -318,11 +318,11 @@ namespace GroceryLibrary
                             else
                                 store.StoreName = "Not yet assigned";
 
-                            /* Checks to see if CityID is currently NULL */
+                            /* Checks to see if CityName is currently NULL */
                             if (!reader.IsDBNull(2))
-                                store.CityID = reader.GetInt32(2);
+                                store.CityName = reader.GetString(1);
                             else
-                                store.CityID = -1;
+                                store.CityName = "Not yet assigned";
 
                             /* Checks to see if NumChkLanes is currently NULL */
                             if (!reader.IsDBNull(3))
@@ -545,14 +545,14 @@ namespace GroceryLibrary
         /// <param name="conn">The database connection</param>
         private static void getRestOfInfo(SqlConnection conn)
         {
-            if (store.CityID != -1 || store.DistributorID != -1)
+            if (store.CityName != "Not yet assigned" || store.DistributorID != -1)
             {
                 bool needsCity = false, needsDist = false;
                 StringBuilder sb = new StringBuilder();
 
                 sb.Append("SELECT ");
 
-                if (store.CityID != -1)
+                if (store.CityName != "Not yet assigned")
                 {
                     sb.Append("C." + CitiesTable.CITY_NAME);
                     needsCity = true;
@@ -573,7 +573,7 @@ namespace GroceryLibrary
 
                 sb.Append("FROM " + DatabaseTables.STORE_INFORMATION + "S ");
 
-                if (store.CityID != -1)
+                if (store.CityName != "Not yet assigned")
                     sb.Append("INNER JOIN " + DatabaseTables.CITIES + "C ON C." + CitiesTable.CITY_ID + "= S." + StoreInformationTable.CITY_ID);
                 if (store.DistributorID != -1)
                 {
@@ -831,6 +831,8 @@ namespace GroceryLibrary
 
             sb.Append("SELECT *");
             sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
+            sb.Append("INNER JOIN " + DatabaseTables.CITIES + "ON StoreInformation.CityID = Cities.CityID");
+            //sb.Append(DatabaseTables.STATES + "ON States.StateID = Cities.StateID");
             builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
             //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
 
@@ -848,6 +850,10 @@ namespace GroceryLibrary
                                 Store tempStore = new Store();
                                 tempStore.StoreID = Convert.ToInt32(reader["StoreID"]);
                                 tempStore.StoreName = reader["StoreName"].ToString();
+                                tempStore.Address = reader["Address"].ToString();
+                                tempStore.CityName = reader["CityName"].ToString();
+                                //tempStore.StateName = reader["StateName"].ToString();
+                                tempStore.ZipCode = reader["Zip"].ToString();
                                 tempStore.YLAT = Convert.ToDecimal(reader["YLAT"]);
                                 tempStore.XLONG = Convert.ToDecimal(reader["XLONG"]);
 
