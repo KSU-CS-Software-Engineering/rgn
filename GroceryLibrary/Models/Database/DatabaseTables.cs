@@ -22,20 +22,20 @@ namespace GroceryLibrary.Models.Database
 {
     public static class DatabaseTables
     {
-        public const string CITIES = "[dbo].[Cities] ";
+        public const string CITIES = "[dbo].[Cities] C ";
 
-        public const string DISTRIBUTOR = "[dbo].[Distributor] ";
+        public const string DISTRIBUTOR = "[dbo].[Distributor] D ";
 
-        public const string SQUARE_FOOTAGE_CATEGORIES = "[dbo].[SquareFootageCategories] ";
+        public const string SQUARE_FOOTAGE_CATEGORIES = "[dbo].[SquareFootageCategories] SFC ";
 
-        public const string STATES = "[dbo].[States] ";
+        public const string STATES = "[dbo].[States] S ";
 
-        public const string STORE_DELIVERY_INFORMATION = "[dbo].[StoreDeliveryInformation] ";
+        public const string STORE_DELIVERY_INFORMATION = "[dbo].[StoreDeliveryInformation] SDI ";
 
-        public const string STORE_DELIVERY_SCHEDULE = "[dbo].[StoreDeliverySchedule] ";
+        public const string STORE_DELIVERY_SCHEDULE = "[dbo].[StoreDeliverySchedule] SDS ";
 
-        public const string STORE_EQUIPMENT_INFORMATION = "[dbo].[StoreEquipmentInformation] ";
+        public const string STORE_EQUIPMENT_INFORMATION = "[dbo].[StoreEquipmentInformation] SEI ";
 
-        public const string STORE_INFORMATION = "[dbo].[StoreInformation] ";
+        public const string STORE_INFORMATION = "[dbo].[StoreInformation] SI ";
     }
 }

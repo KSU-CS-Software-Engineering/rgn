@@ -173,7 +173,10 @@ require([
                         name: store.storeName,
                         address: store.address,
                         city: store.cityName,
-                        zip: store.zipCode
+                        state: store.stateName,
+                        zip: store.zipCode,
+                        weeklyPurchaseAmountMin: store.weeklyPurchaseAmountMin,
+                        weeklyPurchaseAmountMax: store.weeklyPurchaseAmountMax
                     }
                 });
 
@@ -182,7 +185,7 @@ require([
                 if (dis <= cir.radius) {
                     point.attributes.distanceToCenter = dis;
                     inCircle.push(point);
-                }               
+                }
             });
 
             //sort by distance to the center
@@ -198,7 +201,7 @@ require([
             }
 
             for (i = 0; i < inCircle.length; i++) {
-                var div = document.createElement("div");
+                var div = document.getElementById("radius-stores");
 
                 if (i != 0) {
                     var checkbox = document.createElement("input");
@@ -212,15 +215,22 @@ require([
                 if (i == 0)
                     createAndAppendTo("p", "(Secondary Distributor)", div);
 
-                createAndAppendTo("p", inCircle[i].attributes["address"] + " " + inCircle[i].attributes["city"] + ", KS " + inCircle[i].attributes["zip"], div)
+                createAndAppendTo("p", displayAddress(inCircle[i]), div);
+
+                if (inCircle[i].attributes["weeklyPurchaseAmountMin"] == inCircle[i].attributes["weeklyPurchaseAmountMax"], div)
+                    createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmountMin"], div)
+                else {
+                    createAndAppendTo("p", "Minimum Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmountMin"], div)
+                    createAndAppendTo("p", "Maximum Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmountMax"], div)
+                }
 
                 if (i != 0)
                     createAndAppendTo("p", displayDistanceToCenter(inCircle[0], inCircle[i]), div)
-
-                document.getElementById("radius-stores").appendChild(div);
             }
 
-            console.log(inCircle);
+            div = document.getElementById("summary");
+
+            createAndAppendTo("h3", "Summary", div);
 
             getRouteInCircle(inCircle);
         }
@@ -231,6 +241,10 @@ require([
             var textnode = document.createTextNode(text);
             name.appendChild(textnode);
             append_to.appendChild(name);
+        }
+
+        function displayAddress(store) {
+            return store.attributes["address"] + " " + store.attributes["city"] + ", " + store.attributes["state"] + " " + store.attributes["zip"];
         }
 
         function displayDistanceToCenter(centerStore, store) {
