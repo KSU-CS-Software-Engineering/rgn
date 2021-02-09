@@ -874,18 +874,12 @@ namespace GroceryLibrary
                                 tempStore.YLAT = Convert.ToDecimal(reader["YLAT"]);
                                 tempStore.XLONG = Convert.ToDecimal(reader["XLONG"]);
 
-                                var r = reader["WeeklyPurchaseAmountMin"];
+                                var r = reader["WeeklyPurchaseAmount"];
                                 var rs = r.ToString();
                                 if (r.ToString() == "")
-                                    tempStore.WeeklyPurchaseAmountMin = 0;
+                                    tempStore.WeeklyPurchaseAmount = 0;
                                 else
-                                    tempStore.WeeklyPurchaseAmountMin = Convert.ToInt32(reader["WeeklyPurchaseAmountMin"]);
-
-                                r = reader["WeeklyPurchaseAmountMax"];
-                                if (r.ToString() == "")
-                                    tempStore.WeeklyPurchaseAmountMax = 0;
-                                else
-                                    tempStore.WeeklyPurchaseAmountMax = Convert.ToInt32(reader["WeeklyPurchaseAmountMax"]);
+                                    tempStore.WeeklyPurchaseAmount = Convert.ToInt32(reader["WeeklyPurchaseAmount"]);
 
                                 allStores.Add(tempStore);
                             }

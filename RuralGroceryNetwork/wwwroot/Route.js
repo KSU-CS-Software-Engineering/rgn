@@ -175,8 +175,7 @@ require([
                         city: store.cityName,
                         state: store.stateName,
                         zip: store.zipCode,
-                        weeklyPurchaseAmountMin: store.weeklyPurchaseAmountMin,
-                        weeklyPurchaseAmountMax: store.weeklyPurchaseAmountMax
+                        weeklyPurchaseAmount: store.weeklyPurchaseAmount
                     }
                 });
 
@@ -200,6 +199,7 @@ require([
                 }
             }
 
+            var weeklyPurchaseAmount = 0;
             for (i = 0; i < inCircle.length; i++) {
                 var div = document.getElementById("radius-stores");
 
@@ -207,6 +207,8 @@ require([
                     var checkbox = document.createElement("input");
                     checkbox.setAttribute("type", "checkbox");
                     checkbox.setAttribute("class", "scenarios-checkbox");
+                    checkbox.setAttribute("onClick", "updateSummary(this)");
+                    checkbox.setAttribute("data-weeklyamount", inCircle[i].attributes["weeklyPurchaseAmount"])
                     div.appendChild(checkbox);
                 }
 
@@ -217,12 +219,8 @@ require([
 
                 createAndAppendTo("p", displayAddress(inCircle[i]), div);
 
-                if (inCircle[i].attributes["weeklyPurchaseAmountMin"] == inCircle[i].attributes["weeklyPurchaseAmountMax"], div)
-                    createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmountMin"], div)
-                else {
-                    createAndAppendTo("p", "Minimum Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmountMin"], div)
-                    createAndAppendTo("p", "Maximum Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmountMax"], div)
-                }
+                createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmount"], div)
+                weeklyPurchaseAmount += inCircle[i].attributes["weeklyPurchaseAmount"]
 
                 if (i != 0)
                     createAndAppendTo("p", displayDistanceToCenter(inCircle[0], inCircle[i]), div)
@@ -231,13 +229,21 @@ require([
             div = document.getElementById("summary");
 
             createAndAppendTo("h3", "Summary", div);
+            createAndAppendTo("p", "Stores in Radius: " + inCircle.length, div)
+            createAndAppendTo("h5", "Weekly Purchase Amount", div)
+            createAndAppendTo("p", "Amount of All Stores in Radius: $" + weeklyPurchaseAmount, div)
+            createAndAppendTo("p", "Amount for Selected Stores: $" + inCircle[0].attributes["weeklyPurchaseAmount"], div, "selected-stores-amount")
+            createAndAppendTo("p", "Distributor Minimum Amount: $0", div, "min-distributor-amount")
+            createAndAppendTo("p", "Selected Stores Meets Minimum Amount: " + meetsMinimum(0, inCircle[0].attributes["weeklyPurchaseAmount"]), div, "meets-minimum")
 
             getRouteInCircle(inCircle);
         }
         window.GetRadius = GetRadius;
 
-        function createAndAppendTo(element, text, append_to) {
+        function createAndAppendTo(element, text, append_to, id = "") {
             var name = document.createElement(element);
+            if (id != "")
+                name.setAttribute("id", id);
             var textnode = document.createTextNode(text);
             name.appendChild(textnode);
             append_to.appendChild(name);
@@ -249,6 +255,31 @@ require([
 
         function displayDistanceToCenter(centerStore, store) {
             return "Straight Line Distance to " + centerStore.attributes["name"] + ": " + Math.round(store.attributes["distanceToCenter"] * 10) / 10 + " miles"
+        }
+
+        function meetsMinimum(min, store_amount) {
+            if (store_amount >= min)
+                return "Yes"
+            return "No"
+        }
+
+        function updateSummary(checkbox) {
+            element = document.getElementById("selected-stores-amount");
+            element = element.textContent.split(": ");
+            element[1] = parseInt(element[1].substring(1)); //get rid of $ and parseInt
+
+            var weeklyAmount = parseInt(checkbox.dataset.weeklyamount);
+            if (checkbox.checked)
+                element[1] += weeklyAmount;
+            else
+                element[1] -= weeklyAmount;
+
+            document.getElementById("selected-stores-amount").innerHTML = element[0] + ": $" + element[1];
+        }
+        window.updateSummary = updateSummary;
+
+        function updateSection(element, add_num) {
+            
         }
 
         // Used to calculate distance between points -- Haversine Formula
@@ -286,7 +317,7 @@ require([
         
         var popupTemplate = {
             title: "<b>{name}</b>",
-            content: "{address}<br>{city}, {state} {zip}"
+            content: "{address}<br>{city}, {state} {zip}<br><br>Weekly Purchase Amount: ${weeklyPurchaseAmount}"
         };
 
         function addGraphic(store, lat, lon, color) {
@@ -302,7 +333,8 @@ require([
                     address: store.address,
                     city: store.cityName,
                     state: "KS",
-                    zip: store.zipCode
+                    zip: store.zipCode,
+                    weeklyPurchaseAmount: store.weeklyPurchaseAmount
                 },
                 popupTemplate: popupTemplate
             });

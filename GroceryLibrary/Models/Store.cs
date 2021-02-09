@@ -99,14 +99,9 @@ namespace GroceryLibrary.Models
         public bool HasWeeklyPurchaseRequirement { get; set; }
 
         /// <summary>
-        /// The Store's lower purchase amount per week
+        /// The Store's purchase amount per week
         /// </summary>
-        public int WeeklyPurchaseAmountMin { get; set; }
-
-        /// <summary>
-        /// The Store's higher purchase amount per week
-        /// </summary>
-        public int WeeklyPurchaseAmountMax { get; set; }
+        public int WeeklyPurchaseAmount { get; set; }
 
         /// <summary>
         /// What is the minimum number of pallets the store recieved per delivery
