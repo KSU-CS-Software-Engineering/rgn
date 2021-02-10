@@ -321,6 +321,24 @@ require([
         };
 
         function addGraphic(store, lat, lon, color) {
+            const s = store.weeklyPurchaseAmount;
+            switch (true) {
+                case (s == 0): color = "#E6E6FA"
+                    break;
+                case (s < 5000): color = "#D8BFD8"
+                    break;
+                case (s < 10000): color = "#EE82EE"
+                    break;
+                case (s < 15000): color = "#9370DB"
+                    break;
+                case (s < 20000): color = "#8A2BE2"
+                    break;
+                case (s < 36001): color = "#4B0082"
+                    break;
+                default:
+                    color = "yellow";
+            }
+
             var graphic = new Graphic({
                 symbol: {
                     type: "simple-marker",
@@ -332,7 +350,7 @@ require([
                     name: store.storeName,
                     address: store.address,
                     city: store.cityName,
-                    state: "KS",
+                    state: store.stateName,
                     zip: store.zipCode,
                     weeklyPurchaseAmount: store.weeklyPurchaseAmount
                 },
@@ -341,6 +359,11 @@ require([
             view.graphics.add(graphic);
         }
         window.addGraphic = addGraphic;
+
+        function displayLegend() {
+            document.getElementById("map-legend").style.display = "block";
+        }
+        window.displayLegend = displayLegend;
 
         function addGraphicClick(type, point) {
             var graphic = new Graphic({
