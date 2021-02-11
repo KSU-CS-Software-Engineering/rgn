@@ -39,7 +39,6 @@ limitations under the License.
 
 
 <!-- The Main Div that contains everything in the map; used in this way to display the map components next to eachothers.-->
-
 <div class="float-container">
 
     <div class="float-child1">
@@ -53,7 +52,7 @@ limitations under the License.
                             <input id="radius" @bind="RouteState.Radius_Size" />
                         </div>
                     </div>
-                    <!-- Node supply field -->
+                    <!-- Route supply field -->
                     <div class="form-field">
                         <label>Radius Center:</label>
                         <div>
@@ -81,7 +80,6 @@ limitations under the License.
             <div id="viewDiv"></div>
 
             <!-- Various options for changing the MapBase -->
-
             <label for="Map" display="float:right">Choose a MapBase:</label>
 
             <select id="MapBase" @onchange="ChangeMapBase" display="float:right">
@@ -99,9 +97,9 @@ limitations under the License.
             </select>
             <br />
             <label style="font-style: italic;">  Lat / Lon</label>
-
         </div>
 
+        <!-- Creates legend for map -->
         <div id="summary"></div>
         <div id="map-legend" style="float:right; margin-right: 50%; display: none;">
             <h4>Weekly Purchase Amount</h4>
@@ -131,24 +129,21 @@ limitations under the License.
     /// <summary>
     /// Change the Base Map Style for the Arcgis Map
     /// </summary>
-    new async Task ChangeMapBase()
-    {
+    new async Task ChangeMapBase() {
 
         await JS.InvokeVoidAsync(identifier: "ChangeMapBase");
     }
     /// <summary>
     /// Recenter the map on a given latitude  and longitude
     /// </summary>
-    async Task CenterMap(double lat, double lon)
-    {
+    async Task CenterMap(double lat, double lon) {
         await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
     }
 
     /// <summary>
     /// Add a node on the map on a given latitude  and longitude
     /// </summary>
-    async Task MapInput(double lat, double lon)
-    {
+    async Task MapInput(double lat, double lon) {
         await JS.InvokeVoidAsync(identifier: "MapInput", lat, lon);
         await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
     }
@@ -163,26 +158,32 @@ limitations under the License.
     //await JS.InvokeVoidAsync("CreateMap");
     //}
 
-    async Task GetRadius()
-    {
+    /// <summary>
+    /// Calls GetRadius from Route.js to load a radius onto map
+    /// </summary>
+    async Task GetRadius() {
         List<Store> allStores = SqlDataAccess.getAllStores();
 
         await JS.InvokeVoidAsync("GetRadius", allStores);
     }
 
+    /// <summary>
+    /// Loads Stores, distributors, and legend onto the map
+    /// </summary>
     async void LoadStores() {
         List<Store> allStores = SqlDataAccess.getAllStores();
         List<Distributor> allDist = SqlDataAccess.getAllDistributors();
 
-        foreach (Store s in allStores)
-        {
+        //Calls Route.js to load each store in List<Store> allStores to the map as a blue node
+        foreach (Store s in allStores) {
             await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "blue");
         }
-        foreach (Distributor d in allDist)
-        {
+        //Calls Route.js to load each store in List<Distributor> allDist to the map as a yellow node
+        foreach (Distributor d in allDist) {
             await JS.InvokeVoidAsync("addGraphic", d, d.YLAT, d.XLONG, "yellow");
         }
 
+        //Calls Route.js to load in the legend
         await JS.InvokeVoidAsync("displayLegend");
     }
 
