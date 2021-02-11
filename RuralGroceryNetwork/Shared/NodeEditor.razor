@@ -14,6 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+@using GroceryLibrary
+@using GroceryLibrary.Models.Database 
+@using System.Text 
+
 @inject IJSRuntime JS
 
 <!-- Javascript ArcGIS map Div setup -->
@@ -102,6 +106,8 @@ limitations under the License.
                     <!-- Reload the map if needed -->
                     <button @onclick="LoadMap">Reload Map</button>
 
+                    <!-- button for download Store Information table from DB-->
+                    <button @onclick="downloadTables">Download Tables</button>
                 </div> 
             </div>
 
@@ -173,7 +179,6 @@ limitations under the License.
 
 
 @code {
-
 
 
     /// <summary>
@@ -285,5 +290,95 @@ limitations under the License.
     void enableImportPage()
     {
         ShowImportPage = true;
+    }
+
+    /// <summary>
+    /// Controls the downloading of all the tables from the database. This is called from the button on the webpage
+    /// </summary>
+    /// <returns></returns>
+    async Task downloadTables()
+    {
+        //await downloadStoreInfoTable();
+        //await downloadDistributorTable();
+        //await downloadCitiesTable();
+        //await downloadStatesTable();
+
+        List<string> allcsv = new List<string>();
+
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STORE_INFORMATION));
+
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.DISTRIBUTOR));
+
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.CITIES));
+
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STATES));
+
+        //If new tables are added, just make the same call to DBTableToCSV and add to the list. The following loop creates one file for all tables.
+
+        StringBuilder csv = new StringBuilder();
+
+        foreach(string s in allcsv)
+        {
+            csv.Append(s);
+            csv.Append("|\n");
+        }
+
+        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv.ToString());
+        string temp = csv.ToString();
+        await JS.InvokeVoidAsync("BlazorDownloadFile", "AllFiles.csv", "text/plain", file);
+
+
+    }
+
+    // STOPPED USING THESE FUNCTIONS FOR NOW. Not sure if I want to use these later or not. Still a WIP.
+
+
+    /// <summary>
+    /// Controls the download of the Store Information table from the database
+    /// </summary>
+    /// <returns></returns>
+    async Task downloadStoreInfoTable()
+    {
+        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.STORE_INFORMATION);
+
+        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
+        await JS.InvokeVoidAsync("BlazorDownloadFile", "StoreInfo.csv", "text/plain", file);
+
+    }
+
+    /// <summary>
+    /// Controls the download of the distributors table
+    /// </summary>
+    /// <returns></returns>
+    async Task downloadDistributorTable()
+    {
+        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.DISTRIBUTOR);
+
+        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
+        await JS.InvokeVoidAsync("BlazorDownloadFile", "Distributors.csv", "text/plain", file);
+    }
+
+    /// <summary>
+    /// Controls the download of the cities table
+    /// </summary>
+    /// <returns></returns>
+    async Task downloadCitiesTable()
+    {
+        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.CITIES);
+
+        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
+        await JS.InvokeVoidAsync("BlazorDownloadFile", "Cities.csv", "text/plain", file);
+    }
+
+    /// <summary>
+    /// Controls the download of the states table
+    /// </summary>
+    /// <returns></returns>
+    async Task downloadStatesTable()
+    {
+        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.STATES);
+
+        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
+        await JS.InvokeVoidAsync("BlazorDownloadFile", "States.csv", "text/plain", file);
     }
 }

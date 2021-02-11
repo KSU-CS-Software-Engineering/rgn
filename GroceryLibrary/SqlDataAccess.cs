@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.IO;
+using System.Data;
 using System.Collections.Generic;
-
+using System.Configuration;
 using System.Data.SqlClient;
 
 using GroceryLibrary.Models;
@@ -906,6 +907,75 @@ namespace GroceryLibrary
             }
 
             return allDist;
+        }
+
+
+        // STARTING THE SECTION OF FUNCTIONS REQUIRED FOR DOWNLOADING THE DATABASE
+        /// <summary>
+        /// Converts a table in the database to csv format
+        /// </summary>
+        /// <param name="dbTable">The table to convert</param>
+        /// <returns>a csv of the given table</returns>
+        public static string DBTableToCSV(string dbTable)
+        {
+            string csv = "";
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("SELECT *");
+            sb.Append("FROM " + dbTable);
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    {
+                        // Most of the code from this section is from: https://www.aspsnippets.com/Articles/Export-data-from-SQL-Server-to-CSV-file-in-ASPNet-using-C-and-VBNet.aspx
+                        // Adapter to fill a datatable
+
+                        using (SqlDataAdapter sda = new SqlDataAdapter())
+                        {
+                            command.Connection = connection;
+                            sda.SelectCommand = command;
+
+                            using (DataTable dt = new DataTable())
+                            {
+                                // Fill the data table with the all the info from Store Information
+                                sda.Fill(dt);
+
+                                // Fill the csv files with column names
+                                foreach(DataColumn column in dt.Columns)
+                                {
+                                    csv += column.ColumnName + ",";
+                                }
+
+                                // new line
+                                csv += "\r\n";
+
+                                // Fill the data table with all of the results
+                                foreach(DataRow row in dt.Rows)
+                                {
+                                    foreach(DataColumn column in dt.Columns)
+                                    {
+                                        csv += row[column.ColumnName].ToString().Replace(",", ";") + ",";
+                                    }
+
+                                    csv += "\r\n";
+                                }
+                            }
+                        }
+                    }
+                    connection.Close();                   
+                }
+            }
+            catch(SqlException sqle)
+            {
+
+            }
+            return csv;
         }
     }
 }

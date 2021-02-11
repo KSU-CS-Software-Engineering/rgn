@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+@using System.Text
+@using GroceryLibrary 
+
 <!-- Page for importing nodes from file -->
 <div class="dialog-container">
 	<div class="dialog">
@@ -83,49 +86,62 @@ limitations under the License.
 
 @code {
 
-	/// <summary>
-	/// Stores user uploaded file
-	/// </summary>
-	IFileListEntry file;
+        /// <summary>
+        /// Stores user uploaded file
+        /// </summary>
+        IFileListEntry file;
 
-	/// <summary>
-	/// List of nodes
-	/// </summary>
-	[Parameter] public List<Node> Nodes { get; set; }
+    /// <summary>
+    /// List of nodes
+    /// </summary>
+    [Parameter] public List<Node> Nodes { get; set; }
 
-	bool showBody = false; //for diplaying the body of the import page
+    bool showBody = false; //for diplaying the body of the import page
 
-	bool showImportButton = false; // for displaying the import button
+    bool showImportButton = false; // for displaying the import button
 
-	//the size is arbitrary.
-	string[] contants = new string[4];
+    //the size is arbitrary. 
+    // Won't need this anymore, leaving it here to not break code until my stuff works.
+    string[] contants = new string[4];
 
-	/// <summary>
-	/// Handles uploaded files
-	/// </summary>
-	/// <param name="files">List of files</param>
-	void HandleFileSelected(IFileListEntry[] files)
-	{
-		file = files.FirstOrDefault();
-		showImportButton = true;
-		// Do something with the files, e.g., read them
-	}
 
-	/// <summary>
-	/// Imports data from file and creates nodes
-	/// </summary>
-	async Task ImportFile()
-	{
-		//read the selected file.
-		using (var reader = new System.IO.StreamReader(file.Data))
-		{
-			while (await reader.ReadLineAsync() != null)
+    /// <summary>
+    /// Handles uploaded files
+    /// </summary>
+    /// <param name="files">List of files</param>
+    void HandleFileSelected(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+        showImportButton = true;
+        // Do something with the files, e.g., read them
+    }
+
+    /// <summary>
+    /// Imports data from file and creates nodes
+    /// </summary>
+    async Task ImportFile()
+    {
+        string allInfo = "";
+
+        //read the selected file.
+        using (var reader = new System.IO.StreamReader(file.Data))
+        {
+            /*
+			while (!reader.EndOfStream)
 			{
-
-				contants = reader.ReadLineAsync().Result.Split(',');
+				string line = reader.ReadLineAsync().Result;
+				allInfo += line;
+				//contants = reader.ReadLineAsync().Result.Split(',');
 			}
-		}
+			*/
+            allInfo = await reader.ReadToEndAsync();
+        }
 
+        string[] tables = allInfo.Split('|');
+
+        string test = tables[0];
+
+        /*
 		//Create a new Node with read information and add to the nodelist.
 		Node x = new Node();
 		x.State.Name = contants[0];
@@ -134,24 +150,25 @@ limitations under the License.
 		x.State.Demand = contants[3];
 		x.State.Supply = contants[4];
 		importNodes(x);
-
+		
 		//show the Body of the imported info.
-		showBody = true;
-	}
+		//showBody = true;
+		*/
+    }
 
-	/// <summary>
-	/// Adds node to nodes list
-	/// </summary>
-	/// <param name="x">Node to be added</param>
-	void importNodes(Node x)
-	{
-		Nodes.Add(x);
-	}
+    /// <summary>
+    /// Adds node to nodes list
+    /// </summary>
+    /// <param name="x">Node to be added</param>
+    void importNodes(Node x)
+    {
+        Nodes.Add(x);
+    }
 
-	[Parameter] public EventCallback OnChange { get; set; }
+    [Parameter] public EventCallback OnChange { get; set; }
 
-	/// <summary>
-	/// Close import page
-	/// </summary>
-	[Parameter] public EventCallback Close { get; set; }
+    /// <summary>
+    /// Close import page
+    /// </summary>
+    [Parameter] public EventCallback Close { get; set; }
 }
