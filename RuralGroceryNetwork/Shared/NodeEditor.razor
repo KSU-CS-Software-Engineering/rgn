@@ -14,6 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+@using GroceryLibrary
+@using GroceryLibrary.Models.Database 
+@using System.Text 
+
 @inject IJSRuntime JS
 
 <!-- Javascript ArcGIS map Div setup -->
@@ -92,6 +96,7 @@ limitations under the License.
                     <!-- button for opening the import page -->
                     <br />
                     <button @onclick="enableImportPage" class="btn-1">Import Stores from .csv</button>
+
                     <!-- button for removing the nodes from list -->
                     <br />
                     <button @onclick="RemoveNodes" class="btn-1">Remove All Stores</button>
@@ -99,9 +104,12 @@ limitations under the License.
                     <!-- button for showing the nodelist  page -->
                     <br />
                     <button @onclick="enableNodeList">Stores List</button>
+
                     <!-- Reload the map if needed -->
                     <button @onclick="LoadMap">Reload Map</button>
 
+                    <!-- button for download Store Information table from DB-->
+                    <button @onclick="downloadTables">Download Tables</button>
                 </div> 
             </div>
 
@@ -122,16 +130,13 @@ limitations under the License.
 
             <!-- Button for adding a node on the map -->
             <button style="float:left" @onclick="@(() =>MapInput(NodeState.Location_x,NodeState.Location_y))">Add a Nodes</button>
+
             <!-- The Lat/Lon Fields -->
             <input type="number" style="width:50px" @bind="NodeState.Location_x" /> <input type="number" style="width:50px" @bind="NodeState.Location_y" />
 
 
-
-
             <!-- Various options for changing the MapBase -->
-
             <label for="Map" display="float:right">Choose a MapBase:</label>
-
             <select id="MapBase" @onchange="ChangeMapBase" display="float:right">
                 <option value="streets-navigation-vector">streets navigation vector</option>
                 <option value="streets">streets</option>
@@ -159,21 +164,18 @@ limitations under the License.
 
 
 <!-- display the Import node Page -->
-@if (ShowImportPage)
-{
+@if (ShowImportPage) {
     <ImportNodePage Nodes="nodes" Close="disableImportPage" />
 }
 
 <!-- Display the Node List  page -->
-@if (ShowNodeList)
-{
+@if (ShowNodeList) {
     <NodeListPage Close="disableNodeList" Nodes="nodes" />
 }
 
 
 
 @code {
-
 
 
     /// <summary>
@@ -184,24 +186,22 @@ limitations under the License.
     /// <summary>
     /// Change the Base Map Style for the Arcgis Map
     /// </summary>
-    async Task ChangeMapBase()
-    {
+    async Task ChangeMapBase() {
 
         await JS.InvokeVoidAsync(identifier: "ChangeMapBase");
     }
+
     /// <summary>
     /// Recenter the map on a given latitude  and longitude
     /// </summary>
-    async Task CenterMap(double lat, double lon)
-    {
+    async Task CenterMap(double lat, double lon) {
         await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
     }
 
     /// <summary>
     /// Add a node on the map on a given latitude  and longitude
     /// </summary>
-    async Task MapInput(double lat, double lon)
-    {
+    async Task MapInput(double lat, double lon) {
         await JS.InvokeVoidAsync(identifier: "MapInput", lat, lon);
         await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
     }
@@ -211,8 +211,7 @@ limitations under the License.
     /// <summary>
     /// Loads the javascript Arcgis Map
     /// </summary>
-    async Task LoadMap()
-    {
+    async Task LoadMap() {
         await JS.InvokeVoidAsync("CreateMap");
     }
 
@@ -285,5 +284,95 @@ limitations under the License.
     void enableImportPage()
     {
         ShowImportPage = true;
+    }
+
+    /// <summary>
+    /// Controls the downloading of all the tables from the database. This is called from the button on the webpage
+    /// </summary>
+    /// <returns></returns>
+    async Task downloadTables()
+    {
+        //await downloadStoreInfoTable();
+        //await downloadDistributorTable();
+        //await downloadCitiesTable();
+        //await downloadStatesTable();
+
+        List<string> allcsv = new List<string>();
+
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STORE_INFORMATION));
+
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.DISTRIBUTOR));
+
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.CITIES));
+
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STATES));
+
+        //If new tables are added, just make the same call to DBTableToCSV and add to the list. The following loop creates one file for all tables.
+
+        StringBuilder csv = new StringBuilder();
+
+        foreach(string s in allcsv)
+        {
+            csv.Append(s);
+            csv.Append("|\n");
+        }
+
+        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv.ToString());
+        string temp = csv.ToString();
+        await JS.InvokeVoidAsync("BlazorDownloadFile", "AllFiles.csv", "text/plain", file);
+
+
+    }
+
+    // STOPPED USING THESE FUNCTIONS FOR NOW. Not sure if I want to use these later or not. Still a WIP.
+
+
+    /// <summary>
+    /// Controls the download of the Store Information table from the database
+    /// </summary>
+    /// <returns></returns>
+    async Task downloadStoreInfoTable()
+    {
+        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.STORE_INFORMATION);
+
+        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
+        await JS.InvokeVoidAsync("BlazorDownloadFile", "StoreInfo.csv", "text/plain", file);
+
+    }
+
+    /// <summary>
+    /// Controls the download of the distributors table
+    /// </summary>
+    /// <returns></returns>
+    async Task downloadDistributorTable()
+    {
+        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.DISTRIBUTOR);
+
+        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
+        await JS.InvokeVoidAsync("BlazorDownloadFile", "Distributors.csv", "text/plain", file);
+    }
+
+    /// <summary>
+    /// Controls the download of the cities table
+    /// </summary>
+    /// <returns></returns>
+    async Task downloadCitiesTable()
+    {
+        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.CITIES);
+
+        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
+        await JS.InvokeVoidAsync("BlazorDownloadFile", "Cities.csv", "text/plain", file);
+    }
+
+    /// <summary>
+    /// Controls the download of the states table
+    /// </summary>
+    /// <returns></returns>
+    async Task downloadStatesTable()
+    {
+        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.STATES);
+
+        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
+        await JS.InvokeVoidAsync("BlazorDownloadFile", "States.csv", "text/plain", file);
     }
 }

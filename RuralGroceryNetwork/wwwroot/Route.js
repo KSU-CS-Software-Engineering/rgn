@@ -32,7 +32,7 @@ require([
     });
 
     function CreateMap() {
-
+        //Creates container for map to be view in
         var view = new MapView({
             container: "viewDiv",
             map: map,
@@ -50,38 +50,33 @@ require([
             url: "https://utility.arcgis.com/usrsvcs/appservices/6g6tiL0fLOmFllkm/rest/services/World/Route/NAServer/Route_World/solve"
         });
 
+        //Function that changes map base from what's selected from "MapBase" in the *Editor.razor files
         function ChangeMapBase() {
-
             var x = document.getElementById("MapBase").value;
             map.basemap = x;
-
         }
         window.ChangeMapBase = ChangeMapBase;
 
-        //Add nodes on the map by a given input
+        //Adds diffrent types nodes on the map by a given lat/lon input
         function MapInput(lat, lon) {
-
             var Point = {
                 type: "point",
                 longitude: lon,
                 latitude: lat,
             };
+            //If first point added then add a starting node
             if (view.graphics.length === 0) {
                 addGraphicClick("start", Point);
-
-
-            } else if (view.graphics.length === 1) {
+            } else if (view.graphics.length === 1) {  //If it's to be the second graphic (or node) added, then add a finish node
                 addGraphicClick("finish", Point);
-                // Call the route service
-                //getRoute();
-            } else {
+            } else {   //If two or more nodes are on the map then added another starting node
                 //view.graphics.removeAll();
                 addGraphicClick("start", Point);
             }
         }
-
         window.MapInput = MapInput;
 
+        //Controls what happens when the map is clicked
         view.on("click", function (event) {
             /*if (view.graphics.length === 0) {
                 addGraphicClick("start", event.mapPoint);
@@ -96,10 +91,9 @@ require([
                 addGraphicClick("start", event.mapPoint);
             }*/
 
-            //set clicked part as lat and long in textboxes
+            //Set clicked part as lat and long in textboxes
             document.getElementById("x-long-input").value = event.mapPoint.longitude;
             document.getElementById("y-lat-input").value = event.mapPoint.latitude;
-
 
             var screenPoint = {
                 x: event.x,
@@ -118,11 +112,9 @@ require([
                     var direction_inputs = document.getElementsByClassName("esri-search__input");
                     if (direction_inputs[0].value === "") {
                         direction_inputs[0].value = longitude + ", " + latitude;
-                    }
-                    else if (direction_inputs[1].value === "") {
+                    } else if (direction_inputs[1].value === "") {
                         direction_inputs[1].value = longitude + ", " + latitude;
-                    }
-                    else {
+                    } else {
                         direction_inputs[1].value = "";
                         direction_inputs[0].value = longitude + ", " + latitude;
                     }
@@ -130,11 +122,14 @@ require([
             });
         });
 
+        // Generates a radius on the map
         function GetRadius(allStores) {
+            // Pulls the latitude, longitude, and radius size from corresponding textboxes
             var longitude = document.getElementById("x-long-input").value;
             var latitude = document.getElementById("y-lat-input").value;
             var radius = document.getElementById("radius").value
 
+            // Checks to see if their is already a radius on the map, if so removes the old one
             view.graphics.items.forEach(function (g, i) {
                 
                 if (g.id === "circle1") {
@@ -142,25 +137,31 @@ require([
                 }
             });
 
+            // Checks to see if their is already a route on the map, if so removes the old one
             view.graphics.items.forEach(function (g, i) {
                 if (g.id === "route1") {
                     view.graphics.remove(g);
                 }
             });
-            
+
+            // Generates the radius and adds to map
             var symbol = new SimpleFillSymbol({ color: null, style: "solid", outline: { color: "blue", width: 1 } });
             var cir = new Circle({ center: new Point([longitude, latitude]), radius: radius, geodesic: true, radiusUnit: "miles" })
             var graphic = new Graphic(cir, symbol);
             graphic.id = "circle1";
             view.graphics.add(graphic);
 
+            // Generates a array of all stores in the radius called inCircle
             var inCircle = new Array();
+
+            // Makes a point in the center of the radius
             var circleCenter = {
                 type: "point",
                 longitude: cir.center.longitude,
                 latitude: cir.center.latitude
             };
-            
+
+            // Goes through all the stores to make a point and add the stores info to it
             allStores.forEach(function (store) {
                 var x = store.xlong;
                 var y = store.ylat;
@@ -179,15 +180,17 @@ require([
                     }
                 });
 
+                // Finds distance of store from center of radius
                 var dis = distance(point.latitude, point.longitude, circleCenter.latitude, circleCenter.longitude)
 
+                // If store point is within the radius then add to the inCircle array
                 if (dis <= cir.radius) {
                     point.attributes.distanceToCenter = dis;
                     inCircle.push(point);
                 }
             });
 
-            //sort by distance to the center
+            // Reorginize inCircle array by closest distance to the center to farthest
             var len = inCircle.length;
             for (i = 0; i < len; i++) {
                 for (j = 0; j < len - 1; j++) {
@@ -199,6 +202,7 @@ require([
                 }
             }
 
+            // Finds the weekely Purchase Amount total for all stores in radius
             var weeklyPurchaseAmount = 0;
             for (i = 0; i < inCircle.length; i++) {
                 var div = document.getElementById("radius-stores");
@@ -230,6 +234,7 @@ require([
 
             div = document.getElementById("summary");
 
+            // Create text to show following statistics
             createAndAppendTo("h3", "Summary", div);
             createAndAppendTo("p", "Stores in Radius: " + inCircle.length, div)
             createAndAppendTo("h5", "Weekly Purchase Amount", div)
@@ -242,6 +247,7 @@ require([
         }
         window.GetRadius = GetRadius;
 
+        // A function to create an element and append it to given var
         function createAndAppendTo(element, text, append_to, id = "") {
             var name = document.createElement(element);
             if (id != "")
@@ -251,30 +257,35 @@ require([
             append_to.appendChild(name);
         }
 
+        // A function to return a string of text with the address for a store 
         function displayAddress(store) {
             return store.attributes["address"] + " " + store.attributes["city"] + ", " + store.attributes["state"] + " " + store.attributes["zip"];
         }
 
+        // A function return text containing the distance from one given store to the second given store
         function displayDistanceToCenter(centerStore, store) {
             return "Straight Line Distance to " + centerStore.attributes["name"] + ": " + Math.round(store.attributes["distanceToCenter"] * 10) / 10 + " miles"
         }
 
+        // A function that returns a Yes or No for if the given store amount is greater than or equal to the given min.
         function meetsMinimum(min, store_amount) {
             if (store_amount >= min)
                 return "Yes"
             return "No"
         }
 
+        // A function to update the weekly buying amount for stores
         function updateSummary(checkbox) {
             element = document.getElementById("selected-stores-amount");
             element = element.textContent.split(": ");
             element[1] = parseInt(element[1].substring(1)); //get rid of $ and parseInt
 
             var weeklyAmount = parseInt(checkbox.dataset.weeklyamount);
-            if (checkbox.checked)
+            if (checkbox.checked) {
                 element[1] += weeklyAmount;
-            else
+            } else { 
                 element[1] -= weeklyAmount;
+            }
 
             document.getElementById("selected-stores-amount").innerHTML = element[0] + ": $" + element[1];
         }
@@ -292,6 +303,7 @@ require([
         }
         window.distance = distance;
 
+        // 
         function getRouteInCircle(points) {
             var routeParams = new RouteParameters({
                 stops: new FeatureSet({
@@ -312,12 +324,14 @@ require([
             });
         }
         window.getRouteInCircle = getRouteInCircle;
-        
+
+        //
         var popupTemplate = {
             title: "<b>{name}</b>",
             content: "{address}<br>{city}, {state} {zip}<br><br>Weekly Purchase Amount: ${weeklyPurchaseAmount}"
         };
 
+        //
         function addGraphic(store, lat, lon, color) {
             const s = store.weeklyPurchaseAmount;
             switch (true) {
@@ -358,30 +372,83 @@ require([
         }
         window.addGraphic = addGraphic;
 
+        // A function to display the legend for the map
         function displayLegend() {
             document.getElementById("map-legend").style.display = "block";
         }
         window.displayLegend = displayLegend;
 
+        // A function to add a either a start or finish point type
         function addGraphicClick(type, point) {
             var graphic = new Graphic({
                 symbol: {
                     type: "simple-marker",
-                    color: (type === "start") ? "green" : "red",
+                    color: (type === "start") ? "green" : "red", // If the type is start then the point is green, otherwise it's red.
                     size: "10px"
                 },
                 geometry: point
-
             });
             view.graphics.add(graphic);
         }
 
+        // A function to center the map on a given lat and lon point
         function centerMap(lat, lon) {
-
             view.center = [lon, lat];
-
         }
         window.centerMap = centerMap;
+
+       
+        // Used to start the download for a csv file from the Database
+        // This code is directly taken from: https://www.meziantou.net/generating-and-downloading-a-file-in-a-blazor-webassembly-application.htm
+        function BlazorDownloadFile(filename, contentType, content) {
+            // Blazor marshall byte[] to a base64 string, so we first need to convert the string (content) to a Uint8Array to create the File
+            const data = base64DecToArr(content);
+
+            // Create the URL
+            const file = new File([data], filename, { type: contentType });
+            const exportUrl = URL.createObjectURL(file);
+
+            // Create the <a> element and click on it
+            const a = document.createElement("a");
+            document.body.appendChild(a);
+            a.href = exportUrl;
+            a.download = filename;
+            a.target = "_self";
+            a.click();
+
+            // We don't need to keep the url, let's release the memory            
+            URL.revokeObjectURL(exportUrl);
+        }
+        window.BlazorDownloadFile = BlazorDownloadFile;
+
+        // Convert a base64 string to a Uint8Array. This is needed to create a blob object from the base64 string.
+        // These two functions for conversion comes from: https://developer.mozilla.org/fr/docs/Web/API/WindowBase64/D%C3%A9coder_encoder_en_base64
+        function b64ToUint6(nChr) {
+            return nChr > 64 && nChr < 91 ? nChr - 65 : nChr > 96 && nChr < 123 ? nChr - 71 : nChr > 47 && nChr < 58 ? nChr + 4 : nChr === 43 ? 62 : nChr === 47 ? 63 : 0;
+        }
+        window.b64ToUint6 = b64ToUint6;
+
+        function base64DecToArr(sBase64, nBlocksSize) {
+            var
+                sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ""),
+                nInLen = sB64Enc.length,
+                nOutLen = nBlocksSize ? Math.ceil((nInLen * 3 + 1 >> 2) / nBlocksSize) * nBlocksSize : nInLen * 3 + 1 >> 2,
+                taBytes = new Uint8Array(nOutLen);
+
+            for (var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0; nInIdx < nInLen; nInIdx++) {
+                nMod4 = nInIdx & 3;
+                nUint24 |= b64ToUint6(sB64Enc.charCodeAt(nInIdx)) << 18 - 6 * nMod4;
+                if (nMod4 === 3 || nInLen - nInIdx === 1) {
+                    for (nMod3 = 0; nMod3 < 3 && nOutIdx < nOutLen; nMod3++, nOutIdx++) {
+                        taBytes[nOutIdx] = nUint24 >>> (16 >>> nMod3 & 24) & 255;
+                    }
+                    nUint24 = 0;
+                }
+            }
+            return taBytes;
+        }
+        window.base64DecToArr = base64DecToArr;
+        
     }
     window.CreateMap = CreateMap;
 });

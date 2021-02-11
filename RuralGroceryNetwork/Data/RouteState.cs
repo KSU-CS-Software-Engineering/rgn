@@ -28,6 +28,7 @@ namespace RuralGroceryNetwork
 		/// Size of  radius
 		/// </summary>
 		[Required, MaxLength(100)] public double Radius_Size { get; set; }
+		
 		/// <summary>
 		/// Start location of radius, x
 		/// </summary>
