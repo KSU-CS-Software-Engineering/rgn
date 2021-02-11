@@ -52,6 +52,7 @@ limitations under the License.
                             <input id="radius" @bind="RouteState.Radius_Size" />
                         </div>
                     </div>
+
                     <!-- Route supply field -->
                     <div class="form-field">
                         <label>Radius Center:</label>
@@ -81,7 +82,6 @@ limitations under the License.
 
             <!-- Various options for changing the MapBase -->
             <label for="Map" display="float:right">Choose a MapBase:</label>
-
             <select id="MapBase" @onchange="ChangeMapBase" display="float:right">
                 <option value="streets-navigation-vector">streets navigation vector</option>
                 <option value="streets">streets</option>
@@ -133,6 +133,7 @@ limitations under the License.
 
         await JS.InvokeVoidAsync(identifier: "ChangeMapBase");
     }
+
     /// <summary>
     /// Recenter the map on a given latitude  and longitude
     /// </summary>

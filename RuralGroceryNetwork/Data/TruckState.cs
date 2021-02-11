@@ -44,7 +44,14 @@ namespace RuralGroceryNetwork
 		/// </summary>
 		public bool Refrigerated { get; set; }
 
+		/// <summary>
+		/// The bool for if it's the trucks starting point
+		/// </summary>
 		public bool Start { get; set; }
+
+		/// <summary>
+		/// The bool for if it's the trucks last point
+		/// </summary>
 		public bool End { get; set; }
 
 		/// <summary>

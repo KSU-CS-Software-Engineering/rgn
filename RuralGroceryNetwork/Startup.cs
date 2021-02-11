@@ -67,13 +67,10 @@ namespace RuralGroceryNetwork
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-            }
-            else
-            {
+            } else {
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
@@ -87,7 +84,7 @@ namespace RuralGroceryNetwork
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.UseEndpoints(endpoints => 
             {
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
@@ -95,8 +92,7 @@ namespace RuralGroceryNetwork
             });
 
             //Migrates databases
-            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
+            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope()) {
                 scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
                 scope.ServiceProvider.GetRequiredService<RuralGroceryDB.Data.RuralGrocery.RuralGroceryContext>().Database.Migrate();
             }
