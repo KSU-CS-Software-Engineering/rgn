@@ -222,8 +222,10 @@ require([
                 createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmount"], div)
                 weeklyPurchaseAmount += inCircle[i].attributes["weeklyPurchaseAmount"]
 
-                if (i != 0)
+                if (i != 0) {
                     createAndAppendTo("p", displayDistanceToCenter(inCircle[0], inCircle[i]), div)
+                    createAndAppendTo("p", "Directions >", div)
+                }
             }
 
             div = document.getElementById("summary");
@@ -277,10 +279,6 @@ require([
             document.getElementById("selected-stores-amount").innerHTML = element[0] + ": $" + element[1];
         }
         window.updateSummary = updateSummary;
-
-        function updateSection(element, add_num) {
-            
-        }
 
         // Used to calculate distance between points -- Haversine Formula
         function distance(lat1, lon1, lat2, lon2) {
