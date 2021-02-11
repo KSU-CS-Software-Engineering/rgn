@@ -1,4 +1,20 @@
-﻿using System;
+﻿/*
+Copyright 2020 Kansas State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+using System;
 using System.Text;
 using System.IO;
 using System.Data;
@@ -299,8 +315,8 @@ namespace GroceryLibrary
                 "SI." + StoreInformationTable.NUMBER_OF_CHECKOUT_LANES + ", " +
                 "SI." + StoreInformationTable.WEEKLY_BUYING_MIN_REQUIREMENT + ", " +
                 "SFC." + SquareFootageCategoriesTable.CATEGORY_NAME + " ");
-            sb.Append("FROM " + DatabaseTables.STORE_INFORMATION + "SI ");
-            sb.Append("INNER JOIN " + DatabaseTables.SQUARE_FOOTAGE_CATEGORIES + "SFC ON SFC." + SquareFootageCategoriesTable.SQUARE_FOOTAGE_CATEGORIES_ID + " = SI." + StoreInformationTable.SQUARE_FOOTAGE_CATEGORIES_ID);
+            sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
+            sb.Append("INNER JOIN " + DatabaseTables.SQUARE_FOOTAGE_CATEGORIES + "ON SFC." + SquareFootageCategoriesTable.SQUARE_FOOTAGE_CATEGORIES_ID + " = SI." + StoreInformationTable.SQUARE_FOOTAGE_CATEGORIES_ID);
             sb.Append("WHERE " + StoreInformationTable.STORE_EMAIL_ADDRESS + "= '" + store.StoreEmail + "'");
 
             using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
@@ -319,11 +335,11 @@ namespace GroceryLibrary
                             else
                                 store.StoreName = "Not yet assigned";
 
-                            /* Checks to see if CityID is currently NULL */
+                            /* Checks to see if CityName is currently NULL */
                             if (!reader.IsDBNull(2))
-                                store.CityID = reader.GetInt32(2);
+                                store.CityName = reader.GetString(1);
                             else
-                                store.CityID = -1;
+                                store.CityName = "Not yet assigned";
 
                             /* Checks to see if NumChkLanes is currently NULL */
                             if (!reader.IsDBNull(3))
@@ -333,9 +349,9 @@ namespace GroceryLibrary
 
                             /* Checks to see if weekly buying requirement is currently NULL */
                             if (!reader.IsDBNull(4))
-                                store.HasWeeklyBuyingRequirement = ConvertCharToBool(reader.GetString(4)[0]);
+                                store.HasWeeklyPurchaseRequirement = ConvertCharToBool(reader.GetString(4)[0]);
                             else
-                                store.HasWeeklyBuyingRequirement = false;
+                                store.HasWeeklyPurchaseRequirement = false;
 
 
                             /* Checks to see if square footage category ID is currently NULL */
@@ -405,9 +421,9 @@ namespace GroceryLibrary
                                 store.SellsToOthers = false;
 
                             if (!reader.IsDBNull(4))
-                                store.HasWeeklyBuyingRequirement = ConvertCharToBool(reader.GetString(4)[0]);
+                                store.HasWeeklyPurchaseRequirement = ConvertCharToBool(reader.GetString(4)[0]);
                             else
-                                store.HasWeeklyBuyingRequirement = false;
+                                store.HasWeeklyPurchaseRequirement = false;
                         }
                     }
                     else
@@ -546,14 +562,14 @@ namespace GroceryLibrary
         /// <param name="conn">The database connection</param>
         private static void getRestOfInfo(SqlConnection conn)
         {
-            if (store.CityID != -1 || store.DistributorID != -1)
+            if (store.CityName != "Not yet assigned" || store.DistributorID != -1)
             {
                 bool needsCity = false, needsDist = false;
                 StringBuilder sb = new StringBuilder();
 
                 sb.Append("SELECT ");
 
-                if (store.CityID != -1)
+                if (store.CityName != "Not yet assigned")
                 {
                     sb.Append("C." + CitiesTable.CITY_NAME);
                     needsCity = true;
@@ -572,13 +588,13 @@ namespace GroceryLibrary
                 else
                     store.DistributorName = "Not yet assigned";
 
-                sb.Append("FROM " + DatabaseTables.STORE_INFORMATION + "S ");
+                sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
 
-                if (store.CityID != -1)
-                    sb.Append("INNER JOIN " + DatabaseTables.CITIES + "C ON C." + CitiesTable.CITY_ID + "= S." + StoreInformationTable.CITY_ID);
+                if (store.CityName != "Not yet assigned")
+                    sb.Append("INNER JOIN " + DatabaseTables.CITIES + "ON C." + CitiesTable.CITY_ID + "= S." + StoreInformationTable.CITY_ID);
                 if (store.DistributorID != -1)
                 {
-                    sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "SDI ON SDI." + StoreDeliveryInformationTable.STORE_ID + "= S." + StoreInformationTable.STORE_ID);
+                    sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "ON SDI." + StoreDeliveryInformationTable.STORE_ID + "= S." + StoreInformationTable.STORE_ID);
                     sb.Append("INNER JOIN " + DatabaseTables.DISTRIBUTOR + "D ON D." + DistributorTable.DISTRIBUTOR_ID + "= SDI." + StoreDeliveryInformationTable.DISTRIBUTOR_ID);
                 }
 
@@ -832,6 +848,9 @@ namespace GroceryLibrary
 
             sb.Append("SELECT *");
             sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
+            sb.Append("INNER JOIN " + DatabaseTables.CITIES + "ON SI.CityID = C.CityID ");
+            sb.Append("INNER JOIN " + DatabaseTables.STATES + "ON S.StateID = C.StateID ");
+            sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "ON SDI.StoreID = SI.StoreID ");
             builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
             //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
 
@@ -849,8 +868,19 @@ namespace GroceryLibrary
                                 Store tempStore = new Store();
                                 tempStore.StoreID = Convert.ToInt32(reader["StoreID"]);
                                 tempStore.StoreName = reader["StoreName"].ToString();
+                                tempStore.Address = reader["Address"].ToString();
+                                tempStore.CityName = reader["CityName"].ToString();
+                                tempStore.StateName = reader["StateName"].ToString();
+                                tempStore.ZipCode = reader["Zip"].ToString();
                                 tempStore.YLAT = Convert.ToDecimal(reader["YLAT"]);
                                 tempStore.XLONG = Convert.ToDecimal(reader["XLONG"]);
+
+                                var r = reader["WeeklyPurchaseAmount"];
+                                var rs = r.ToString();
+                                if (r.ToString() == "")
+                                    tempStore.WeeklyPurchaseAmount = 0;
+                                else
+                                    tempStore.WeeklyPurchaseAmount = Convert.ToInt32(reader["WeeklyPurchaseAmount"]);
 
                                 allStores.Add(tempStore);
                             }

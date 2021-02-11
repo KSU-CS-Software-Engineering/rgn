@@ -24,8 +24,7 @@ limitations under the License.
 			<h2>Import from .csv</h2>
 		</div>
 
-		@if (showBody)
-		{
+		@if (showBody) {
 			<form class="dialog-body">
 				<label> First Line Header</label>
 				<input type="checkbox" />
@@ -43,8 +42,7 @@ limitations under the License.
 							<th>Demand</th>
 						</tr>
 						<tr>
-							@for (int i = 0; i < contants.Length; i++)
-							{
+							@for (int i = 0; i < contants.Length; i++) {
 								<td>@contants[i]</td>
 							}
 						</tr>
@@ -55,20 +53,26 @@ limitations under the License.
 				</div>
 
 				<!-- for loops to create the 1-17 buttons  -->
-				@for (int i = 1; i < 18; i++)
-				{<button>@i</button>}Name
+				@for (int i = 1; i < 18; i++) {
+					<button>@i</button>
+				}Name
 				<br />
-				@for (int i = 1; i < 18; i++)
-				{<button>@i</button>}Latitude
+				@for (int i = 1; i < 18; i++) {
+					<button>@i</button>
+				}Latitude
 				<br />
-				@for (int i = 1; i < 18; i++)
-				{<button>@i</button>}Longitude
+				@for (int i = 1; i < 18; i++) {
+					<button>@i</button>
+				}Longitude
 				<br />
-				@for (int i = 1; i < 18; i++)
-				{<button>@i</button>}Demand[palettes]
+				@for (int i = 1; i < 18; i++) {
+					<button>@i</button>
+				}Demand[palettes]
 				<br />
-				@for (int i = 1; i < 18; i++)
-				{<button>@i</button>}Supply[palettes]
+				@for (int i = 1; i < 18; i++) {
+					<button>@i</button>
+				}Supply[palettes]
+
 			</form>
 		}
 		<div class="dialog-buttons">
@@ -76,8 +80,7 @@ limitations under the License.
 			<button @onclick="@Close" class="btn btn-secondary mr-auto">Close</button>
 
 			<InputFile OnChange="HandleFileSelected" />
-			@if (showImportButton)
-			{
+			@if (showImportButton) {
 				<button @onclick="@ImportFile" class="btn btn-success ml-auto">OK, Import</button>
 			}
 		</div>

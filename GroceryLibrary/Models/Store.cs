@@ -1,4 +1,20 @@
-﻿using System;
+﻿/*
+Copyright 2020 Kansas State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -23,14 +39,24 @@ namespace GroceryLibrary.Models
         public string StoreName { get; set; }
 
         /// <summary>
-        /// The store's CityID
+        /// The Store's address
         /// </summary>
-        public int CityID { get; set; }
+        public string Address { get; set; }
 
         /// <summary>
         /// The city which the store is located in
         /// </summary>
         public string CityName { get; set; }
+
+        /// <summary>
+        /// The state which the store is located in
+        /// </summary>
+        public string StateName { get; set; }
+
+        /// <summary>
+        /// The zip code where the store is located in
+        /// </summary>
+        public string ZipCode { get; set; }
 
         /// <summary>
         /// The y coordinate for the store
@@ -41,11 +67,6 @@ namespace GroceryLibrary.Models
         /// The x coordinate for the store
         /// </summary>
         public decimal XLONG { get; set; }
-
-        /// <summary>
-        /// The state which the store is located in
-        /// </summary>
-        public string StateName { get; set; }
 
         /// <summary>
         /// The number of checkout lanes that the store has
@@ -75,7 +96,12 @@ namespace GroceryLibrary.Models
         /// <summary>
         /// Does the Store have a minimum buying requirement per week
         /// </summary>
-        public bool HasWeeklyBuyingRequirement { get; set; }
+        public bool HasWeeklyPurchaseRequirement { get; set; }
+
+        /// <summary>
+        /// The Store's purchase amount per week
+        /// </summary>
+        public int WeeklyPurchaseAmount { get; set; }
 
         /// <summary>
         /// What is the minimum number of pallets the store recieved per delivery
