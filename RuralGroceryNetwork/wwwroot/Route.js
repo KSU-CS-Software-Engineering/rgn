@@ -262,7 +262,7 @@ require([
             return store.attributes["address"] + " " + store.attributes["city"] + ", " + store.attributes["state"] + " " + store.attributes["zip"];
         }
 
-        // A function return text containing the distance from one given store to the second given store
+        // A function return text containing the distance from one given store to the second given store in a straight line 
         function displayDistanceToCenter(centerStore, store) {
             return "Straight Line Distance to " + centerStore.attributes["name"] + ": " + Math.round(store.attributes["distanceToCenter"] * 10) / 10 + " miles"
         }
@@ -303,7 +303,7 @@ require([
         }
         window.distance = distance;
 
-        // 
+        // A function to find a route with given points and adds that path to the map
         function getRouteInCircle(points) {
             var routeParams = new RouteParameters({
                 stops: new FeatureSet({
@@ -325,15 +325,16 @@ require([
         }
         window.getRouteInCircle = getRouteInCircle;
 
-        //
+        // A template for a popup for a store of it's information
         var popupTemplate = {
             title: "<b>{name}</b>",
             content: "{address}<br>{city}, {state} {zip}<br><br>Weekly Purchase Amount: ${weeklyPurchaseAmount}"
         };
 
-        //
+        // A function to add a graphic to the map for a store
         function addGraphic(store, lat, lon, color) {
             const s = store.weeklyPurchaseAmount;
+            // Sets a color based off a stores weekly purchaseing amount
             switch (true) {
                 case (s == 0): color = "#E6E6FA"
                     break;
@@ -351,6 +352,7 @@ require([
                     color = "yellow";
             }
 
+            // Creates a graphic for a store
             var graphic = new Graphic({
                 symbol: {
                     type: "simple-marker",
@@ -428,13 +430,13 @@ require([
         }
         window.b64ToUint6 = b64ToUint6;
 
+        // A function to convert strings to help convert .csv files
         function base64DecToArr(sBase64, nBlocksSize) {
             var
                 sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ""),
                 nInLen = sB64Enc.length,
                 nOutLen = nBlocksSize ? Math.ceil((nInLen * 3 + 1 >> 2) / nBlocksSize) * nBlocksSize : nInLen * 3 + 1 >> 2,
                 taBytes = new Uint8Array(nOutLen);
-
             for (var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0; nInIdx < nInLen; nInIdx++) {
                 nMod4 = nInIdx & 3;
                 nUint24 |= b64ToUint6(sB64Enc.charCodeAt(nInIdx)) << 18 - 6 * nMod4;
