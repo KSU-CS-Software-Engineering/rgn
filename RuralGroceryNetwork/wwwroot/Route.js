@@ -127,7 +127,11 @@ require([
             // Pulls the latitude, longitude, and radius size from corresponding textboxes
             var longitude = document.getElementById("x-long-input").value;
             var latitude = document.getElementById("y-lat-input").value;
-            var radius = document.getElementById("radius").value
+            var radius = document.getElementById("radius").value;
+            if (radius == 0) {
+                radius = 25;
+                document.getElementById("radius").value = 25;
+            }
 
             // Checks to see if their is already a radius on the map, if so removes the old one
             view.graphics.items.forEach(function (g, i) {
@@ -188,6 +192,10 @@ require([
                     point.attributes.distanceToCenter = dis;
                     inCircle.push(point);
                 }
+
+                if (dis == 0) {
+                    addGraphic(point, point.latitude, point.longitude, "", "15px");
+                }
             });
 
             // Reorginize inCircle array by closest distance to the center to farthest
@@ -204,9 +212,9 @@ require([
 
             // Finds the weekely Purchase Amount total for all stores in radius
             var weeklyPurchaseAmount = 0;
+            var div = document.getElementById("radius-stores");
+            div.innerHTML = ""; //clear it
             for (i = 0; i < inCircle.length; i++) {
-                var div = document.getElementById("radius-stores");
-
                 if (i != 0) {
                     var checkbox = document.createElement("input");
                     checkbox.setAttribute("type", "checkbox");
@@ -228,11 +236,11 @@ require([
 
                 if (i != 0) {
                     createAndAppendTo("p", displayDistanceToCenter(inCircle[0], inCircle[i]), div)
-                    createAndAppendTo("p", "Directions >", div)
                 }
             }
 
             div = document.getElementById("summary");
+            div.innerHTML = "" //clear it
 
             // Create text to show following statistics
             createAndAppendTo("h3", "Summary", div);
@@ -332,24 +340,33 @@ require([
         };
 
         // A function to add a graphic to the map for a store
-        function addGraphic(store, lat, lon, color) {
-            const s = store.weeklyPurchaseAmount;
-            // Sets a color based off a stores weekly purchaseing amount
-            switch (true) {
-                case (s == 0): color = "#E6E6FA"
-                    break;
-                case (s < 5000): color = "#D8BFD8"
-                    break;
-                case (s < 10000): color = "#EE82EE"
-                    break;
-                case (s < 15000): color = "#9370DB"
-                    break;
-                case (s < 20000): color = "#8A2BE2"
-                    break;
-                case (s < 36001): color = "#4B0082"
-                    break;
-                default:
-                    color = "yellow";
+        function addGraphic(store, lat, lon, color, size = "10px") {
+            outlineColor = "black";
+            outlineSize = 1;
+            if (size == "15px") {
+                store = store.attributes;
+                outlineColor = "#00f";
+                outlineSize = 1.5;
+            }
+            if (color == "") {
+                const s = store.weeklyPurchaseAmount;
+                // Sets a color based off a stores weekly purchaseing amount
+                switch (true) {
+                    case (s == 0): color = "#E6E6FA"
+                        break;
+                    case (s < 5000): color = "#D8BFD8"
+                        break;
+                    case (s < 10000): color = "#EE82EE"
+                        break;
+                    case (s < 15000): color = "#9370DB"
+                        break;
+                    case (s < 20000): color = "#8A2BE2"
+                        break;
+                    case (s < 36001): color = "#4B0082"
+                        break;
+                    default:
+                        color = "yellow";
+                }
             }
 
             // Creates a graphic for a store
@@ -357,7 +374,11 @@ require([
                 symbol: {
                     type: "simple-marker",
                     color: color,
-                    size: "10px"
+                    size: size,
+                    outline: {
+                        color: outlineColor,
+                        width: outlineSize
+                    }
                 },
                 geometry: new Point(lon, lat),
                 attributes: {
@@ -366,7 +387,8 @@ require([
                     city: store.cityName,
                     state: store.stateName,
                     zip: store.zipCode,
-                    weeklyPurchaseAmount: store.weeklyPurchaseAmount
+                    weeklyPurchaseAmount: store.weeklyPurchaseAmount,
+                    store: store
                 },
                 popupTemplate: popupTemplate
             });

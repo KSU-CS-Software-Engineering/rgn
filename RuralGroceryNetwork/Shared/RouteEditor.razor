@@ -178,7 +178,7 @@ limitations under the License.
 
         //Calls Route.js to load each store in List<Store> allStores to the map as a blue node
         foreach (Store s in allStores) {
-            await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "blue");
+            await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "");
         }
         //Calls Route.js to load each store in List<Distributor> allDist to the map as a yellow node
         foreach (Distributor d in allDist) {
