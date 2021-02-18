@@ -123,7 +123,7 @@ require([
         });
 
         // Generates a radius on the map
-        function GetRadius(allStores) {
+        async function GetRadius(allStores) {
             // Pulls the latitude, longitude, and radius size from corresponding textboxes
             var longitude = document.getElementById("x-long-input").value;
             var latitude = document.getElementById("y-lat-input").value;
@@ -235,9 +235,13 @@ require([
                 weeklyPurchaseAmount += inCircle[i].attributes["weeklyPurchaseAmount"]
 
                 if (i != 0) {
-                    createAndAppendTo("p", displayDistanceToCenter(inCircle[0], inCircle[i]), div)
+                    await displayDistanceToCenter(inCircle[0], inCircle[i]).then(function (result) {
+                        createAndAppendTo("p", result, div)
+                    })
+                    //createAndAppendTo("p", displayDistanceToCenter(inCircle[0], inCircle[i]), div)
                 }
             }
+
 
             div = document.getElementById("summary");
             div.innerHTML = "" //clear it
@@ -248,10 +252,8 @@ require([
             createAndAppendTo("h5", "Weekly Purchase Amount", div)
             createAndAppendTo("p", "Amount of All Stores in Radius: $" + weeklyPurchaseAmount, div)
             createAndAppendTo("p", "Amount for Selected Stores: $" + inCircle[0].attributes["weeklyPurchaseAmount"], div, "selected-stores-amount")
-            createAndAppendTo("p", "Distributor Minimum Amount: $0", div, "min-distributor-amount")
-            createAndAppendTo("p", "Selected Stores Meets Minimum Amount: " + meetsMinimum(0, inCircle[0].attributes["weeklyPurchaseAmount"]), div, "meets-minimum")
-
-            getRouteInCircle(inCircle);
+            createAndAppendTo("p", "Distributor Minimum Amount: $25,000", div, "min-distributor-amount")
+            createAndAppendTo("p", "Selected Stores Meets Minimum Amount: " + meetsMinimum(inCircle[0].attributes["weeklyPurchaseAmount"]), div, "meets-minimum")
         }
         window.GetRadius = GetRadius;
 
@@ -271,15 +273,29 @@ require([
         }
 
         // A function return text containing the distance from one given store to the second given store in a straight line 
-        function displayDistanceToCenter(centerStore, store) {
-            return "Straight Line Distance to " + centerStore.attributes["name"] + ": " + Math.round(store.attributes["distanceToCenter"] * 10) / 10 + " miles"
+        async function displayDistanceToCenter(centerStore, store) {
+            length = await getRouteInCircle([centerStore, store]).then(function (result) {
+                return result;
+            });
+            return "Distance to " + centerStore.attributes["name"] + ": " + Math.round(length * 10) / 10 + " miles";
         }
 
-        // A function that returns a Yes or No for if the given store amount is greater than or equal to the given min.
-        function meetsMinimum(min, store_amount) {
-            if (store_amount >= min)
+        // A function that returns whether the minimum amount is met or not.
+        function meetsMinimum(store_amount) {
+            if (store_amount >= 25000)
                 return "Yes"
             return "No"
+        }
+
+        // A function that updates whether the minimum amount is met or not.
+        function updateMeetsMinimum(store_amount) {
+            element = document.getElementById("meets-minimum");
+            element = element.textContent.split(": ");
+            element[1] = parseInt(element[1].substring(1)); //get rid of $ and parseInt
+
+            if (store_amount >= 25000)
+                return document.getElementById("meets-minimum").innerHTML = element[0] + ": Yes";
+            return document.getElementById("meets-minimum").innerHTML = element[0] + ": No";
         }
 
         // A function to update the weekly buying amount for stores
@@ -296,6 +312,7 @@ require([
             }
 
             document.getElementById("selected-stores-amount").innerHTML = element[0] + ": $" + element[1];
+            updateMeetsMinimum(element[1]);
         }
         window.updateSummary = updateSummary;
 
@@ -312,14 +329,15 @@ require([
         window.distance = distance;
 
         // A function to find a route with given points and adds that path to the map
-        function getRouteInCircle(points) {
+        async function getRouteInCircle(points) {
+            var length = 0;
             var routeParams = new RouteParameters({
                 stops: new FeatureSet({
                     features: points
                 }),
                 returnDirections: true
             });
-            routeTask.solve(routeParams).then(function (data) {
+            await routeTask.solve(routeParams).then(function (data) {
                 data.routeResults.forEach(function (result) {
                     result.route.symbol = {
                         type: "simple-line",
@@ -328,8 +346,10 @@ require([
                     };
                     result.route.id = "route1";
                     view.graphics.add(result.route);
+                    length = result.route.attributes.Total_Miles;
                 });
             });
+            return length;
         }
         window.getRouteInCircle = getRouteInCircle;
 
