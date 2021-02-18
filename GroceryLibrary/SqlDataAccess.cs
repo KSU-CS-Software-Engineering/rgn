@@ -1007,5 +1007,40 @@ namespace GroceryLibrary
             }
             return csv;
         }
+
+        /// <summary>
+        /// Bulk insert data from a given datatable into a targeted DB table
+        /// </summary>
+        /// <param name="data">the datatable parsed from a csv file</param>
+        /// <param name="tableName">the target table name</param>
+        public static void InsertDataViaBulkCopy(DataTable data, string tableName)
+        {
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+
+            StringBuilder sb = new StringBuilder();
+            // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
+            sb.Append("DELETE FROM [dbo].[StoreInformation]; ");
+                     
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+                // remove the existing entries in the database
+                ExecuteNonQuery(sb.ToString(), connection);
+                connection.Open();
+                // bulk copy the data from the csv into the table
+                using(SqlBulkCopy s = new SqlBulkCopy(connection))
+                {
+                    // define target table name
+                    s.DestinationTableName = "[dbo].[StoreInformation]";
+                    // match the columns
+                    foreach(var column in data.Columns)
+                    {
+                        s.ColumnMappings.Add(column.ToString(), column.ToString());
+                    }
+                    //bulk write the information
+                    s.WriteToServer(data);
+                }
+                connection.Close();
+            }           
+        }
     }
 }
