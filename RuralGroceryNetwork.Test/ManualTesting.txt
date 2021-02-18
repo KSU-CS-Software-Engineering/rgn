@@ -1,0 +1,38 @@
+Manual Testing
+
+Scenarios Page Testing:
+  Test: The stores and distributors should show up on the map when clicking the "Load All Stores and Distributors"
+  Validation: Clicked the button and the stores and distributors show up. Counted the stores and distributors and that equals the total number.
+
+  Test: The stores are color-coded based on weekly purchase amount and a legend show up
+  Validation: Visual inspection shows they are color-coded and clicking on the stores validates that it is based on weekly purchase amount. Also, the legend does show up when the stores and distributors are loaded.
+
+  Test: Clicking on a store will have a popup displaying the name, address, and weekly purchase amount of the store
+  Validation: Clicked on a store and it does indeed have a popup with that information
+
+  Test: Clicking on a store will fill in the coordinates in the Radius Center box
+  Validation: Clicked on a store and it does indeed fill in the coordinates
+
+  Test: Putting in a radius after clicking a store and clicking the "Find Radius" button will create a radius that size
+  Validation: Visual inspection shows that it does indeed create a circle with the radius size
+
+  Test: Clicking the "Find Radius" button will also list all the stores in the radius with address, weekly purchase amount and distance to the center, and a checkbox for every store except the center
+  Validation: Visual inspection shows that it does indeed create this list with the information
+
+  Test: Clicking the "Find Radius" button will also create a summary list of different aggregated stats, such as stores in the radius, total weekly purchase amount of all stores, total weekly purchase amount of selected stores, distributor minimum amount, and if the purchase amount of selected stores meets the minimum distributor amount
+  Validation: Visual inspection shows that it does indeed create this summary list with the information
+
+  Test: Clicking the "Find Radius" button will have the total weekly purchase amount of selected stores as the weekly purchase amount of the center store
+  Validation: Visual inspection shows that it does indeed equal to the weekly purchase amount of the center store and works for multiple stores
+
+  Test: Checking on a checkbox for a store will add that store's total weekly purchase amount to the total weekly purchase amount of selected stores
+  Validation: Clicking a checkbox does indeed add the total weekly purchase amount to the total weekly purchase amount of selected stores
+
+  Test: Unchecking on a checkbox for a store will add that store's total weekly purchase amount to the total weekly purchase amount of selected stores
+  Validation: Unchecking a checkbox does indeed add the total weekly purchase amount to the total weekly purchase amount of selected stores
+
+CSV Testing:
+  Test: Clicking the "Download Tables" button will download a CSV with all of the data from the table
+  Validation: Clicked the "Download Tables" button and it did indeed download a CSV file with the data of all the tables
+
+

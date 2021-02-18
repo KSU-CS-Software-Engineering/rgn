@@ -98,13 +98,14 @@ limitations under the License.
             <br />
             <label style="font-style: italic;">  Lat / Lon</label>
         </div>
-
-        <!-- Creates legend for map -->
-        <div id="summary"></div>
-        <div id="map-legend" style="float:right; margin-right: 50%; display: none;">
+        
+        <!-- A summary table for the weekly purchase amounts (added via js)-->
+        <div id="summary" style="width: 60%; float: left;"></div>
+        <!-- A legend for the stores on the map and weekly purchase amounts -->
+        <div id="map-legend" style="float:right; width: 40%; display: none;">
             <h4>Weekly Purchase Amount</h4>
-            <ul>
-                <li style="color: #E6E6FA; background: black;">$0</li>
+            <ul style="background-color: black;">
+                <li style="color: #E6E6FA;">$0 / NA</li>
                 <li style="color: #D8BFD8">$1 - $4,999</li>
                 <li style="color: #EE82EE">$5,000 - $9,999</li>
                 <li style="color: #9370DB">$10,000 - $14,999</li>
@@ -177,7 +178,7 @@ limitations under the License.
 
         //Calls Route.js to load each store in List<Store> allStores to the map as a blue node
         foreach (Store s in allStores) {
-            await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "blue");
+            await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "");
         }
         //Calls Route.js to load each store in List<Distributor> allDist to the map as a yellow node
         foreach (Distributor d in allDist) {

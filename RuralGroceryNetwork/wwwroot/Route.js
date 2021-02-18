@@ -127,7 +127,11 @@ require([
             // Pulls the latitude, longitude, and radius size from corresponding textboxes
             var longitude = document.getElementById("x-long-input").value;
             var latitude = document.getElementById("y-lat-input").value;
-            var radius = document.getElementById("radius").value
+            var radius = document.getElementById("radius").value;
+            if (radius == 0) {
+                radius = 25;
+                document.getElementById("radius").value = 25;
+            }
 
             // Checks to see if their is already a radius on the map, if so removes the old one
             view.graphics.items.forEach(function (g, i) {
@@ -188,6 +192,10 @@ require([
                     point.attributes.distanceToCenter = dis;
                     inCircle.push(point);
                 }
+
+                if (dis == 0) {
+                    addGraphic(point, point.latitude, point.longitude, "", "15px");
+                }
             });
 
             // Reorginize inCircle array by closest distance to the center to farthest
@@ -204,9 +212,9 @@ require([
 
             // Finds the weekely Purchase Amount total for all stores in radius
             var weeklyPurchaseAmount = 0;
+            var div = document.getElementById("radius-stores");
+            div.innerHTML = ""; //clear it
             for (i = 0; i < inCircle.length; i++) {
-                var div = document.getElementById("radius-stores");
-
                 if (i != 0) {
                     var checkbox = document.createElement("input");
                     checkbox.setAttribute("type", "checkbox");
@@ -226,11 +234,13 @@ require([
                 createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmount"], div)
                 weeklyPurchaseAmount += inCircle[i].attributes["weeklyPurchaseAmount"]
 
-                if (i != 0)
+                if (i != 0) {
                     createAndAppendTo("p", displayDistanceToCenter(inCircle[0], inCircle[i]), div)
+                }
             }
 
             div = document.getElementById("summary");
+            div.innerHTML = "" //clear it
 
             // Create text to show following statistics
             createAndAppendTo("h3", "Summary", div);
@@ -260,7 +270,7 @@ require([
             return store.attributes["address"] + " " + store.attributes["city"] + ", " + store.attributes["state"] + " " + store.attributes["zip"];
         }
 
-        // A function return text containing the distance from one given store to the second given store
+        // A function return text containing the distance from one given store to the second given store in a straight line 
         function displayDistanceToCenter(centerStore, store) {
             return "Straight Line Distance to " + centerStore.attributes["name"] + ": " + Math.round(store.attributes["distanceToCenter"] * 10) / 10 + " miles"
         }
@@ -289,11 +299,6 @@ require([
         }
         window.updateSummary = updateSummary;
 
-        // 
-        function updateSection(element, add_num) {
-            
-        }
-
         // Used to calculate distance between points -- Haversine Formula
         function distance(lat1, lon1, lat2, lon2) {
             var p = 0.017453292519943295;    // Math.PI / 180
@@ -306,7 +311,7 @@ require([
         }
         window.distance = distance;
 
-        // 
+        // A function to find a route with given points and adds that path to the map
         function getRouteInCircle(points) {
             var routeParams = new RouteParameters({
                 stops: new FeatureSet({
@@ -328,37 +333,52 @@ require([
         }
         window.getRouteInCircle = getRouteInCircle;
 
-        //
+        // A template for a popup for a store of it's information
         var popupTemplate = {
             title: "<b>{name}</b>",
             content: "{address}<br>{city}, {state} {zip}<br><br>Weekly Purchase Amount: ${weeklyPurchaseAmount}"
         };
 
-        //
-        function addGraphic(store, lat, lon, color) {
-            const s = store.weeklyPurchaseAmount;
-            switch (true) {
-                case (s == 0): color = "#E6E6FA"
-                    break;
-                case (s < 5000): color = "#D8BFD8"
-                    break;
-                case (s < 10000): color = "#EE82EE"
-                    break;
-                case (s < 15000): color = "#9370DB"
-                    break;
-                case (s < 20000): color = "#8A2BE2"
-                    break;
-                case (s < 36001): color = "#4B0082"
-                    break;
-                default:
-                    color = "yellow";
+        // A function to add a graphic to the map for a store
+        function addGraphic(store, lat, lon, color, size = "10px") {
+            outlineColor = "black";
+            outlineSize = 1;
+            if (size == "15px") {
+                store = store.attributes;
+                outlineColor = "#00f";
+                outlineSize = 1.5;
+            }
+            if (color == "") {
+                const s = store.weeklyPurchaseAmount;
+                // Sets a color based off a stores weekly purchaseing amount
+                switch (true) {
+                    case (s == 0): color = "#E6E6FA"
+                        break;
+                    case (s < 5000): color = "#D8BFD8"
+                        break;
+                    case (s < 10000): color = "#EE82EE"
+                        break;
+                    case (s < 15000): color = "#9370DB"
+                        break;
+                    case (s < 20000): color = "#8A2BE2"
+                        break;
+                    case (s < 36001): color = "#4B0082"
+                        break;
+                    default:
+                        color = "yellow";
+                }
             }
 
+            // Creates a graphic for a store
             var graphic = new Graphic({
                 symbol: {
                     type: "simple-marker",
                     color: color,
-                    size: "10px"
+                    size: size,
+                    outline: {
+                        color: outlineColor,
+                        width: outlineSize
+                    }
                 },
                 geometry: new Point(lon, lat),
                 attributes: {
@@ -367,7 +387,8 @@ require([
                     city: store.cityName,
                     state: store.stateName,
                     zip: store.zipCode,
-                    weeklyPurchaseAmount: store.weeklyPurchaseAmount
+                    weeklyPurchaseAmount: store.weeklyPurchaseAmount,
+                    store: store
                 },
                 popupTemplate: popupTemplate
             });
@@ -431,13 +452,13 @@ require([
         }
         window.b64ToUint6 = b64ToUint6;
 
+        // A function to convert strings to help convert .csv files
         function base64DecToArr(sBase64, nBlocksSize) {
             var
                 sB64Enc = sBase64.replace(/[^A-Za-z0-9\+\/]/g, ""),
                 nInLen = sB64Enc.length,
                 nOutLen = nBlocksSize ? Math.ceil((nInLen * 3 + 1 >> 2) / nBlocksSize) * nBlocksSize : nInLen * 3 + 1 >> 2,
                 taBytes = new Uint8Array(nOutLen);
-
             for (var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0; nInIdx < nInLen; nInIdx++) {
                 nMod4 = nInIdx & 3;
                 nUint24 |= b64ToUint6(sB64Enc.charCodeAt(nInIdx)) << 18 - 6 * nMod4;
