@@ -19,6 +19,7 @@ limitations under the License.
 @using GroceryLibrary.Models.Database
 @using System.Data 
 @using System.IO 
+@using System.Linq 
 
 <!-- Page for importing nodes from file -->
 <div class="dialog-container">
@@ -143,44 +144,62 @@ limitations under the License.
             allInfo = await reader.ReadToEndAsync();
         }
 
+        // split into each table
         string[] tables = allInfo.Split('|');
 
-        AddDataToTable(tables[0], DatabaseTables.STORE_INFORMATION);
+        // each of these calls the sql to update table with the returned data table
+        SqlDataAccess.InsertNewStoreInformation(CreateDataTable(tables[0]));
+        SqlDataAccess.InsertNewDistributorInformation(CreateDataTable(tables[1]));
+        SqlDataAccess.InsertNewCityInformation(CreateDataTable(tables[2]));
+        SqlDataAccess.InsertNewStateInformation(CreateDataTable(tables[3]));
     }
 
     /// <summary>
     /// A helper function that parses a string into a datatable then calls the sql function to bulk copy
     /// </summary>
-    /// <param name="csvData">The table in csv format</param>
-    /// <param name="tableName">target table name</param>
-    void AddDataToTable(string csvData, string tableName)
+    /// <param name="csvData">The string of csv data to be converted</param>
+    /// <returns>A datatable of the given csv information</returns>
+    DataTable CreateDataTable(string csvData)
     {
         DataTable extractedData = new DataTable();
 
         try
         {
             using (StringReader strReader = new StringReader(csvData)) {
+                // get the line for columns
                 string[] columns = strReader.ReadLine().Split(',');
+                // sometimes with the csv there is a weird line of just commas, this eats that up
+                if (columns[0] == "")
+                {
+                    columns = strReader.ReadLine().Split(',');
+                }
+                // gets rid of extra empty values
+                columns = columns.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                // loops through and adds the columns to the datatable
                 foreach (string column in columns)
                 {
                     DataColumn dataColumn = new DataColumn(column);
                     dataColumn.AllowDBNull = false;
                     extractedData.Columns.Add(dataColumn);
                 }
-
+                // read each line of data
                 for(string line = strReader.ReadLine(); line != null; line = strReader.ReadLine())
                 {
                     string[] lineSplit = line.Split(',');
+                    // remove any excess empty data in the row
+                    lineSplit = lineSplit.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                    // add row to datatable
                     extractedData.Rows.Add(lineSplit);
                 }
             }
         }
         catch (Exception ex)
         {
-
+            // Should probably handle this better
+            return null;
         }
 
-        SqlDataAccess.InsertDataViaBulkCopy(extractedData, tableName);
+        return extractedData;
     }
 
     /// <summary>

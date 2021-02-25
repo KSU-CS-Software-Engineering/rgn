@@ -14,6 +14,10 @@ DROP TABLE IF EXISTS [dbo].[SquareFootageCategories];
 DROP TABLE IF EXISTS [dbo].[Distributor]; 
 DROP TABLE IF EXISTS [dbo].[Cities]; 
 DROP TABLE IF EXISTS [dbo].[States];
+DROP TABLE IF EXISTS [dbo].[StoreInformationStaging];
+DROP TABLE IF EXISTS [dbo].[DistributorStaging];
+DROP TABLE IF EXISTS [dbo].[StatesStaging];
+DROP TABLE IF EXISTS [dbo].[CitiesStaging];
 
 /*
 * Table: [dbo].[States]
@@ -92,6 +96,24 @@ VALUES
 /* ******************************************************* END OF STATE TABLE *************************************************************** */
  GO
  
+ /*
+* Table: [dbo].[StatesStaging]
+* Active Constraints: 
+		None
+		
+* Values: Updated at runtime temporarily to merge into permanent table
+*/
+
+CREATE TABLE [dbo].[StatesStaging]
+(
+  StateID INT,
+  StateName VARCHAR(32) NOT NULL
+);
+
+GO
+
+/* ******************************************************* END OF STATES STAGING TABLE *************************************************************** */
+
 /*
 * Table: [dbo].[Cities]
 * Active Constraints: 
@@ -753,6 +775,25 @@ VALUES
 /* ******************************************************* END OF CITY TABLE *************************************************************** */
  GO
  
+ /*
+* Table: [dbo].[CitiesStaging]
+* Active Constraints: 
+		None
+		
+* Values: Updated at runtime temporarily to merge new city data into permanent table
+*/
+
+CREATE TABLE [dbo].[CitiesStaging]
+(
+  CityID INT,
+  CityName VARCHAR(32) NOT NULL,
+  StateID INT NOT NULL
+);
+
+GO
+
+/* ******************************************************* END OF CITY STAGING TABLE *************************************************************** */
+
 /*
 * Table: [dbo].[Distributor]
 * Active Constraints: 
@@ -792,6 +833,29 @@ VALUES
 
 /* ************************************************** END OF DISTRIBUTORS TABLE ************************************************************ */
  GO
+
+ /*
+* Table: [dbo].[DistributorStaging]
+* Active Constraints: 
+		None
+		
+* Values: Updated at runtime temporarily with new Distribtor information to be merged into permanent table
+*/
+
+CREATE TABLE [dbo].[DistributorStaging]
+(
+  DistributorID INT,
+  DistributorName VARCHAR(128) NOT NULL,
+  [Address] VARCHAR(64) NOT NULL,
+  CityID INT NOT NULL,
+  Zip CHAR(5) NOT NULL,
+  YLAT DECIMAL(15,10) NOT NULL,
+  XLONG DECIMAL(15,10) NOT NULL
+);
+
+GO
+
+/* ************************************************** END OF DISTRIBUTOR STAGING TABLE ************************************************************ */
 
 /*
 * Table: [dbo].[SquareFootageCategories]
@@ -873,6 +937,28 @@ GO
 /*ALTER TABLE  [dbo].[StoreInformation]
 ADD CONSTRAINT StoreInformation_StoreEmailAddress_Unique UNIQUE (StoreEmailAddress);*/
 /* ************************************************ END OF STORE INFORMATION TABLE ********************************************************* */
+
+/*
+* Table: [dbo].[StoreInformationStaging]
+* Active Constraints:
+		None
+* Values: Populated temporarily via InsertNewStoreInformation in SqlDataAccess. Used to MERGE into StoreInformation table.
+*/
+
+CREATE TABLE [dbo].[StoreInformationStaging]
+(
+  StoreID INT,
+  StoreName VARCHAR(64) NOT NULL,
+  [Address] VARCHAR(64) NOT NULL,
+  CityID INT NOT NULL,
+  Zip CHAR(5) NOT NULL,
+  YLAT DECIMAL(15,10) NOT NULL,
+  XLONG DECIMAL(15,10) NOT NULL,
+);
+
+GO
+
+/* ************************************************ END OF STORE INFORMATION STAGING TABLE ********************************************************* */
 
 /*
 * Table: [dbo].[StoreEquipmentInformation]
