@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,84 +15,96 @@ limitations under the License.
 -->
 
 @using System.Text
-@using GroceryLibrary 
+@using GroceryLibrary
+@using GroceryLibrary.Models.Database
+@using System.Data 
+@using System.IO 
+@using System.Linq 
 
 <!-- Page for importing nodes from file -->
 <div class="dialog-container">
-	<div class="dialog">
-		<div class="dialog-title">
-			<h2>Import from .csv</h2>
-		</div>
+    <div class="dialog">
+        <div class="dialog-title">
+            <h2>Import from .csv</h2>
+        </div>
 
-		@if (showBody) {
-			<form class="dialog-body">
-				<label> First Line Header</label>
-				<input type="checkbox" />
-				<br />
-				<br />
+        @if (showBody)
+        {
+            <form class="dialog-body">
+                <label> First Line Header</label>
+                <input type="checkbox" />
+                <br />
+                <br />
 
-				<div style="overflow-x:auto" class="dialog-body">
-					<!-- Create a table for the info of the file  -->
-					<table>
-						<tr>
-							<th>Name</th>
-							<th>Longtitude</th>
-							<th>Latitude</th>
-							<th>Supply</th>
-							<th>Demand</th>
-						</tr>
-						<tr>
-							@for (int i = 0; i < contants.Length; i++) {
-								<td>@contants[i]</td>
-							}
-						</tr>
-					</table>
+                <div style="overflow-x:auto" class="dialog-body">
+                    <!-- Create a table for the info of the file  -->
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Longtitude</th>
+                            <th>Latitude</th>
+                            <th>Supply</th>
+                            <th>Demand</th>
+                        </tr>
+                        <tr>
+                            @for (int i = 0; i < contants.Length; i++)
+                            {
+                                <td>@contants[i]</td>
+                            }
+                        </tr>
+                    </table>
 
-					<table>
-					</table>
-				</div>
+                    <table>
+                    </table>
+                </div>
 
-				<!-- for loops to create the 1-17 buttons  -->
-				@for (int i = 1; i < 18; i++) {
-					<button>@i</button>
-				}Name
-				<br />
-				@for (int i = 1; i < 18; i++) {
-					<button>@i</button>
-				}Latitude
-				<br />
-				@for (int i = 1; i < 18; i++) {
-					<button>@i</button>
-				}Longitude
-				<br />
-				@for (int i = 1; i < 18; i++) {
-					<button>@i</button>
-				}Demand[palettes]
-				<br />
-				@for (int i = 1; i < 18; i++) {
-					<button>@i</button>
-				}Supply[palettes]
+                <!-- for loops to create the 1-17 buttons  -->
+                @for (int i = 1; i < 18; i++)
+                {
+                    <button>@i</button>
+                }Name
+                <br />
+                @for (int i = 1; i < 18; i++)
+                {
+                    <button>@i</button>
+                }Latitude
+                <br />
+                @for (int i = 1; i < 18; i++)
+                {
+                    <button>@i</button>
+                }Longitude
+                <br />
+                @for (int i = 1; i < 18; i++)
+                {
+                    <button>@i</button>
+                }Demand[palettes]
+                <br />
+                @for (int i = 1; i < 18; i++)
+                {
+                    <button>@i</button>
+                }Supply[palettes]
 
-			</form>
-		}
-		<div class="dialog-buttons">
-			<!-- Close button -->
-			<button @onclick="@Close" class="btn btn-secondary mr-auto">Close</button>
+            </form>
+        }
+        <div class="dialog-buttons">
+            <!-- Close button -->
+            <button @onclick="@Close" class="btn btn-secondary mr-auto">Close</button>
 
-			<InputFile OnChange="HandleFileSelected" />
-			@if (showImportButton) {
-				<button @onclick="@ImportFile" class="btn btn-success ml-auto">OK, Import</button>
-			}
-		</div>
-	</div>
+            <InputFile OnChange="HandleFileSelected" />
+            @if (showImportButton)
+            {
+                <button @onclick="@ImportFile" class="btn btn-success ml-auto">OK, Import</button>
+            }
+        </div>
+    </div>
 </div>
 
 @code {
 
-        /// <summary>
-        /// Stores user uploaded file
-        /// </summary>
-        IFileListEntry file;
+    /// <summary>
+    /// Stores user uploaded file
+    /// </summary>
+    IFileListEntry file;
 
     /// <summary>
     /// List of nodes
@@ -103,7 +115,7 @@ limitations under the License.
 
     bool showImportButton = false; // for displaying the import button
 
-    //the size is arbitrary. 
+    //the size is arbitrary.
     // Won't need this anymore, leaving it here to not break code until my stuff works.
     string[] contants = new string[4];
 
@@ -129,34 +141,65 @@ limitations under the License.
         //read the selected file.
         using (var reader = new System.IO.StreamReader(file.Data))
         {
-            /*
-			while (!reader.EndOfStream)
-			{
-				string line = reader.ReadLineAsync().Result;
-				allInfo += line;
-				//contants = reader.ReadLineAsync().Result.Split(',');
-			}
-			*/
             allInfo = await reader.ReadToEndAsync();
         }
 
+        // split into each table
         string[] tables = allInfo.Split('|');
 
-        string test = tables[0];
+        // each of these calls the sql to update table with the returned data table
+        SqlDataAccess.InsertNewStoreInformation(CreateDataTable(tables[0]));
+        SqlDataAccess.InsertNewDistributorInformation(CreateDataTable(tables[1]));
+        SqlDataAccess.InsertNewCityInformation(CreateDataTable(tables[2]));
+        SqlDataAccess.InsertNewStateInformation(CreateDataTable(tables[3]));
+    }
 
-        /*
-		//Create a new Node with read information and add to the nodelist.
-		Node x = new Node();
-		x.State.Name = contants[0];
-		x.State.Location_x = Int32.Parse(contants[1]);
-		x.State.Location_y = Int32.Parse(contants[2]);
-		x.State.Demand = contants[3];
-		x.State.Supply = contants[4];
-		importNodes(x);
-		
-		//show the Body of the imported info.
-		//showBody = true;
-		*/
+    /// <summary>
+    /// A helper function that parses a string into a datatable then calls the sql function to bulk copy
+    /// </summary>
+    /// <param name="csvData">The string of csv data to be converted</param>
+    /// <returns>A datatable of the given csv information</returns>
+    DataTable CreateDataTable(string csvData)
+    {
+        DataTable extractedData = new DataTable();
+
+        try
+        {
+            using (StringReader strReader = new StringReader(csvData)) {
+                // get the line for columns
+                string[] columns = strReader.ReadLine().Split(',');
+                // sometimes with the csv there is a weird line of just commas, this eats that up
+                if (columns[0] == "")
+                {
+                    columns = strReader.ReadLine().Split(',');
+                }
+                // gets rid of extra empty values
+                columns = columns.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                // loops through and adds the columns to the datatable
+                foreach (string column in columns)
+                {
+                    DataColumn dataColumn = new DataColumn(column);
+                    dataColumn.AllowDBNull = false;
+                    extractedData.Columns.Add(dataColumn);
+                }
+                // read each line of data
+                for(string line = strReader.ReadLine(); line != null; line = strReader.ReadLine())
+                {
+                    string[] lineSplit = line.Split(',');
+                    // remove any excess empty data in the row
+                    lineSplit = lineSplit.Where(x => !string.IsNullOrEmpty(x)).ToArray();
+                    // add row to datatable
+                    extractedData.Rows.Add(lineSplit);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Should probably handle this better
+            return null;
+        }
+
+        return extractedData;
     }
 
     /// <summary>

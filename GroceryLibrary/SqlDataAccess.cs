@@ -846,11 +846,12 @@ namespace GroceryLibrary
             List<Store> allStores = new List<Store>();
             StringBuilder sb = new StringBuilder();
 
-            sb.Append("SELECT *");
+            sb.Append("SELECT * ");
             sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
-            sb.Append("INNER JOIN " + DatabaseTables.CITIES + "ON SI.CityID = C.CityID ");
+            sb.Append(" INNER JOIN " + DatabaseTables.CITIES + "ON SI.CityID = C.CityID ");
             sb.Append("INNER JOIN " + DatabaseTables.STATES + "ON S.StateID = C.StateID ");
-            sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "ON SDI.StoreID = SI.StoreID ");
+            sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "ON SDI.StoreID = SI.StoreID ");   
+
             builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
             //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
 
@@ -875,6 +876,7 @@ namespace GroceryLibrary
                                 tempStore.YLAT = Convert.ToDecimal(reader["YLAT"]);
                                 tempStore.XLONG = Convert.ToDecimal(reader["XLONG"]);
 
+                                
                                 var r = reader["WeeklyPurchaseAmount"];
                                 var rs = r.ToString();
                                 if (r.ToString() == "")
@@ -940,7 +942,10 @@ namespace GroceryLibrary
         }
 
 
-        // STARTING THE SECTION OF FUNCTIONS REQUIRED FOR DOWNLOADING THE DATABASE
+        // STARTING THE SECTION OF FUNCTIONS REQUIRED FOR DOWNLOADING/UPLOADING THE DATABASE
+
+
+
         /// <summary>
         /// Converts a table in the database to csv format
         /// </summary>
@@ -1006,6 +1011,206 @@ namespace GroceryLibrary
 
             }
             return csv;
+        }
+
+        /// <summary>
+        /// Bulk insert data from a given datatable into the store information table
+        /// </summary>
+        /// <param name="data">the datatable parsed from a csv file</param>
+        public static void InsertNewStoreInformation(DataTable data)
+        {
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+
+            StringBuilder sb = new StringBuilder();
+            // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
+            sb.Append("DELETE FROM [dbo].[StoreInformationStaging]; ");
+                     
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+
+                // Delete any existing entries from the staging table
+                ExecuteNonQuery(sb.ToString(), connection);
+
+                connection.Open();
+                // bulk copy the data from the csv into the staging table
+                using(SqlBulkCopy s = new SqlBulkCopy(connection))
+                {
+                    // define target table name
+                    s.DestinationTableName = "[dbo].[StoreInformationStaging]";
+                    // match the columns
+                    foreach(var column in data.Columns)
+                    {
+                        s.ColumnMappings.Add(column.ToString(), column.ToString());
+                    }
+                    //bulk write the information
+                    s.WriteToServer(data);
+                }
+                connection.Close();
+
+                sb.Clear();
+
+                // Create the SQL to Merge staging table (source) into permanent store information table (target).
+                // If the ID matches, we update the row. If the ID is not in the target then we insert. If the ID is not in the source then we delete from the target.
+                sb.Append("MERGE [dbo].StoreInformation AS TARGET");
+                sb.Append(" USING [dbo].StoreInformationStaging AS SOURCE");
+                sb.Append(" ON (TARGET.StoreID = SOURCE.StoreID)");
+                sb.Append(" WHEN MATCHED THEN UPDATE SET TARGET.StoreName = SOURCE.StoreName, TARGET.Address = SOURCE.Address, TARGET.CityID = SOURCE.CityID, TARGET.Zip = SOURCE.Zip, " +
+                    "TARGET.YLAT = SOURCE.YLAT, TARGET.XLONG = SOURCE.XLONG");
+                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (StoreName, Address, CityID, Zip, YLAT, XLONG) VALUES (SOURCE.StoreName, SOURCE.Address, SOURCE.CityID, SOURCE.Zip, " +
+                    "SOURCE.YLAT, SOURCE.XLONG)");
+                sb.Append(" WHEN NOT MATCHED BY SOURCE THEN DELETE;");
+
+                ExecuteNonQuery(sb.ToString(), connection);
+            }           
+        }
+
+        /// <summary>
+        /// Bulk insert data from a given datatable into the distributor table
+        /// </summary>
+        /// <param name="data">the datatable parsed from a csv file</param>
+        public static void InsertNewDistributorInformation(DataTable data)
+        {
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+
+            StringBuilder sb = new StringBuilder();
+            // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
+            sb.Append("DELETE FROM [dbo].[DistributorStaging]; ");
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+
+                // Delete any existing entries from the staging table
+                ExecuteNonQuery(sb.ToString(), connection);
+
+                connection.Open();
+                // bulk copy the data from the csv into the staging table
+                using (SqlBulkCopy s = new SqlBulkCopy(connection))
+                {
+                    // define target table name
+                    s.DestinationTableName = "[dbo].[DistributorStaging]";
+                    // match the columns
+                    foreach (var column in data.Columns)
+                    {
+                        s.ColumnMappings.Add(column.ToString(), column.ToString());
+                    }
+                    //bulk write the information
+                    s.WriteToServer(data);
+                }
+                connection.Close();
+
+                sb.Clear();
+
+                // Create the SQL to Merge staging table (source) into permanent store information table (target).
+                // If the ID matches, we update the row. If the ID is not in the target then we insert. If the ID is not in the source then we delete from the target.
+                sb.Append("MERGE [dbo].Distributor AS TARGET");
+                sb.Append(" USING [dbo].DistributorStaging AS SOURCE");
+                sb.Append(" ON (TARGET.DistributorID = SOURCE.DistributorID)");
+                sb.Append(" WHEN MATCHED THEN UPDATE SET TARGET.DistributorName = SOURCE.DistributorName, TARGET.Address = SOURCE.Address, TARGET.CityID = SOURCE.CityID, TARGET.Zip = SOURCE.Zip, " +
+                    "TARGET.YLAT = SOURCE.YLAT, TARGET.XLONG = SOURCE.XLONG");
+                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (DistributorName, Address, CityID, Zip, YLAT, XLONG) VALUES (SOURCE.DistributorName, SOURCE.Address, SOURCE.CityID, SOURCE.Zip, " +
+                    "SOURCE.YLAT, SOURCE.XLONG)");
+                sb.Append(" WHEN NOT MATCHED BY SOURCE THEN DELETE;");
+
+                ExecuteNonQuery(sb.ToString(), connection);
+            }
+        }
+
+        /// <summary>
+        /// Bulk insert data from a given datatable into the city table
+        /// </summary>
+        /// <param name="data">the datatable parsed from a csv file</param>
+        public static void InsertNewCityInformation(DataTable data)
+        {
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+
+            StringBuilder sb = new StringBuilder();
+            // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
+            sb.Append("DELETE FROM [dbo].[CitiesStaging]; ");
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+
+                // Delete any existing entries from the staging table
+                ExecuteNonQuery(sb.ToString(), connection);
+
+                connection.Open();
+                // bulk copy the data from the csv into the staging table
+                using (SqlBulkCopy s = new SqlBulkCopy(connection))
+                {
+                    // define target table name
+                    s.DestinationTableName = "[dbo].[CitiesStaging]";
+                    // match the columns
+                    foreach (var column in data.Columns)
+                    {
+                        s.ColumnMappings.Add(column.ToString(), column.ToString());
+                    }
+                    //bulk write the information
+                    s.WriteToServer(data);
+                }
+                connection.Close();
+
+                sb.Clear();
+
+                // Create the SQL to Merge staging table (source) into permanent store information table (target).
+                // If the ID matches, we update the row. If the ID is not in the target then we insert. If the ID is not in the source then we delete from the target.
+                sb.Append("MERGE [dbo].Cities AS TARGET");
+                sb.Append(" USING [dbo].CitiesStaging AS SOURCE");
+                sb.Append(" ON (TARGET.CityID = SOURCE.CityID)");
+                sb.Append(" WHEN MATCHED THEN UPDATE SET TARGET.CityName = SOURCE.CityName, TARGET.StateID = SOURCE.StateID");
+                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (CityName, StateID) VALUES (SOURCE.CityName, SOURCE.StateID)");
+                sb.Append(" WHEN NOT MATCHED BY SOURCE THEN DELETE;");
+
+                ExecuteNonQuery(sb.ToString(), connection);
+            }
+        }
+
+        /// <summary>
+        /// Bulk insert data from a given datatable into the state table
+        /// </summary>
+        /// <param name="data">the datatable parsed from a csv file</param>
+        public static void InsertNewStateInformation(DataTable data)
+        {
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+
+            StringBuilder sb = new StringBuilder();
+            // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
+            sb.Append("DELETE FROM [dbo].[StatesStaging]; ");
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+
+                // Delete any existing entries from the staging table
+                ExecuteNonQuery(sb.ToString(), connection);
+
+                connection.Open();
+                // bulk copy the data from the csv into the staging table
+                using (SqlBulkCopy s = new SqlBulkCopy(connection))
+                {
+                    // define target table name
+                    s.DestinationTableName = "[dbo].[StatesStaging]";
+                    // match the columns
+                    foreach (var column in data.Columns)
+                    {
+                        s.ColumnMappings.Add(column.ToString(), column.ToString());
+                    }
+                    //bulk write the information
+                    s.WriteToServer(data);
+                }
+                connection.Close();
+
+                sb.Clear();
+
+                // Create the SQL to Merge staging table (source) into permanent store information table (target).
+                // If the ID matches, we update the row. If the ID is not in the target then we insert. If the ID is not in the source then we delete from the target.
+                sb.Append("MERGE [dbo].States AS TARGET");
+                sb.Append(" USING [dbo].StatesStaging AS SOURCE");
+                sb.Append(" ON (TARGET.StateID = SOURCE.StateID)");
+                sb.Append(" WHEN MATCHED THEN UPDATE SET TARGET.StateName = SOURCE.StateName");
+                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (StateName) VALUES (SOURCE.StateName)");
+                sb.Append(" WHEN NOT MATCHED BY SOURCE THEN DELETE;");
+
+                ExecuteNonQuery(sb.ToString(), connection);
+            }
         }
     }
 }
