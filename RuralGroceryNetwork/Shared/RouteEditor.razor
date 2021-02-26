@@ -130,6 +130,15 @@ limitations under the License.
     /// <summary>
     /// Change the Base Map Style for the Arcgis Map
     /// </summary>
+    new async Task CreateMap()
+    {
+        await JS.InvokeVoidAsync(identifier: "CreateMap");
+        //LoadStores();
+    }
+
+    /// <summary>
+    /// Change the Base Map Style for the Arcgis Map
+    /// </summary>
     new async Task ChangeMapBase() {
 
         await JS.InvokeVoidAsync(identifier: "ChangeMapBase");
@@ -172,7 +181,7 @@ limitations under the License.
     /// <summary>
     /// Loads Stores, distributors, and legend onto the map
     /// </summary>
-    async void LoadStores() {
+    async Task LoadStores() {
         List<Store> allStores = SqlDataAccess.getAllStores();
         List<Distributor> allDist = SqlDataAccess.getAllDistributors();
 
@@ -201,17 +210,36 @@ limitations under the License.
     }
     */
 
-    /*protected override void OnAfterRender(bool firstRender)
+    protected override bool ShouldRender()
     {
-        if (firstRender)
-        {
-            List<Store> allStores = SqlDataAccess.getAllStores();
+        var renderUI = true;
 
+        return renderUI;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await LoadStores();
+    }
+
+    /*protected override async Task OnInitializedAsync()
+    {
+        //LoadStores();
+            List<Store> allStores = SqlDataAccess.getAllStores();
+            List<Distributor> allDist = SqlDataAccess.getAllDistributors();
+
+            //Calls Route.js to load each store in List<Store> allStores to the map as a blue node
             foreach (Store s in allStores)
             {
-                JS.InvokeVoidAsync(identifier: "addGraphic", s.YLAT, s.XLONG);
+                await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "");
             }
-        }
-    }*/
+            //Calls Route.js to load each store in List<Distributor> allDist to the map as a yellow node
+            foreach (Distributor d in allDist)
+            {
+                await JS.InvokeVoidAsync("addGraphic", d, d.YLAT, d.XLONG, "yellow");
+            }
 
+            //Calls Route.js to load in the legend
+            await JS.InvokeVoidAsync("displayLegend");
+    }*/
 }

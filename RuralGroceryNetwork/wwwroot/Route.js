@@ -133,27 +133,8 @@ require([
                 document.getElementById("radius").value = 25;
             }
 
-            // Checks to see if their is already a radius on the map, if so removes the old one
-            view.graphics.items.forEach(function (g, i) {
-                
-                if (g.id === "circle1") {
-                    view.graphics.remove(g);
-                }
-            });
-
-            // Checks to see if their is already a route on the map, if so removes the old one
-            view.graphics.items.forEach(function (g, i) {
-                if (g.id === "route1") {
-                    view.graphics.remove(g);
-                }
-            });
-
-            // Generates the radius and adds to map
             var symbol = new SimpleFillSymbol({ color: null, style: "solid", outline: { color: "blue", width: 1 } });
             var cir = new Circle({ center: new Point([longitude, latitude]), radius: radius, geodesic: true, radiusUnit: "miles" })
-            var graphic = new Graphic(cir, symbol);
-            graphic.id = "circle1";
-            view.graphics.add(graphic);
 
             // Generates a array of all stores in the radius called inCircle
             var inCircle = new Array();
@@ -197,6 +178,11 @@ require([
                     addGraphic(point, point.latitude, point.longitude, "", "15px");
                 }
             });
+
+            // Generates the radius and adds to map
+            var graphic = new Graphic(cir, symbol);
+            graphic.id = "circle1";
+            view.graphics.add(graphic);
 
             // Reorginize inCircle array by closest distance to the center to farthest
             var len = inCircle.length;
@@ -344,7 +330,7 @@ require([
                         color: [5, 150, 255],
                         width: 3
                     };
-                    result.route.id = "route1";
+                    result.route.class = "route1";
                     view.graphics.add(result.route);
                     length = result.route.attributes.Total_Miles;
                 });
@@ -363,10 +349,20 @@ require([
         function addGraphic(store, lat, lon, color, size = "10px") {
             outlineColor = "black";
             outlineSize = 1;
+            id = "";
             if (size == "15px") {
+                // Checks to see if their is already a radius, route, or center point on the map, if so removes the old one
+                view.graphics.forEach(function (g, i) {
+                    console.log(g)
+                    if (g.id === "circle1" || g.class === "route1" || g.id === "centerPoint") {
+                        view.graphics.remove(g);
+                    }
+                });
+
                 store = store.attributes;
                 outlineColor = "#00f";
                 outlineSize = 1.5;
+                id = "centerPoint"
             }
             if (color == "") {
                 const s = store.weeklyPurchaseAmount;
@@ -412,6 +408,7 @@ require([
                 },
                 popupTemplate: popupTemplate
             });
+            graphic.id = id
             view.graphics.add(graphic);
         }
         window.addGraphic = addGraphic;
