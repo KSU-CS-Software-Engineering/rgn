@@ -17,10 +17,12 @@ limitations under the License.
 @using System.Text
 @using GroceryLibrary
 @using GroceryLibrary.Models.Database
-@using System.Data 
-@using System.IO 
-@using System.Linq 
+@using System.Data
+@using System.IO
+@using System.Linq
 
+
+@inject IJSRuntime JS
 <!-- Page for importing nodes from file -->
 <div class="dialog-container">
     <div class="dialog">
@@ -136,22 +138,32 @@ limitations under the License.
     /// </summary>
     async Task ImportFile()
     {
-        string allInfo = "";
-
-        //read the selected file.
-        using (var reader = new System.IO.StreamReader(file.Data))
+        try
         {
-            allInfo = await reader.ReadToEndAsync();
+            string allInfo = "";
+
+            //read the selected file.
+            using (var reader = new System.IO.StreamReader(file.Data))
+            {
+                allInfo = await reader.ReadToEndAsync();
+            }
+
+            // split into each table
+            string[] tables = allInfo.Split('|');
+
+            // each of these calls the sql to update table with the returned data table
+            SqlDataAccess.InsertNewStoreInformation(CreateDataTable(tables[0]));
+            SqlDataAccess.InsertNewDistributorInformation(CreateDataTable(tables[1]));
+            SqlDataAccess.InsertNewCityInformation(CreateDataTable(tables[2]));
+            SqlDataAccess.InsertNewStateInformation(CreateDataTable(tables[3]));
+
+            await JS.InvokeVoidAsync("ShowMessage", "Upload successful.");
+        }
+        catch (Exception exc)
+        {
+            await JS.InvokeVoidAsync("ShowMessage", "There was an issue processing the file.");
         }
 
-        // split into each table
-        string[] tables = allInfo.Split('|');
-
-        // each of these calls the sql to update table with the returned data table
-        SqlDataAccess.InsertNewStoreInformation(CreateDataTable(tables[0]));
-        SqlDataAccess.InsertNewDistributorInformation(CreateDataTable(tables[1]));
-        SqlDataAccess.InsertNewCityInformation(CreateDataTable(tables[2]));
-        SqlDataAccess.InsertNewStateInformation(CreateDataTable(tables[3]));
     }
 
     /// <summary>
@@ -165,7 +177,8 @@ limitations under the License.
 
         try
         {
-            using (StringReader strReader = new StringReader(csvData)) {
+            using (StringReader strReader = new StringReader(csvData))
+            {
                 // get the line for columns
                 string[] columns = strReader.ReadLine().Split(',');
                 // sometimes with the csv there is a weird line of just commas, this eats that up
@@ -183,7 +196,7 @@ limitations under the License.
                     extractedData.Columns.Add(dataColumn);
                 }
                 // read each line of data
-                for(string line = strReader.ReadLine(); line != null; line = strReader.ReadLine())
+                for (string line = strReader.ReadLine(); line != null; line = strReader.ReadLine())
                 {
                     string[] lineSplit = line.Split(',');
                     // remove any excess empty data in the row

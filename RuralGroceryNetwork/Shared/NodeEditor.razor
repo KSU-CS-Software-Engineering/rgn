@@ -292,11 +292,6 @@ limitations under the License.
     /// <returns></returns>
     async Task downloadTables()
     {
-        //await downloadStoreInfoTable();
-        //await downloadDistributorTable();
-        //await downloadCitiesTable();
-        //await downloadStatesTable();
-
         List<string> allcsv = new List<string>();
 
         allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STORE_INFORMATION));
@@ -322,57 +317,5 @@ limitations under the License.
         await JS.InvokeVoidAsync("BlazorDownloadFile", "AllFiles.csv", "text/plain", file);
 
 
-    }
-
-    // STOPPED USING THESE FUNCTIONS FOR NOW. Not sure if I want to use these later or not. Still a WIP.
-
-
-    /// <summary>
-    /// Controls the download of the Store Information table from the database
-    /// </summary>
-    /// <returns></returns>
-    async Task downloadStoreInfoTable()
-    {
-        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.STORE_INFORMATION);
-
-        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
-        await JS.InvokeVoidAsync("BlazorDownloadFile", "StoreInfo.csv", "text/plain", file);
-
-    }
-
-    /// <summary>
-    /// Controls the download of the distributors table
-    /// </summary>
-    /// <returns></returns>
-    async Task downloadDistributorTable()
-    {
-        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.DISTRIBUTOR);
-
-        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
-        await JS.InvokeVoidAsync("BlazorDownloadFile", "Distributors.csv", "text/plain", file);
-    }
-
-    /// <summary>
-    /// Controls the download of the cities table
-    /// </summary>
-    /// <returns></returns>
-    async Task downloadCitiesTable()
-    {
-        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.CITIES);
-
-        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
-        await JS.InvokeVoidAsync("BlazorDownloadFile", "Cities.csv", "text/plain", file);
-    }
-
-    /// <summary>
-    /// Controls the download of the states table
-    /// </summary>
-    /// <returns></returns>
-    async Task downloadStatesTable()
-    {
-        string csv = SqlDataAccess.DBTableToCSV(DatabaseTables.STATES);
-
-        byte[] file = System.Text.Encoding.UTF8.GetBytes(csv);
-        await JS.InvokeVoidAsync("BlazorDownloadFile", "States.csv", "text/plain", file);
     }
 }

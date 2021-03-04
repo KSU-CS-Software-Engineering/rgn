@@ -1024,7 +1024,7 @@ namespace GroceryLibrary
             StringBuilder sb = new StringBuilder();
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
             sb.Append("DELETE FROM [dbo].[StoreInformationStaging]; ");
-                     
+
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
 
@@ -1033,12 +1033,12 @@ namespace GroceryLibrary
 
                 connection.Open();
                 // bulk copy the data from the csv into the staging table
-                using(SqlBulkCopy s = new SqlBulkCopy(connection))
+                using (SqlBulkCopy s = new SqlBulkCopy(connection))
                 {
                     // define target table name
                     s.DestinationTableName = "[dbo].[StoreInformationStaging]";
                     // match the columns
-                    foreach(var column in data.Columns)
+                    foreach (var column in data.Columns)
                     {
                         s.ColumnMappings.Add(column.ToString(), column.ToString());
                     }
@@ -1061,7 +1061,7 @@ namespace GroceryLibrary
                 sb.Append(" WHEN NOT MATCHED BY SOURCE THEN DELETE;");
 
                 ExecuteNonQuery(sb.ToString(), connection);
-            }           
+            }
         }
 
         /// <summary>
