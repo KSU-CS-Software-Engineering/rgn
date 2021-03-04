@@ -199,6 +199,7 @@ require([
 
             // Finds the weekely Purchase Amount total for all stores in radius
             var weeklyPurchaseAmount = 0;
+            var totalPopulation = 0;
             var div = document.getElementById("radius-stores");
             div.innerHTML = ""; //clear it
             for (i = 0; i < inCircle.length; i++) {
@@ -208,6 +209,7 @@ require([
                     checkbox.setAttribute("class", "scenarios-checkbox");
                     checkbox.setAttribute("onClick", "updateSummary(this)");
                     checkbox.setAttribute("data-weeklyamount", inCircle[i].attributes["weeklyPurchaseAmount"])
+                    checkbox.setAttribute("data-population", inCircle[i].attributes["cityPopulation"])
                     div.appendChild(checkbox);
                 }
 
@@ -217,7 +219,8 @@ require([
                     createAndAppendTo("p", "(Secondary Distributor)", div);
 
                 createAndAppendTo("p", displayAddress(inCircle[i]), div);
-                createAndAppendTo("p", "City Population: " + inCircle[i].attributes["cityPopulation"], div)
+                createAndAppendTo("p", inCircle[i].attributes["city"] + " Population: " + inCircle[i].attributes["cityPopulation"], div)
+                totalPopulation += inCircle[i].attributes["cityPopulation"]
 
                 createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmount"], div)
                 weeklyPurchaseAmount += inCircle[i].attributes["weeklyPurchaseAmount"]
@@ -242,7 +245,13 @@ require([
             createAndAppendTo("p", "Amount of All Stores in Radius: $" + weeklyPurchaseAmount, div)
             createAndAppendTo("p", "Amount for Selected Stores: $" + inCircle[0].attributes["weeklyPurchaseAmount"], div, "selected-stores-amount")
             createAndAppendTo("p", "Distributor Minimum Amount: $25,000", div, "min-distributor-amount")
-            createAndAppendTo("p", "Selected Stores Meets Minimum Amount: " + meetsMinimum(inCircle[0].attributes["weeklyPurchaseAmount"]), div, "meets-minimum")
+            createAndAppendTo("p", "Selected Stores Meets Minimum Amount: " + meetsMinimum(inCircle[0].attributes["weeklyPurchaseAmount"], 25000), div, "meets-minimum")
+
+            createAndAppendTo("h5", "Population", div)
+            createAndAppendTo("p", "Town Poulation of All Stores in Radius: " + totalPopulation, div)
+            createAndAppendTo("p", "Population for Selected Stores: " + inCircle[0].attributes["cityPopulation"], div, "selected-stores-population")
+            createAndAppendTo("p", "Estimated Minimum Population: 2,000", div, "min-population-amount")
+            createAndAppendTo("p", "Selected Stores Meets Minimum Population: " + meetsMinimum(inCircle[0].attributes["cityPopulation"], 2000), div, "meets-minimum-population")
         }
         window.GetRadius = GetRadius;
 
@@ -270,38 +279,51 @@ require([
         }
 
         // A function that returns whether the minimum amount is met or not.
-        function meetsMinimum(store_amount) {
-            if (store_amount >= 25000)
+        function meetsMinimum(store_amount, min) {
+            if (store_amount >= min)
                 return "Yes"
             return "No"
         }
 
         // A function that updates whether the minimum amount is met or not.
-        function updateMeetsMinimum(store_amount) {
-            element = document.getElementById("meets-minimum");
+        function updateMeetsMinimum(store_amount, min, id) {
+            element = document.getElementById(id);
             element = element.textContent.split(": ");
             element[1] = parseInt(element[1].substring(1)); //get rid of $ and parseInt
 
-            if (store_amount >= 25000)
-                return document.getElementById("meets-minimum").innerHTML = element[0] + ": Yes";
-            return document.getElementById("meets-minimum").innerHTML = element[0] + ": No";
+            if (store_amount >= min)
+                return document.getElementById(id).innerHTML = element[0] + ": Yes";
+            return document.getElementById(id).innerHTML = element[0] + ": No";
         }
 
         // A function to update the weekly buying amount for stores
         function updateSummary(checkbox) {
             element = document.getElementById("selected-stores-amount");
+            element2 = document.getElementById("selected-stores-population");
+            console.log(element2)
             element = element.textContent.split(": ");
+            element2 = element2.textContent.split(": ");
+            console.log(element2)
             element[1] = parseInt(element[1].substring(1)); //get rid of $ and parseInt
+            element2[1] = parseInt(element2[1]);
+            console.log(element2[1])
 
             var weeklyAmount = parseInt(checkbox.dataset.weeklyamount);
+            var population = parseInt(checkbox.dataset.population);
+            console.log([population, element2[1]])
             if (checkbox.checked) {
                 element[1] += weeklyAmount;
+                element2[1] += population;
             } else { 
                 element[1] -= weeklyAmount;
+                element2[1] -= population;
             }
 
             document.getElementById("selected-stores-amount").innerHTML = element[0] + ": $" + element[1];
-            updateMeetsMinimum(element[1]);
+            updateMeetsMinimum(element[1], 25000, "meets-minimum");
+
+            document.getElementById("selected-stores-population").innerHTML = element2[0] + ": " + element2[1];
+            updateMeetsMinimum(element2[1], 2000, "meets-minimum-population");
         }
         window.updateSummary = updateSummary;
 
@@ -345,7 +367,9 @@ require([
         // A template for a popup for a store of it's information
         var popupTemplate = {
             title: "<b>{name}</b>",
-            content: "{address}<br>{city}, {state} {zip}<br><br>Weekly Purchase Amount: ${weeklyPurchaseAmount}"
+            content: "{address}<br>{city}, {state} {zip}<br><br>" +
+                "Weekly Purchase Amount: ${ weeklyPurchaseAmount }<br>" +
+                "{city} Population: {cityPopulation}"
         };
 
         // A function to add a graphic to the map for a store
@@ -356,7 +380,6 @@ require([
             if (size == "15px") {
                 // Checks to see if their is already a radius, route, or center point on the map, if so removes the old one
                 view.graphics.forEach(function (g, i) {
-                    console.log(g)
                     if (g.id === "circle1" || g.class === "route1" || g.id === "centerPoint") {
                         view.graphics.remove(g);
                     }
@@ -406,6 +429,7 @@ require([
                     city: store.cityName,
                     state: store.stateName,
                     zip: store.zipCode,
+                    cityPopulation: store.cityPopulation,
                     weeklyPurchaseAmount: store.weeklyPurchaseAmount,
                     store: store
                 },
