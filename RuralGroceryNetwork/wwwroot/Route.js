@@ -516,7 +516,12 @@ require([
             return taBytes;
         }
         window.base64DecToArr = base64DecToArr;
-        
+
+        // Create a simple browser message alert to display messages to the user.
+        function ShowMessage(message) {
+            window.alert(message);
+        }
+        window.ShowMessage = ShowMessage;
     }
     window.CreateMap = CreateMap;
 });
