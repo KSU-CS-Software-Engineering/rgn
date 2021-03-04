@@ -124,7 +124,7 @@ GO
 CREATE TABLE [dbo].[Cities]
 (
   CityID INT PRIMARY KEY IDENTITY(1, 1),
-  CityName VARCHAR(32) NOT NULL,
+  CityName VARCHAR(64) NOT NULL,
   StateID INT NOT NULL,
   [Population] INT NOT NULL,
   
@@ -834,8 +834,9 @@ VALUES
 CREATE TABLE [dbo].[CitiesStaging]
 (
   CityID INT,
-  CityName VARCHAR(32) NOT NULL,
-  StateID INT NOT NULL
+  CityName VARCHAR(64) NOT NULL,
+  StateID INT NOT NULL,
+  [Population] INT NOT NULL,
 );
 
 GO

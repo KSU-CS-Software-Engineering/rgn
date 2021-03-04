@@ -294,13 +294,13 @@ limitations under the License.
     {
         List<string> allcsv = new List<string>();
 
-        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STORE_INFORMATION));
-
-        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.DISTRIBUTOR));
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STATES));
 
         allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.CITIES));
 
-        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STATES));
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.DISTRIBUTOR));
+
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STORE_INFORMATION));
 
         //If new tables are added, just make the same call to DBTableToCSV and add to the list. The following loop creates one file for all tables.
 

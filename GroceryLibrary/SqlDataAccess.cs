@@ -1156,8 +1156,8 @@ namespace GroceryLibrary
                 sb.Append("MERGE [dbo].Cities AS TARGET");
                 sb.Append(" USING [dbo].CitiesStaging AS SOURCE");
                 sb.Append(" ON (TARGET.CityID = SOURCE.CityID)");
-                sb.Append(" WHEN MATCHED THEN UPDATE SET TARGET.CityName = SOURCE.CityName, TARGET.StateID = SOURCE.StateID");
-                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (CityName, StateID) VALUES (SOURCE.CityName, SOURCE.StateID)");
+                sb.Append(" WHEN MATCHED THEN UPDATE SET TARGET.CityName = SOURCE.CityName, TARGET.StateID = SOURCE.StateID, TARGET.Population = SOURCE.Population");
+                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (CityName, StateID, Population) VALUES (SOURCE.CityName, SOURCE.StateID, SOURCE.Population)");
                 sb.Append(" WHEN NOT MATCHED BY SOURCE THEN DELETE;");
 
                 ExecuteNonQuery(sb.ToString(), connection);
