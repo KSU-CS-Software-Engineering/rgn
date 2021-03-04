@@ -161,6 +161,7 @@ require([
                         city: store.cityName,
                         state: store.stateName,
                         zip: store.zipCode,
+                        cityPopulation: store.cityPopulation,
                         weeklyPurchaseAmount: store.weeklyPurchaseAmount
                     }
                 });
@@ -216,9 +217,11 @@ require([
                     createAndAppendTo("p", "(Secondary Distributor)", div);
 
                 createAndAppendTo("p", displayAddress(inCircle[i]), div);
+                createAndAppendTo("p", "City Population: " + inCircle[i].attributes["cityPopulation"], div)
 
                 createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmount"], div)
                 weeklyPurchaseAmount += inCircle[i].attributes["weeklyPurchaseAmount"]
+
 
                 if (i != 0) {
                     await displayDistanceToCenter(inCircle[0], inCircle[i]).then(function (result) {

@@ -873,9 +873,9 @@ namespace GroceryLibrary
                                 tempStore.CityName = reader["CityName"].ToString();
                                 tempStore.StateName = reader["StateName"].ToString();
                                 tempStore.ZipCode = reader["Zip"].ToString();
+                                tempStore.CityPopulation = Convert.ToInt32(reader["Population"]);
                                 tempStore.YLAT = Convert.ToDecimal(reader["YLAT"]);
                                 tempStore.XLONG = Convert.ToDecimal(reader["XLONG"]);
-
                                 
                                 var r = reader["WeeklyPurchaseAmount"];
                                 var rs = r.ToString();
