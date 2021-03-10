@@ -851,8 +851,10 @@ namespace GroceryLibrary
             sb.Append("INNER JOIN " + DatabaseTables.CITIES + "ON SI.CityID = C.CityID ");
             sb.Append("INNER JOIN " + DatabaseTables.STATES + "ON S.StateID = C.StateID ");
             sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "ON SDI.StoreID = SI.StoreID ");
+            //builder.ConnectionString = "Data Source = (localdb)\\MSSqlLocalDb; Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
             builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
-            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+            //(localdb)\MSSqlLocalDb for SQL
+            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";  
 
             try
             {
