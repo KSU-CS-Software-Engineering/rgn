@@ -58,6 +58,12 @@ namespace GroceryLibrary.Models
         /// </summary>
         public string ZipCode { get; set; }
 
+
+        /// <summary>
+        /// The population of the city where the store is located in
+        /// </summary>
+        public int CityPopulation { get; set; }
+
         /// <summary>
         /// The y coordinate for the store
         /// </summary>

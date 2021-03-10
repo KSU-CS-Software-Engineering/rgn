@@ -31,6 +31,9 @@ require([
         basemap: "streets-navigation-vector"
     });
 
+    var allStores = "";
+    var allDistributors = "";
+
     function CreateMap() {
         //Creates container for map to be view in
         var view = new MapView({
@@ -120,36 +123,41 @@ require([
                     }
                 }
             });
+            GetRadius();
         });
 
         // Generates a radius on the map
-        function GetRadius(allStores) {
+        async function GetRadius() {
             // Pulls the latitude, longitude, and radius size from corresponding textboxes
             var longitude = document.getElementById("x-long-input").value;
             var latitude = document.getElementById("y-lat-input").value;
-            var radius = document.getElementById("radius").value
+            var radius = document.getElementById("radius").value;
+            if (radius == 0) {
+                radius = 25;
+                document.getElementById("radius").value = 25;
+            }
 
-            // Checks to see if their is already a radius on the map, if so removes the old one
-            view.graphics.items.forEach(function (g, i) {
-                
+            // Checks to see if their is already a radius, route, or center point on the map, if so removes the old one
+            view.graphics.forEach(function (g, i) {
                 if (g.id === "circle1") {
                     view.graphics.remove(g);
                 }
             });
 
-            // Checks to see if their is already a route on the map, if so removes the old one
-            view.graphics.items.forEach(function (g, i) {
-                if (g.id === "route1") {
+            view.graphics.forEach(function (g, i) {
+                if (g.class === "route1") {
                     view.graphics.remove(g);
                 }
             });
 
-            // Generates the radius and adds to map
+            view.graphics.forEach(function (g, i) {
+                if (g.id === "centerPoint") {
+                    view.graphics.remove(g);
+                }
+            });
+
             var symbol = new SimpleFillSymbol({ color: null, style: "solid", outline: { color: "blue", width: 1 } });
             var cir = new Circle({ center: new Point([longitude, latitude]), radius: radius, geodesic: true, radiusUnit: "miles" })
-            var graphic = new Graphic(cir, symbol);
-            graphic.id = "circle1";
-            view.graphics.add(graphic);
 
             // Generates a array of all stores in the radius called inCircle
             var inCircle = new Array();
@@ -176,6 +184,7 @@ require([
                         city: store.cityName,
                         state: store.stateName,
                         zip: store.zipCode,
+                        cityPopulation: store.cityPopulation,
                         weeklyPurchaseAmount: store.weeklyPurchaseAmount
                     }
                 });
@@ -188,7 +197,16 @@ require([
                     point.attributes.distanceToCenter = dis;
                     inCircle.push(point);
                 }
+
+                if (dis == 0) {
+                    addGraphic(point, point.latitude, point.longitude, "", "15px");
+                }
             });
+
+            // Generates the radius and adds to map
+            var graphic = new Graphic(cir, symbol);
+            graphic.id = "circle1";
+            view.graphics.add(graphic);
 
             // Reorginize inCircle array by closest distance to the center to farthest
             var len = inCircle.length;
@@ -204,15 +222,17 @@ require([
 
             // Finds the weekely Purchase Amount total for all stores in radius
             var weeklyPurchaseAmount = 0;
+            var totalPopulation = 0;
+            var div = document.getElementById("radius-stores");
+            div.innerHTML = ""; //clear it
             for (i = 0; i < inCircle.length; i++) {
-                var div = document.getElementById("radius-stores");
-
                 if (i != 0) {
                     var checkbox = document.createElement("input");
                     checkbox.setAttribute("type", "checkbox");
                     checkbox.setAttribute("class", "scenarios-checkbox");
                     checkbox.setAttribute("onClick", "updateSummary(this)");
                     checkbox.setAttribute("data-weeklyamount", inCircle[i].attributes["weeklyPurchaseAmount"])
+                    checkbox.setAttribute("data-population", inCircle[i].attributes["cityPopulation"])
                     div.appendChild(checkbox);
                 }
 
@@ -222,36 +242,51 @@ require([
                     createAndAppendTo("p", "(Secondary Distributor)", div);
 
                 createAndAppendTo("p", displayAddress(inCircle[i]), div);
+                createAndAppendTo("p", inCircle[i].attributes["city"] + " Population: " + inCircle[i].attributes["cityPopulation"], div, "", "city-population");
+                totalPopulation += inCircle[i].attributes["cityPopulation"]
 
-                createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmount"], div)
+                createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmount"], div, "", "store-weekly-purchase-amount");
                 weeklyPurchaseAmount += inCircle[i].attributes["weeklyPurchaseAmount"]
 
+
                 if (i != 0) {
-                    createAndAppendTo("p", displayDistanceToCenter(inCircle[0], inCircle[i]), div)
-                    createAndAppendTo("p", "Directions >", div)
+                    await displayDistanceToCenter(inCircle[0], inCircle[i]).then(function (result) {
+                        createAndAppendTo("p", result, div)
+                    })
+                    //createAndAppendTo("p", displayDistanceToCenter(inCircle[0], inCircle[i]), div)
                 }
             }
 
+
             div = document.getElementById("summary");
+            div.innerHTML = "" //clear it
 
             // Create text to show following statistics
             createAndAppendTo("h3", "Summary", div);
             createAndAppendTo("p", "Stores in Radius: " + inCircle.length, div)
-            createAndAppendTo("h5", "Weekly Purchase Amount", div)
-            createAndAppendTo("p", "Amount of All Stores in Radius: $" + weeklyPurchaseAmount, div)
-            createAndAppendTo("p", "Amount for Selected Stores: $" + inCircle[0].attributes["weeklyPurchaseAmount"], div, "selected-stores-amount")
-            createAndAppendTo("p", "Distributor Minimum Amount: $0", div, "min-distributor-amount")
-            createAndAppendTo("p", "Selected Stores Meets Minimum Amount: " + meetsMinimum(0, inCircle[0].attributes["weeklyPurchaseAmount"]), div, "meets-minimum")
 
-            getRouteInCircle(inCircle);
+            createAndAppendTo("h5", "Weekly Purchase Amount", div, "", "weekly-purchase-summary");
+            createAndAppendTo("p", "Amount of All Stores in Radius: $" + weeklyPurchaseAmount, div, "", "weekly-purchase-summary")
+            createAndAppendTo("p", "Amount for Selected Stores: $" + inCircle[0].attributes["weeklyPurchaseAmount"], div, "selected-stores-amount", "weekly-purchase-summary")
+            createAndAppendTo("p", "Distributor Minimum Amount: $25,000", div, "min-distributor-amount", "weekly-purchase-summary")
+            createAndAppendTo("p", "Selected Stores Meets Minimum Amount: " + meetsMinimum(inCircle[0].attributes["weeklyPurchaseAmount"], 25000), div, "meets-minimum", "weekly-purchase-summary")
+
+            createAndAppendTo("h5", "Population", div, "", "population-summary");
+            createAndAppendTo("p", "Town Poulation of All Stores in Radius: " + totalPopulation, div, "", "population-summary")
+            createAndAppendTo("p", "Population for Selected Stores: " + inCircle[0].attributes["cityPopulation"], div, "selected-stores-population", "population-summary")
+            createAndAppendTo("p", "Estimated Minimum Population: 2,000", div, "min-population-amount", "population-summary")
+            createAndAppendTo("p", "Selected Stores Meets Minimum Population: " + meetsMinimum(inCircle[0].attributes["cityPopulation"], 2000), div, "meets-minimum-population", "population-summary")
+            updateVariable();
         }
         window.GetRadius = GetRadius;
 
         // A function to create an element and append it to given var
-        function createAndAppendTo(element, text, append_to, id = "") {
+        function createAndAppendTo(element, text, append_to, id = "", klass="") {
             var name = document.createElement(element);
             if (id != "")
                 name.setAttribute("id", id);
+            if (klass != "")
+                name.setAttribute("class", klass)
             var textnode = document.createTextNode(text);
             name.appendChild(textnode);
             append_to.appendChild(name);
@@ -263,33 +298,80 @@ require([
         }
 
         // A function return text containing the distance from one given store to the second given store in a straight line 
-        function displayDistanceToCenter(centerStore, store) {
-            return "Straight Line Distance to " + centerStore.attributes["name"] + ": " + Math.round(store.attributes["distanceToCenter"] * 10) / 10 + " miles"
+        async function displayDistanceToCenter(centerStore, store) {
+            length = await getRouteInCircle([centerStore, store]).then(function (result) {
+                return result;
+            });
+            return "Distance to " + centerStore.attributes["name"] + ": " + Math.round(length * 10) / 10 + " miles";
         }
 
-        // A function that returns a Yes or No for if the given store amount is greater than or equal to the given min.
-        function meetsMinimum(min, store_amount) {
+        // A function that returns whether the minimum amount is met or not.
+        function meetsMinimum(store_amount, min) {
             if (store_amount >= min)
                 return "Yes"
             return "No"
         }
 
-        // A function to update the weekly buying amount for stores
-        function updateSummary(checkbox) {
-            element = document.getElementById("selected-stores-amount");
+        // A function that updates whether the minimum amount is met or not.
+        function updateMeetsMinimum(store_amount, min, id) {
+            element = document.getElementById(id);
             element = element.textContent.split(": ");
             element[1] = parseInt(element[1].substring(1)); //get rid of $ and parseInt
 
+            if (store_amount >= min)
+                return document.getElementById(id).innerHTML = element[0] + ": Yes";
+            return document.getElementById(id).innerHTML = element[0] + ": No";
+        }
+
+        // A function to update the weekly buying amount for stores
+        function updateSummary(checkbox) {
+            element = document.getElementById("selected-stores-amount");
+            element2 = document.getElementById("selected-stores-population");
+            console.log(element2)
+            element = element.textContent.split(": ");
+            element2 = element2.textContent.split(": ");
+            console.log(element2)
+            element[1] = parseInt(element[1].substring(1)); //get rid of $ and parseInt
+            element2[1] = parseInt(element2[1]);
+            console.log(element2[1])
+
             var weeklyAmount = parseInt(checkbox.dataset.weeklyamount);
+            var population = parseInt(checkbox.dataset.population);
+            console.log([population, element2[1]])
             if (checkbox.checked) {
                 element[1] += weeklyAmount;
+                element2[1] += population;
             } else { 
                 element[1] -= weeklyAmount;
+                element2[1] -= population;
             }
 
             document.getElementById("selected-stores-amount").innerHTML = element[0] + ": $" + element[1];
+            updateMeetsMinimum(element[1], 25000, "meets-minimum");
+
+            document.getElementById("selected-stores-population").innerHTML = element2[0] + ": " + element2[1];
+            updateMeetsMinimum(element2[1], 2000, "meets-minimum-population");
         }
         window.updateSummary = updateSummary;
+
+        function updateVariable() {
+            cbox = document.getElementById("scenario-variable");
+            // population
+            if (cbox.checked) {
+                for (let el of document.querySelectorAll('.weekly-purchase-summary')) el.style.display = 'none';
+                for (let el of document.querySelectorAll('.store-weekly-purchase-amount')) el.style.display = 'none';
+                for (let el of document.querySelectorAll('.population-summary')) el.style.display = 'block';
+                for (let el of document.querySelectorAll('.city-population')) el.style.display = 'block';
+            }
+            //weekly purchase amount
+            else {
+                for (let el of document.querySelectorAll('.weekly-purchase-summary')) el.style.display = 'block';
+                for (let el of document.querySelectorAll('.store-weekly-purchase-amount')) el.style.display = 'block';
+                for (let el of document.querySelectorAll('.population-summary')) el.style.display = 'none';
+                for (let el of document.querySelectorAll('.city-population')) el.style.display = 'none';
+            }
+        }
+        window.updateVariable = updateVariable;
 
         // Used to calculate distance between points -- Haversine Formula
         function distance(lat1, lon1, lat2, lon2) {
@@ -304,52 +386,68 @@ require([
         window.distance = distance;
 
         // A function to find a route with given points and adds that path to the map
-        function getRouteInCircle(points) {
+        async function getRouteInCircle(points) {
+            var length = 0;
             var routeParams = new RouteParameters({
                 stops: new FeatureSet({
                     features: points
                 }),
                 returnDirections: true
             });
-            routeTask.solve(routeParams).then(function (data) {
+            await routeTask.solve(routeParams).then(function (data) {
                 data.routeResults.forEach(function (result) {
                     result.route.symbol = {
                         type: "simple-line",
                         color: [5, 150, 255],
                         width: 3
                     };
-                    result.route.id = "route1";
+                    result.route.class = "route1";
                     view.graphics.add(result.route);
+                    length = result.route.attributes.Total_Miles;
                 });
             });
+            return length;
         }
         window.getRouteInCircle = getRouteInCircle;
 
         // A template for a popup for a store of it's information
         var popupTemplate = {
             title: "<b>{name}</b>",
-            content: "{address}<br>{city}, {state} {zip}<br><br>Weekly Purchase Amount: ${weeklyPurchaseAmount}"
+            content: "{address}<br>{city}, {state} {zip}<br><br>" +
+                "Weekly Purchase Amount: ${ weeklyPurchaseAmount }<br>" +
+                "{city} Population: {cityPopulation}"
         };
 
         // A function to add a graphic to the map for a store
-        function addGraphic(store, lat, lon, color) {
-            const s = store.weeklyPurchaseAmount;
-            // Sets a color based off a stores weekly purchaseing amount
-            switch (true) {
-                case (s == 0): color = "#E6E6FA"
-                    break;
-                case (s < 5000): color = "#D8BFD8"
-                    break;
-                case (s < 10000): color = "#EE82EE"
-                    break;
-                case (s < 15000): color = "#9370DB"
-                    break;
-                case (s < 20000): color = "#8A2BE2"
-                    break;
-                case (s < 36001): color = "#4B0082"
-                    break;
-                default:
-                    color = "yellow";
+        function addGraphic(store, lat, lon, color, size = "10px") {
+            outlineColor = "black";
+            outlineSize = 1;
+            id = "";
+            if (size == "15px") {
+                store = store.attributes;
+                outlineColor = "#00f";
+                outlineSize = 1.5;
+                id = "centerPoint"
+            }
+            if (color == "") {
+                const s = store.weeklyPurchaseAmount;
+                // Sets a color based off a stores weekly purchaseing amount
+                switch (true) {
+                    case (s == 0): color = "#E6E6FA"
+                        break;
+                    case (s < 5000): color = "#D8BFD8"
+                        break;
+                    case (s < 10000): color = "#EE82EE"
+                        break;
+                    case (s < 15000): color = "#9370DB"
+                        break;
+                    case (s < 20000): color = "#8A2BE2"
+                        break;
+                    case (s < 36001): color = "#4B0082"
+                        break;
+                    default:
+                        color = "yellow";
+                }
             }
 
             // Creates a graphic for a store
@@ -357,7 +455,11 @@ require([
                 symbol: {
                     type: "simple-marker",
                     color: color,
-                    size: "10px"
+                    size: size,
+                    outline: {
+                        color: outlineColor,
+                        width: outlineSize
+                    }
                 },
                 geometry: new Point(lon, lat),
                 attributes: {
@@ -366,10 +468,13 @@ require([
                     city: store.cityName,
                     state: store.stateName,
                     zip: store.zipCode,
-                    weeklyPurchaseAmount: store.weeklyPurchaseAmount
+                    cityPopulation: store.cityPopulation,
+                    weeklyPurchaseAmount: store.weeklyPurchaseAmount,
+                    store: store
                 },
                 popupTemplate: popupTemplate
             });
+            graphic.id = id
             view.graphics.add(graphic);
         }
         window.addGraphic = addGraphic;
@@ -392,6 +497,16 @@ require([
             });
             view.graphics.add(graphic);
         }
+
+        function setAllStores(stores) {
+            allStores = stores
+        }
+        window.setAllStores = setAllStores;
+
+        function setAllDistributors(distributors) {
+            allDistributors = distributors
+        }
+        window.setAllDistributors = setAllDistributors;
 
         // A function to center the map on a given lat and lon point
         function centerMap(lat, lon) {
@@ -450,7 +565,12 @@ require([
             return taBytes;
         }
         window.base64DecToArr = base64DecToArr;
-        
+
+        // Create a simple browser message alert to display messages to the user.
+        function ShowMessage(message) {
+            window.alert(message);
+        }
+        window.ShowMessage = ShowMessage;
     }
     window.CreateMap = CreateMap;
 });

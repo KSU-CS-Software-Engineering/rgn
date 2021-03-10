@@ -15,8 +15,8 @@ limitations under the License.
 -->
 
 @using GroceryLibrary
-@using GroceryLibrary.Models 
- 
+@using GroceryLibrary.Models
+
 
 @inject IJSRuntime JS
 <!-- Javascript ArcGIS map Div setup -->
@@ -63,6 +63,12 @@ limitations under the License.
                         <div>
                             <button @onclick="GetRadius">Get Radius</button>
                             <button @onclick="LoadStores">Load All Stores and Distributors</button>
+                            <p style="float: left;">Weekly Purchase Amount</p>
+                            <label class="switch" style="float: left;">
+                                <input type="checkbox" id="scenario-variable" onclick="updateVariable()">
+                                <span class="slider round"></span>
+                            </label>
+                            <p style="float: left;">Population</p>
                         </div>
                     </div>
                     <br />
@@ -98,7 +104,7 @@ limitations under the License.
             <br />
             <label style="font-style: italic;">  Lat / Lon</label>
         </div>
-        
+
         <!-- A summary table for the weekly purchase amounts (added via js)-->
         <div id="summary" style="width: 60%; float: left;"></div>
         <!-- A legend for the stores on the map and weekly purchase amounts -->
@@ -130,7 +136,17 @@ limitations under the License.
     /// <summary>
     /// Change the Base Map Style for the Arcgis Map
     /// </summary>
-    new async Task ChangeMapBase() {
+    new async Task CreateMap()
+    {
+        await JS.InvokeVoidAsync(identifier: "CreateMap");
+        //LoadStores();
+    }
+
+    /// <summary>
+    /// Change the Base Map Style for the Arcgis Map
+    /// </summary>
+    new async Task ChangeMapBase()
+    {
 
         await JS.InvokeVoidAsync(identifier: "ChangeMapBase");
     }
@@ -138,14 +154,16 @@ limitations under the License.
     /// <summary>
     /// Recenter the map on a given latitude  and longitude
     /// </summary>
-    async Task CenterMap(double lat, double lon) {
+    async Task CenterMap(double lat, double lon)
+    {
         await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
     }
 
     /// <summary>
     /// Add a node on the map on a given latitude  and longitude
     /// </summary>
-    async Task MapInput(double lat, double lon) {
+    async Task MapInput(double lat, double lon)
+    {
         await JS.InvokeVoidAsync(identifier: "MapInput", lat, lon);
         await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
     }
@@ -163,25 +181,30 @@ limitations under the License.
     /// <summary>
     /// Calls GetRadius from Route.js to load a radius onto map
     /// </summary>
-    async Task GetRadius() {
-        List<Store> allStores = SqlDataAccess.getAllStores();
-
-        await JS.InvokeVoidAsync("GetRadius", allStores);
+    async Task GetRadius()
+    {
+        await JS.InvokeVoidAsync("GetRadius");
     }
 
     /// <summary>
     /// Loads Stores, distributors, and legend onto the map
     /// </summary>
-    async void LoadStores() {
+    async Task LoadStores()
+    {
         List<Store> allStores = SqlDataAccess.getAllStores();
         List<Distributor> allDist = SqlDataAccess.getAllDistributors();
 
+        await JS.InvokeVoidAsync("setAllStores", allStores);
+        await JS.InvokeVoidAsync("setAllDistributors", allDist);
+
         //Calls Route.js to load each store in List<Store> allStores to the map as a blue node
-        foreach (Store s in allStores) {
-            await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "blue");
+        foreach (Store s in allStores)
+        {
+            await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "");
         }
         //Calls Route.js to load each store in List<Distributor> allDist to the map as a yellow node
-        foreach (Distributor d in allDist) {
+        foreach (Distributor d in allDist)
+        {
             await JS.InvokeVoidAsync("addGraphic", d, d.YLAT, d.XLONG, "yellow");
         }
 
@@ -201,17 +224,36 @@ limitations under the License.
     }
     */
 
-    /*protected override void OnAfterRender(bool firstRender)
+    /*protected override bool ShouldRender()
     {
-        if (firstRender)
-        {
-            List<Store> allStores = SqlDataAccess.getAllStores();
+        var renderUI = true;
 
-            foreach (Store s in allStores)
-            {
-                JS.InvokeVoidAsync(identifier: "addGraphic", s.YLAT, s.XLONG);
-            }
-        }
+        return renderUI;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await LoadStores();
     }*/
 
+    /*protected override async Task OnInitializedAsync()
+    {
+        //LoadStores();
+            List<Store> allStores = SqlDataAccess.getAllStores();
+            List<Distributor> allDist = SqlDataAccess.getAllDistributors();
+
+            //Calls Route.js to load each store in List<Store> allStores to the map as a blue node
+            foreach (Store s in allStores)
+            {
+                await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "");
+            }
+            //Calls Route.js to load each store in List<Distributor> allDist to the map as a yellow node
+            foreach (Distributor d in allDist)
+            {
+                await JS.InvokeVoidAsync("addGraphic", d, d.YLAT, d.XLONG, "yellow");
+            }
+
+            //Calls Route.js to load in the legend
+            await JS.InvokeVoidAsync("displayLegend");
+    }*/
 }
