@@ -31,6 +31,9 @@ require([
         basemap: "streets-navigation-vector"
     });
 
+    var allStores = "";
+    var allDistributors = "";
+
     function CreateMap() {
         //Creates container for map to be view in
         var view = new MapView({
@@ -120,10 +123,11 @@ require([
                     }
                 }
             });
+            GetRadius();
         });
 
         // Generates a radius on the map
-        async function GetRadius(allStores) {
+        async function GetRadius() {
             // Pulls the latitude, longitude, and radius size from corresponding textboxes
             var longitude = document.getElementById("x-long-input").value;
             var latitude = document.getElementById("y-lat-input").value;
@@ -132,6 +136,25 @@ require([
                 radius = 25;
                 document.getElementById("radius").value = 25;
             }
+
+            // Checks to see if their is already a radius, route, or center point on the map, if so removes the old one
+            view.graphics.forEach(function (g, i) {
+                if (g.id === "circle1") {
+                    view.graphics.remove(g);
+                }
+            });
+
+            view.graphics.forEach(function (g, i) {
+                if (g.class === "route1") {
+                    view.graphics.remove(g);
+                }
+            });
+
+            view.graphics.forEach(function (g, i) {
+                if (g.id === "centerPoint") {
+                    view.graphics.remove(g);
+                }
+            });
 
             var symbol = new SimpleFillSymbol({ color: null, style: "solid", outline: { color: "blue", width: 1 } });
             var cir = new Circle({ center: new Point([longitude, latitude]), radius: radius, geodesic: true, radiusUnit: "miles" })
@@ -219,10 +242,10 @@ require([
                     createAndAppendTo("p", "(Secondary Distributor)", div);
 
                 createAndAppendTo("p", displayAddress(inCircle[i]), div);
-                createAndAppendTo("p", inCircle[i].attributes["city"] + " Population: " + inCircle[i].attributes["cityPopulation"], div)
+                createAndAppendTo("p", inCircle[i].attributes["city"] + " Population: " + inCircle[i].attributes["cityPopulation"], div, "", "city-population");
                 totalPopulation += inCircle[i].attributes["cityPopulation"]
 
-                createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmount"], div)
+                createAndAppendTo("p", "Weekly Purchase Amount: $" + inCircle[i].attributes["weeklyPurchaseAmount"], div, "", "store-weekly-purchase-amount");
                 weeklyPurchaseAmount += inCircle[i].attributes["weeklyPurchaseAmount"]
 
 
@@ -241,25 +264,29 @@ require([
             // Create text to show following statistics
             createAndAppendTo("h3", "Summary", div);
             createAndAppendTo("p", "Stores in Radius: " + inCircle.length, div)
-            createAndAppendTo("h5", "Weekly Purchase Amount", div)
-            createAndAppendTo("p", "Amount of All Stores in Radius: $" + weeklyPurchaseAmount, div)
-            createAndAppendTo("p", "Amount for Selected Stores: $" + inCircle[0].attributes["weeklyPurchaseAmount"], div, "selected-stores-amount")
-            createAndAppendTo("p", "Distributor Minimum Amount: $25,000", div, "min-distributor-amount")
-            createAndAppendTo("p", "Selected Stores Meets Minimum Amount: " + meetsMinimum(inCircle[0].attributes["weeklyPurchaseAmount"], 25000), div, "meets-minimum")
 
-            createAndAppendTo("h5", "Population", div)
-            createAndAppendTo("p", "Town Poulation of All Stores in Radius: " + totalPopulation, div)
-            createAndAppendTo("p", "Population for Selected Stores: " + inCircle[0].attributes["cityPopulation"], div, "selected-stores-population")
-            createAndAppendTo("p", "Estimated Minimum Population: 2,000", div, "min-population-amount")
-            createAndAppendTo("p", "Selected Stores Meets Minimum Population: " + meetsMinimum(inCircle[0].attributes["cityPopulation"], 2000), div, "meets-minimum-population")
+            createAndAppendTo("h5", "Weekly Purchase Amount", div, "", "weekly-purchase-summary");
+            createAndAppendTo("p", "Amount of All Stores in Radius: $" + weeklyPurchaseAmount, div, "", "weekly-purchase-summary")
+            createAndAppendTo("p", "Amount for Selected Stores: $" + inCircle[0].attributes["weeklyPurchaseAmount"], div, "selected-stores-amount", "weekly-purchase-summary")
+            createAndAppendTo("p", "Distributor Minimum Amount: $25,000", div, "min-distributor-amount", "weekly-purchase-summary")
+            createAndAppendTo("p", "Selected Stores Meets Minimum Amount: " + meetsMinimum(inCircle[0].attributes["weeklyPurchaseAmount"], 25000), div, "meets-minimum", "weekly-purchase-summary")
+
+            createAndAppendTo("h5", "Population", div, "", "population-summary");
+            createAndAppendTo("p", "Town Poulation of All Stores in Radius: " + totalPopulation, div, "", "population-summary")
+            createAndAppendTo("p", "Population for Selected Stores: " + inCircle[0].attributes["cityPopulation"], div, "selected-stores-population", "population-summary")
+            createAndAppendTo("p", "Estimated Minimum Population: 2,000", div, "min-population-amount", "population-summary")
+            createAndAppendTo("p", "Selected Stores Meets Minimum Population: " + meetsMinimum(inCircle[0].attributes["cityPopulation"], 2000), div, "meets-minimum-population", "population-summary")
+            updateVariable();
         }
         window.GetRadius = GetRadius;
 
         // A function to create an element and append it to given var
-        function createAndAppendTo(element, text, append_to, id = "") {
+        function createAndAppendTo(element, text, append_to, id = "", klass="") {
             var name = document.createElement(element);
             if (id != "")
                 name.setAttribute("id", id);
+            if (klass != "")
+                name.setAttribute("class", klass)
             var textnode = document.createTextNode(text);
             name.appendChild(textnode);
             append_to.appendChild(name);
@@ -327,6 +354,25 @@ require([
         }
         window.updateSummary = updateSummary;
 
+        function updateVariable() {
+            cbox = document.getElementById("scenario-variable");
+            // population
+            if (cbox.checked) {
+                for (let el of document.querySelectorAll('.weekly-purchase-summary')) el.style.display = 'none';
+                for (let el of document.querySelectorAll('.store-weekly-purchase-amount')) el.style.display = 'none';
+                for (let el of document.querySelectorAll('.population-summary')) el.style.display = 'block';
+                for (let el of document.querySelectorAll('.city-population')) el.style.display = 'block';
+            }
+            //weekly purchase amount
+            else {
+                for (let el of document.querySelectorAll('.weekly-purchase-summary')) el.style.display = 'block';
+                for (let el of document.querySelectorAll('.store-weekly-purchase-amount')) el.style.display = 'block';
+                for (let el of document.querySelectorAll('.population-summary')) el.style.display = 'none';
+                for (let el of document.querySelectorAll('.city-population')) el.style.display = 'none';
+            }
+        }
+        window.updateVariable = updateVariable;
+
         // Used to calculate distance between points -- Haversine Formula
         function distance(lat1, lon1, lat2, lon2) {
             var p = 0.017453292519943295;    // Math.PI / 180
@@ -378,13 +424,6 @@ require([
             outlineSize = 1;
             id = "";
             if (size == "15px") {
-                // Checks to see if their is already a radius, route, or center point on the map, if so removes the old one
-                view.graphics.forEach(function (g, i) {
-                    if (g.id === "circle1" || g.class === "route1" || g.id === "centerPoint") {
-                        view.graphics.remove(g);
-                    }
-                });
-
                 store = store.attributes;
                 outlineColor = "#00f";
                 outlineSize = 1.5;
@@ -458,6 +497,16 @@ require([
             });
             view.graphics.add(graphic);
         }
+
+        function setAllStores(stores) {
+            allStores = stores
+        }
+        window.setAllStores = setAllStores;
+
+        function setAllDistributors(distributors) {
+            allDistributors = distributors
+        }
+        window.setAllDistributors = setAllDistributors;
 
         // A function to center the map on a given lat and lon point
         function centerMap(lat, lon) {
