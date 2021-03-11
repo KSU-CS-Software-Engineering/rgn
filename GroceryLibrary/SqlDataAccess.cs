@@ -1212,5 +1212,56 @@ namespace GroceryLibrary
                 ExecuteNonQuery(sb.ToString(), connection);
             }
         }
+
+        public static void InsertNewStoreDeliveryInformation(DataTable data)
+        {
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+
+            StringBuilder sb = new StringBuilder();
+            // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
+            sb.Append("DELETE FROM [dbo].[StoreDeliveryInformationStaging]; ");
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+
+                // Delete any existing entries from the staging table
+                ExecuteNonQuery(sb.ToString(), connection);
+
+                connection.Open();
+                // bulk copy the data from the csv into the staging table
+                using (SqlBulkCopy s = new SqlBulkCopy(connection))
+                {
+                    // define target table name
+                    s.DestinationTableName = "[dbo].[StoreDeliveryInformationStaging]";
+                    // match the columns
+                    foreach (var column in data.Columns)
+                    {
+                        s.ColumnMappings.Add(column.ToString(), column.ToString());
+                    }
+                    //bulk write the information
+                    s.WriteToServer(data);
+                }
+                connection.Close();
+
+                sb.Clear();
+
+                // Create the SQL to Merge staging table (source) into permanent store information table (target).
+                // If the ID matches, we update the row. If the ID is not in the target then we insert. If the ID is not in the source then we delete from the target.
+                sb.Append("MERGE [dbo].StoreDeliveryInformation AS TARGET");
+                sb.Append(" USING [dbo].StoreDeliveryInformationStaging AS SOURCE");
+                sb.Append(" ON (TARGET.StoreDeliveryInformationID = SOURCE.StoreDeliveryInformationID)");
+                sb.Append(" WHEN MATCHED THEN UPDATE SET TARGET.StoreID = SOURCE.StoreID, TARGET.DistributorID = SOURCE.DistributorID, TARGET.WeeklyPurchaseMinRequirement = SOURCE.WeeklyPurchaseMinRequirement, " +
+                    "TARGET.WeeklyPurchaseAmount = SOURCE.WeeklyPurchaseAmount, TARGET.PalletOrderMinimum = SOURCE.PalletOrderMinimum, TARGET.PalletOrderMaximum = SOURCE.PalletOrderMaximum, " +
+                    "TARGET.SellToBusinesses = SOURCE.SellToBusinesses, TARGET.OtherBusinesses = SOURCE.OtherBusinesses, TARGET.SplitWithGroceryStore = SOURCE.SplitWithGroceryStore, " +
+                    "TARGET.OtherGroceryStore = SOURCE.OtherGroceryStore, TARGET.DeliveryNotes = SOURCE.DeliveryNotes");
+                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (StoreID, DistributorID, WeeklyPurchaseMinRequirement, WeeklyPurchaseAmount, PalletOrderMinimum, " +
+                    "PalletOrderMaximum, SellToBusinesses, OtherBusinesses, SplitWithGroceryStore, OtherGroceryStore, DeliveryNotes) VALUES (SOURCE.StoreID, " +
+                    "SOURCE.DistributorID, SOURCE.WeeklyPurchaseMinRequirement, SOURCE.WeeklyPurchaseAmount, SOURCE.PalletOrderMinimum, " +
+                    "SOURCE.PalletOrderMaximum, SOURCE.SellToBusinesses, SOURCE.OtherBusinesses, SOURCE.SplitWithGroceryStore, SOURCE.OtherGroceryStore, SOURCE.DeliveryNotes)");
+                sb.Append(" WHEN NOT MATCHED BY SOURCE THEN DELETE;");
+
+                ExecuteNonQuery(sb.ToString(), connection);
+            }
+        }
     }
 }

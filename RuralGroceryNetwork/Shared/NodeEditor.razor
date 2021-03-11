@@ -302,6 +302,8 @@ limitations under the License.
 
         allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STORE_INFORMATION));
 
+        allcsv.Add(SqlDataAccess.DBTableToCSV(DatabaseTables.STORE_DELIVERY_INFORMATION));
+
         //If new tables are added, just make the same call to DBTableToCSV and add to the list. The following loop creates one file for all tables.
 
         StringBuilder csv = new StringBuilder();

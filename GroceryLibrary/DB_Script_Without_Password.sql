@@ -18,6 +18,8 @@ DROP TABLE IF EXISTS [dbo].[StoreInformationStaging];
 DROP TABLE IF EXISTS [dbo].[DistributorStaging];
 DROP TABLE IF EXISTS [dbo].[StatesStaging];
 DROP TABLE IF EXISTS [dbo].[CitiesStaging];
+DROP TABLE IF EXISTS [dbo].[StoreDeliveryInformationStaging];
+
 
 /*
 * Table: [dbo].[States]
@@ -1161,7 +1163,7 @@ CREATE TABLE [dbo].[StoreDeliveryInformation]
   StoreID INT NOT NULL,
   DistributorID INT NULL,
 
-  WeeklyPurchaseMinRequirement BIT NULL,
+  WeeklyPurchaseMinRequirement INT NULL,
   WeeklyPurchaseAmount INT NULL,
   PalletOrderMinimum VARCHAR(10) NULL,
   PalletOrderMaximum VARCHAR(10) NULL,
@@ -1182,20 +1184,49 @@ ADD CONSTRAINT StoreDeliveryInformation_StoreID_Unique UNIQUE (StoreID);
 
 INSERT INTO [dbo].[StoreDeliveryInformation]
 VALUES
-(1, 1, 0, 20000, '8', '10', 1, 'Hospital, local restaurants', 1, 'Coldwater, Buffalo, OK' , NULL),
-(2, 1, 0, NULL, '4', '5', 1, 'Senior center, school', 0, NULL, NULL),
-(3, 1, 0, 2500, NULL, '20', 0, NULL, 0, NULL, 'Varies, say 20'),
-(4, 3, NULL, 3500, '2', '3', 0, NULL, 1, 'Scott City Heartland?', NULL),
-(5, 1, 0, NULL, '6', '7', 1, 'School, hospital, resturants, other businesses (Christmas dinner)', 1, 'Occasionally with Scott City and Tribune', NULL),
-(6, 1, 0, 36000, '12', '12', 0, NULL, 0, NULL, NULL),
-(7, 1, 0, NULL, '1', '7', 1, 'Hospital, school', 0, NULL, NULL),
-(8, 1, 0, NULL, '8', '12', 1, 'School, hospital', 0, NULL, NULL),
-(9, 1, 0, 8500, '4', '6', 1, 'Retirement apartment, restaurants, bar, school', 1, 'Occasionally with Jetmore', NULL),
-(10, 1, NULL, NULL, '4-8', '5-10', 1, 'Courhouse, sheriff''s deparment, school', 0, NULL, NULL),
-(11, 1, 0, 25000, '9', '12', 1, 'Special order - not regular', 1, 'Sometimes Johnson', NULL),
-(12, 1, 0, 20000, '6', '6', 1, 'School (weekly), hospital (2x/week), resturant (as needed), convenience store (as needed)', 1, 'Leoti foods, Baca County Foods in Springfield, CO (all owned by Gooch''s)', NULL),
-(13, 1, 0, NULL, '10', '12', 0, NULL, 0, NULL, NULL),
-(14, 1, 0, 12000, NULL, '12', 1, 'Special order from schools and hospital', 0, NULL, NULL),
-(15, 1, 0, 9000, '6', '8', 1, 'Correctional facility, hosptial', 0, NULL, NULL),
-(16, 1, 0, 4500, '3', '9', 1, 'Schools and nursing home', 0, NULL, NULL)
+(1, 1, 0, 20000, '8', '10', 1, 'Hospital, local restaurants', 1, 'Coldwater, Buffalo, OK' , 'No'),
+(2, 1, 0, 0, '4', '5', 1, 'Senior center, school', 0, 'No', 'No'),
+(3, 1, 0, 2500, '0', '20', 0, 'No', 0, 'No', 'Varies, say 20'),
+(4, 3, 0, 3500, '2', '3', 0, 'No', 1, 'Scott City Heartland?', 'No'),
+(5, 1, 0, 0, '6', '7', 1, 'School, hospital, resturants, other businesses (Christmas dinner)', 1, 'Occasionally with Scott City and Tribune', 'No'),
+(6, 1, 0, 36000, '12', '12', 0, 'No', 0, 'No', 'No'),
+(7, 1, 0, 0, '1', '7', 1, 'Hospital, school', 0, 'No', 'No'),
+(8, 1, 0, 0, '8', '12', 1, 'School, hospital', 0, 'No', 'No'),
+(9, 1, 0, 8500, '4', '6', 1, 'Retirement apartment, restaurants, bar, school', 1, 'Occasionally with Jetmore', 'No'),
+(10, 1, 0, 0, '4-8', '5-10', 1, 'Courhouse, sheriff''s deparment, school', 0, 'No', 'No'),
+(11, 1, 0, 25000, '9', '12', 1, 'Special order - not regular', 1, 'Sometimes Johnson', 'No'),
+(12, 1, 0, 20000, '6', '6', 1, 'School (weekly), hospital (2x/week), resturant (as needed), convenience store (as needed)', 1, 'Leoti foods, Baca County Foods in Springfield, CO (all owned by Gooch''s)', 'No'),
+(13, 1, 0, 0, '10', '12', 0, 'No', 0, 'No', 'No'),
+(14, 1, 0, 12000, '0', '12', 1, 'Special order from schools and hospital', 0, 'No', 'No'),
+(15, 1, 0, 9000, '6', '8', 1, 'Correctional facility, hosptial', 0, 'No', 'No'),
+(16, 1, 0, 4500, '3', '9', 1, 'Schools and nursing home', 0, 'No', 'No')
+
+
+/*
+* Table: [dbo].[StoreDeliveryInformationStaging]
+* Active Constraints: 
+		None
+		
+* Values: Populated at runtime with temporary information
+*/
+CREATE TABLE [dbo].[StoreDeliveryInformationStaging]
+(
+  StoreDeliveryInformationID INT,
+  StoreID INT NOT NULL,
+  DistributorID INT NULL,
+
+  WeeklyPurchaseMinRequirement INT NULL,
+  WeeklyPurchaseAmount INT NULL,
+  PalletOrderMinimum VARCHAR(10) NULL,
+  PalletOrderMaximum VARCHAR(10) NULL,
+  SellToBusinesses BIT NULL,
+  OtherBusinesses VARCHAR(100) NULL,
+  SplitWithGroceryStore BIT NULL,
+  OtherGroceryStore VARCHAR(100) NULL,
+  DeliveryNotes VARCHAR(64) NULL
+);
+
+GO
+
+
 /* ******************************************** END OF STORE DELIVERY INFORMATION TABLE **************************************************** */
