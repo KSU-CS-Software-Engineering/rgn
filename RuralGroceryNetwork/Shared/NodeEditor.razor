@@ -15,15 +15,15 @@ limitations under the License.
 -->
 
 @using GroceryLibrary
-@using GroceryLibrary.Models.Database 
-@using System.Text 
+@using GroceryLibrary.Models.Database
+@using System.Text
 
 @inject IJSRuntime JS
-
 <!-- Javascript ArcGIS map Div setup -->
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>ArcGIS</title>
+<!--
 <style onload="CreateMap()">
 
     #viewDiv {
@@ -36,140 +36,59 @@ limitations under the License.
 
 
 <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css">
-
-
+-->
 <!-- The Main Div that contains everything in the map; used in this way to display the map components next to eachothers.-->
 
-<div class="float-container">
+<div >
 
-    <div class="float-child1">
-        <body id="row1" onload="CreateMap()">
+    <div >
+        <body id="row1">
             <div>
-                <div id="Fields">
-                    <!-- Node name field -->
-                    <div class="form-field">
-                        <label>Name:</label>
-                        <div>
-                            <input @bind="NodeState.Name" />
-                        </div>
-                    </div>
-                    <!-- Node location field -->
-                    <div class="form-field">
-                        <label>Location:</label>
-
-                    </div>
-                    <!-- Node location fields -->
-                    <div class="form-field">
-                        <input />
-
-                        <input />
-
-                        <button class="btn-1" @onclick="@(() =>CenterMap(NodeState.Location_x,NodeState.Location_y))">
-                            <img src="img/location.png" />
-                        </button>
-                    </div>
-                    <!-- Node demand field -->
-                    <div class="form-field">
-                        <label>Demand:</label>
-                        <div>
-                            <input @bind="NodeState.Demand" />
-
-                            <label>palettes</label>
-                        </div>
-                    </div>
-                    <!-- Node supply field -->
-                    <div class="form-field">
-                        <label>Supply:</label>
-                        <div>
-                            <input @bind="NodeState.Supply" />
-
-                            <label>palettes</label>
-                        </div>
-                    </div>
-                    <br />
-                </div>
+               <p>This page is for maintaining the elements inside of the database. To begin, click on the "Download Tables" button to download the current elements in 
+               the tables. It works best to open this file in Excel to make changes to the database. From here, you can add, delete, or update data for stores, cities, or states.
+                    </p>  
+                <h4>To Add:</h4>
+                <p> To add a new item to the database, first find the correct table within the .csv file you downloaded. Go to the bottom of that table and add a new row after the last element.
+                The first column is the column id, which you should make 1 larger than the existing final element. After that, fill in the information appropriately in each column.
+                To get the X and Y coordinates, it works well to go to Google Maps and search for the store, then in the URL there will be the coordinates for the store.</p>
+                <h4>To Update:</h4>
+                <p>To update any store in the database, simply find the row in the table that has its information, and make whatever changes are necessary.</p>
+                <h4>To Delete:</h4>
+                <p>To delete any row from the database, all you have to do is remove it from the .csv file. However, there are a few catches to that. If you delete a city, you will have
+                to update the store that was in that city to have a new city, or delete that store. (You can find this by matching the "CityId" columns in each table. The same goes for
+                deleting a store from the table, then you must delete its matching StoreInformation item (some stores won't have this).</p>
+                <h4>To Upload:</h4>
+                <p>To upload the changes, simply click the "Import Stores from .csv" button then choose your updated and saved file.</p>
+                <h4>Other Important Notes:</h4>
+                <p>First, it is important that when entering any information in the .csv file, you do not use a comma (,) anywhere within the file.</p>
+                <p>Second, please enter information in every column if you are adding any new rows (no blank entries). If you don't know/have the information,
+                just enter 0 if its a number, or "None" if its a description.</p>
+                <p>Third, please keep the "|" characters between each table.</p>
                 <div id="Btnz">
-
-                    <!-- button for adding a node  -->
-                    <button type="submit" @onclick="@(() =>@AddNodes(NodeState.Name,NodeState.Demand,NodeState.Supply,NodeState.Location_x,NodeState.Location_x))" class="btn-1">Add Stores</button>
-
                     <!-- button for opening the import page -->
                     <br />
                     <button @onclick="enableImportPage" class="btn-1">Import Stores from .csv</button>
 
-                    <!-- button for removing the nodes from list -->
-                    <br />
-                    <button @onclick="RemoveNodes" class="btn-1">Remove All Stores</button>
-
-                    <!-- button for showing the nodelist  page -->
-                    <br />
-                    <button @onclick="enableNodeList">Stores List</button>
-
-                    <!-- Reload the map if needed -->
-                    <button @onclick="LoadMap">Reload Map</button>
-
                     <!-- button for download Store Information table from DB-->
                     <button @onclick="downloadTables">Download Tables</button>
-                </div> 
+                </div>
             </div>
-
-
-
-
         </body>
-
     </div>
-    <div class="float-child2">
-
-
-
-        <div id="MapDiv">
-
-            <!-- The div that the map get displayed inside of -->
-            <div id="viewDiv"></div>
-
-            <!-- Button for adding a node on the map -->
-            <button style="float:left" @onclick="@(() =>MapInput(NodeState.Location_x,NodeState.Location_y))">Add a Nodes</button>
-
-            <!-- The Lat/Lon Fields -->
-            <input type="number" style="width:50px" @bind="NodeState.Location_x" /> <input type="number" style="width:50px" @bind="NodeState.Location_y" />
-
-
-            <!-- Various options for changing the MapBase -->
-            <label for="Map" display="float:right">Choose a MapBase:</label>
-            <select id="MapBase" @onchange="ChangeMapBase" display="float:right">
-                <option value="streets-navigation-vector">streets navigation vector</option>
-                <option value="streets">streets</option>
-                <option value="topo">topo</option>
-                <option value="satellite">satellite</option>
-                <option value="hybrid">hybrid</option>
-                <option value="dark-gray">dark-gray</option>
-                <option value="national-geographic">national-geographic</option>
-                <option value="oceans">oceans</option>
-                <option value="osm">osm</option>
-                <option value="streets-night-vector">streets-night-vector</option>
-                <option value="topo-vector">topo-vector</option>
-            </select>
-            <br />
-            <label style="font-style: italic;">  Lat / Lon</label>
-
-        </div>
-
-    </div>
-
-
 </div>
 
 
 
 
 <!-- display the Import node Page -->
-@if (ShowImportPage) {
+@if (ShowImportPage)
+{
     <ImportNodePage Nodes="nodes" Close="disableImportPage" />
 }
 
 <!-- Display the Node List  page -->
-@if (ShowNodeList) {
+@if (ShowNodeList)
+{
     <NodeListPage Close="disableNodeList" Nodes="nodes" />
 }
 
@@ -186,7 +105,8 @@ limitations under the License.
     /// <summary>
     /// Change the Base Map Style for the Arcgis Map
     /// </summary>
-    async Task ChangeMapBase() {
+    async Task ChangeMapBase()
+    {
 
         await JS.InvokeVoidAsync(identifier: "ChangeMapBase");
     }
@@ -194,14 +114,16 @@ limitations under the License.
     /// <summary>
     /// Recenter the map on a given latitude  and longitude
     /// </summary>
-    async Task CenterMap(double lat, double lon) {
+    async Task CenterMap(double lat, double lon)
+    {
         await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
     }
 
     /// <summary>
     /// Add a node on the map on a given latitude  and longitude
     /// </summary>
-    async Task MapInput(double lat, double lon) {
+    async Task MapInput(double lat, double lon)
+    {
         await JS.InvokeVoidAsync(identifier: "MapInput", lat, lon);
         await JS.InvokeVoidAsync(identifier: "centerMap", lat, lon);
     }
@@ -211,7 +133,8 @@ limitations under the License.
     /// <summary>
     /// Loads the javascript Arcgis Map
     /// </summary>
-    async Task LoadMap() {
+    async Task LoadMap()
+    {
         await JS.InvokeVoidAsync("CreateMap");
     }
 
@@ -308,7 +231,7 @@ limitations under the License.
 
         StringBuilder csv = new StringBuilder();
 
-        foreach(string s in allcsv)
+        foreach (string s in allcsv)
         {
             csv.Append(s);
             csv.Append("|\n");

@@ -850,7 +850,7 @@ namespace GroceryLibrary
             sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
             sb.Append(" INNER JOIN " + DatabaseTables.CITIES + "ON SI.CityID = C.CityID ");
             sb.Append("INNER JOIN " + DatabaseTables.STATES + "ON S.StateID = C.StateID ");
-            sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "ON SDI.StoreID = SI.StoreID ");   
+            //sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "ON SDI.StoreID = SI.StoreID ");   
 
             builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
             //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
@@ -876,13 +876,16 @@ namespace GroceryLibrary
                                 tempStore.CityPopulation = Convert.ToInt32(reader["Population"]);
                                 tempStore.YLAT = Convert.ToDecimal(reader["YLAT"]);
                                 tempStore.XLONG = Convert.ToDecimal(reader["XLONG"]);
-                                
+                                tempStore.WeeklyPurchaseAmount = Convert.ToInt32(reader["WeeklyPurchaseAmount"]);
+
+                                /*
                                 var r = reader["WeeklyPurchaseAmount"];
                                 var rs = r.ToString();
                                 if (r.ToString() == "")
                                     tempStore.WeeklyPurchaseAmount = 0;
                                 else
                                     tempStore.WeeklyPurchaseAmount = Convert.ToInt32(reader["WeeklyPurchaseAmount"]);
+                                */
 
                                 allStores.Add(tempStore);
                             }
@@ -1055,9 +1058,9 @@ namespace GroceryLibrary
                 sb.Append(" USING [dbo].StoreInformationStaging AS SOURCE");
                 sb.Append(" ON (TARGET.StoreID = SOURCE.StoreID)");
                 sb.Append(" WHEN MATCHED THEN UPDATE SET TARGET.StoreName = SOURCE.StoreName, TARGET.Address = SOURCE.Address, TARGET.CityID = SOURCE.CityID, TARGET.Zip = SOURCE.Zip, " +
-                    "TARGET.YLAT = SOURCE.YLAT, TARGET.XLONG = SOURCE.XLONG");
-                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (StoreName, Address, CityID, Zip, YLAT, XLONG) VALUES (SOURCE.StoreName, SOURCE.Address, SOURCE.CityID, SOURCE.Zip, " +
-                    "SOURCE.YLAT, SOURCE.XLONG)");
+                    "TARGET.YLAT = SOURCE.YLAT, TARGET.XLONG = SOURCE.XLONG, TARGET.WeeklyPurchaseAmount = SOURCE.WeeklyPurchaseAmount");
+                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (StoreName, Address, CityID, Zip, YLAT, XLONG, WeeklyPurchaseAmount) VALUES (SOURCE.StoreName, SOURCE.Address, SOURCE.CityID, SOURCE.Zip, " +
+                    "SOURCE.YLAT, SOURCE.XLONG, SOURCE.WeeklyPurchaseAmount)");
                 sb.Append(" WHEN NOT MATCHED BY SOURCE THEN DELETE;");
 
                 ExecuteNonQuery(sb.ToString(), connection);
@@ -1251,12 +1254,12 @@ namespace GroceryLibrary
                 sb.Append(" USING [dbo].StoreDeliveryInformationStaging AS SOURCE");
                 sb.Append(" ON (TARGET.StoreDeliveryInformationID = SOURCE.StoreDeliveryInformationID)");
                 sb.Append(" WHEN MATCHED THEN UPDATE SET TARGET.StoreID = SOURCE.StoreID, TARGET.DistributorID = SOURCE.DistributorID, TARGET.WeeklyPurchaseMinRequirement = SOURCE.WeeklyPurchaseMinRequirement, " +
-                    "TARGET.WeeklyPurchaseAmount = SOURCE.WeeklyPurchaseAmount, TARGET.PalletOrderMinimum = SOURCE.PalletOrderMinimum, TARGET.PalletOrderMaximum = SOURCE.PalletOrderMaximum, " +
+                    "TARGET.PalletOrderMinimum = SOURCE.PalletOrderMinimum, TARGET.PalletOrderMaximum = SOURCE.PalletOrderMaximum, " +
                     "TARGET.SellToBusinesses = SOURCE.SellToBusinesses, TARGET.OtherBusinesses = SOURCE.OtherBusinesses, TARGET.SplitWithGroceryStore = SOURCE.SplitWithGroceryStore, " +
                     "TARGET.OtherGroceryStore = SOURCE.OtherGroceryStore, TARGET.DeliveryNotes = SOURCE.DeliveryNotes");
-                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (StoreID, DistributorID, WeeklyPurchaseMinRequirement, WeeklyPurchaseAmount, PalletOrderMinimum, " +
+                sb.Append(" WHEN NOT MATCHED BY TARGET THEN INSERT (StoreID, DistributorID, WeeklyPurchaseMinRequirement, PalletOrderMinimum, " +
                     "PalletOrderMaximum, SellToBusinesses, OtherBusinesses, SplitWithGroceryStore, OtherGroceryStore, DeliveryNotes) VALUES (SOURCE.StoreID, " +
-                    "SOURCE.DistributorID, SOURCE.WeeklyPurchaseMinRequirement, SOURCE.WeeklyPurchaseAmount, SOURCE.PalletOrderMinimum, " +
+                    "SOURCE.DistributorID, SOURCE.WeeklyPurchaseMinRequirement, SOURCE.PalletOrderMinimum, " +
                     "SOURCE.PalletOrderMaximum, SOURCE.SellToBusinesses, SOURCE.OtherBusinesses, SOURCE.SplitWithGroceryStore, SOURCE.OtherGroceryStore, SOURCE.DeliveryNotes)");
                 sb.Append(" WHEN NOT MATCHED BY SOURCE THEN DELETE;");
 
