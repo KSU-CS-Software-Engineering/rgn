@@ -138,34 +138,34 @@ limitations under the License.
     /// </summary>
     async Task ImportFile()
     {
-
-        string allInfo = "";
-
-        //read the selected file.
-        using (var reader = new System.IO.StreamReader(file.Data))
+        try
         {
-            allInfo = await reader.ReadToEndAsync();
+            string allInfo = "";
+
+            //read the selected file.
+            using (var reader = new System.IO.StreamReader(file.Data))
+            {
+                allInfo = await reader.ReadToEndAsync();
+            }
+
+            // split into each table
+            string[] tables = allInfo.Split('|');
+
+            // each of these calls the sql to update table with the returned data table
+
+            SqlDataAccess.InsertNewStateInformation(CreateDataTable(tables[0]));
+            SqlDataAccess.InsertNewCityInformation(CreateDataTable(tables[1]));
+            SqlDataAccess.InsertNewDistributorInformation(CreateDataTable(tables[2]));
+            SqlDataAccess.InsertNewStoreInformation(CreateDataTable(tables[3]));
+            SqlDataAccess.InsertNewStoreDeliveryInformation(CreateDataTable(tables[4]));
+
+            await JS.InvokeVoidAsync("ShowMessage", "Upload successful.");
         }
-
-        // split into each table
-        string[] tables = allInfo.Split('|');
-
-        // each of these calls the sql to update table with the returned data table
-
-        SqlDataAccess.InsertNewStateInformation(CreateDataTable(tables[0]));
-        SqlDataAccess.InsertNewCityInformation(CreateDataTable(tables[1]));
-        SqlDataAccess.InsertNewDistributorInformation(CreateDataTable(tables[2]));
-        SqlDataAccess.InsertNewStoreInformation(CreateDataTable(tables[3]));
-        SqlDataAccess.InsertNewStoreDeliveryInformation(CreateDataTable(tables[4]));
-
-        await JS.InvokeVoidAsync("ShowMessage", "Upload successful.");
-        
-        /*
         catch (Exception exc)
         {
             await JS.InvokeVoidAsync("ShowMessage", "There was an issue processing the file.");
         }
-        */
+
     }
 
 

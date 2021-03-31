@@ -71,7 +71,7 @@ limitations under the License.
                             <p style="float: left;">Population</p>
                         </div>
                     </div>
-                    <br />
+                    <br /><br /><br /><br />
                     <div id="radius-stores"></div>
                     <br />
                 </div>
@@ -108,7 +108,7 @@ limitations under the License.
         <!-- A summary table for the weekly purchase amounts (added via js)-->
         <div id="summary" style="width: 60%; float: left;"></div>
         <!-- A legend for the stores on the map and weekly purchase amounts -->
-        <div id="map-legend" style="float:right; width: 40%; display: none;">
+        <div id="weekly-purchase-map-legend" style="float:right; width: 40%; display: none;">
             <h4>Weekly Purchase Amount</h4>
             <ul style="background-color: black;">
                 <li style="color: #E6E6FA;">$0 / NA</li>
@@ -117,6 +117,18 @@ limitations under the License.
                 <li style="color: #9370DB">$10,000 - $14,999</li>
                 <li style="color: #8A2BE2">$15,000 - $19,999</li>
                 <li style="color: #4B0082">$20,000 - $36,000</li>
+                <li style="color: yellow">Distributors</li>
+            </ul>
+        </div>
+        <div id="population-map-legend" style="float:right; width: 40%; display: none;">
+            <h4>Population</h4>
+            <ul style="background-color: black;">
+                <li style="color: #E6E6FA;">1 - 99</li>
+                <li style="color: #D8BFD8">100 - 499</li>
+                <li style="color: #EE82EE">500 - 999</li>
+                <li style="color: #9370DB">1,000 - 1,499</li>
+                <li style="color: #8A2BE2">1,500 - 1,999</li>
+                <li style="color: #4B0082">2,000+</li>
                 <li style="color: yellow">Distributors</li>
             </ul>
         </div>
@@ -196,9 +208,11 @@ limitations under the License.
 
         await JS.InvokeVoidAsync("setAllStores", allStores);
         await JS.InvokeVoidAsync("setAllDistributors", allDist);
+        await JS.InvokeVoidAsync("addAllStores");
+        await JS.InvokeVoidAsync("addAllDistributors");
 
         //Calls Route.js to load each store in List<Store> allStores to the map as a blue node
-        foreach (Store s in allStores)
+        /*foreach (Store s in allStores)
         {
             await JS.InvokeVoidAsync("addGraphic", s, s.YLAT, s.XLONG, "");
         }
@@ -206,10 +220,7 @@ limitations under the License.
         foreach (Distributor d in allDist)
         {
             await JS.InvokeVoidAsync("addGraphic", d, d.YLAT, d.XLONG, "yellow");
-        }
-
-        //Calls Route.js to load in the legend
-        await JS.InvokeVoidAsync("displayLegend");
+        }*/
     }
 
     /* First attempt, maybe useful still

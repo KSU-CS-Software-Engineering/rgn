@@ -370,6 +370,14 @@ require([
                 for (let el of document.querySelectorAll('.population-summary')) el.style.display = 'none';
                 for (let el of document.querySelectorAll('.city-population')) el.style.display = 'none';
             }
+
+            //reload stores
+            view.graphics.forEach(function (g, i) {
+                if (g.class === "store-point") {
+                    view.graphics.remove(g);
+                }
+            });
+            addAllStores();
         }
         window.updateVariable = updateVariable;
 
@@ -418,11 +426,33 @@ require([
                 "{city} Population: {cityPopulation}"
         };
 
+        function addAllStores() {
+            cbox = document.getElementById("scenario-variable");
+            //population
+            if (cbox.checked) {
+                for (let store of allStores) addGraphic(store, store.ylat, store.xlong, "", "10px", "population");
+                displayLegend("population");
+            }
+            //weeklyPurchaseAmount
+            else {
+                for (let store of allStores) addGraphic(store, store.ylat, store.xlong, "", "10px", "weeklyPurchaseAmount");
+                displayLegend("weeklyPurchaseAmount");
+            }
+
+        }
+        window.addAllStores = addAllStores;
+
+        function addAllDistributors() {
+            for (let dist of allDistributors) addGraphic(dist, dist.ylat, dist.xlong, "yellow");
+        }
+        window.addAllDistributors = addAllDistributors;
+
         // A function to add a graphic to the map for a store
-        function addGraphic(store, lat, lon, color, size = "10px") {
+        function addGraphic(store, lat, lon, color, size = "10px", variable="weeklyPurchaseAmount") {
             outlineColor = "black";
             outlineSize = 1;
             id = "";
+            klass = "";
             if (size == "15px") {
                 store = store.attributes;
                 outlineColor = "#00f";
@@ -430,23 +460,46 @@ require([
                 id = "centerPoint"
             }
             if (color == "") {
-                const s = store.weeklyPurchaseAmount;
-                // Sets a color based off a stores weekly purchaseing amount
-                switch (true) {
-                    case (s == 0): color = "#E6E6FA"
-                        break;
-                    case (s < 5000): color = "#D8BFD8"
-                        break;
-                    case (s < 10000): color = "#EE82EE"
-                        break;
-                    case (s < 15000): color = "#9370DB"
-                        break;
-                    case (s < 20000): color = "#8A2BE2"
-                        break;
-                    case (s < 36001): color = "#4B0082"
-                        break;
-                    default:
-                        color = "yellow";
+                klass = "store-point";
+                if (variable == "weeklyPurchaseAmount") {
+                    const s = store.weeklyPurchaseAmount;
+                    // Sets a color based off a stores weekly purchaseing amount
+                    switch (true) {
+                        case (s == 0): color = "#E6E6FA"
+                            break;
+                        case (s < 5000): color = "#D8BFD8"
+                            break;
+                        case (s < 10000): color = "#EE82EE"
+                            break;
+                        case (s < 15000): color = "#9370DB"
+                            break;
+                        case (s < 20000): color = "#8A2BE2"
+                            break;
+                        case (s < 36001): color = "#4B0082"
+                            break;
+                        default:
+                            color = "yellow";
+                    }
+                }
+                else { // variable == "population"
+                    const s = store.cityPopulation;
+                    // Sets a color based off a stores weekly purchaseing amount
+                    switch (true) {
+                        case (s < 100): color = "#E6E6FA"
+                            break;
+                        case (s < 500): color = "#D8BFD8"
+                            break;
+                        case (s < 1000): color = "#EE82EE"
+                            break;
+                        case (s < 1500): color = "#9370DB"
+                            break;
+                        case (s < 2000): color = "#8A2BE2"
+                            break;
+                        case (s >= 2000): color = "#4B0082"
+                            break;
+                        default:
+                            color = "yellow";
+                    }
                 }
             }
 
@@ -475,13 +528,21 @@ require([
                 popupTemplate: popupTemplate
             });
             graphic.id = id
+            graphic.class = klass;
             view.graphics.add(graphic);
         }
         window.addGraphic = addGraphic;
 
         // A function to display the legend for the map
-        function displayLegend() {
-            document.getElementById("map-legend").style.display = "block";
+        function displayLegend(variable) {
+            if (variable == "population") {
+                document.getElementById("weekly-purchase-map-legend").style.display = "none";
+                document.getElementById("population-map-legend").style.display = "block";
+            }
+            else {
+                document.getElementById("population-map-legend").style.display = "none";
+                document.getElementById("weekly-purchase-map-legend").style.display = "block";
+            }
         }
         window.displayLegend = displayLegend;
 
