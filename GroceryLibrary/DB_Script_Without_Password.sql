@@ -957,6 +957,7 @@ CREATE TABLE [dbo].[StoreInformation]
   Zip CHAR(5) NOT NULL,
   YLAT DECIMAL(15,10) NOT NULL,
   XLONG DECIMAL(15,10) NOT NULL,
+  WeeklyPurchaseAmount INT NOT NULL,
 
   /*SquareFootageCategoriesID INT NULL,*/
   
@@ -966,22 +967,22 @@ CREATE TABLE [dbo].[StoreInformation]
 
 INSERT INTO [dbo].[StoreInformation]
 VALUES
-('Venture Foods LLC', '803 Main St', 25, '67831', 37.18845, -99.766),
-('Main Street Market', '102 N Main St', 68, '67834', 37.54979, -99.6339),
-('K & J Foods', '101 W Long St', 143, '67839', 38.48235, -100.467),
-('Hometown Pride Grocery', '1002 Elm St', 248, '67850', 38.60095, -100.617),
-('Leoti Foods', '123 N 4th St', 324, '67861', 38.48243, -101.358),
-('Meade Thriftway', '922 W Carthage St', 371, '67864', 37.28652, -100.352),
-('Home Town Market', '135 S Main St', 382, '67865', 37.44305, -100.014),
-('Satanta Groceries', '109 Comanche St', 515, '67870', 37.43935, -100.984),
-('Kelly''s Corner Grocery', '301 N Main St', 542, '67876', 37.84905, -99.7563),
-('Venture Foods-Sublette', '101 S Inman St', 551, '67877', 37.48206, -100.844),
-('Syracuse Food Center', '301 E US-50', 557, '67878', 37.97958, -101.75),
-('Gooch''s Foods', '503 Broadway Ave', 567, '67879', 38.47002, -101.753),
-('Cimarron Shurfine Foods LLC', '18309 US-50', 102, '67835', 37.80582, -100.335),
-('Moore''s Food Pride', '445 Colorado St', 165, '67950', 37.00325, -101.898),
-('Bob''s Affiliated Foods', '710 Tampa St', 303, '67860', 37.94387, -101.264),
-('Harvest Market', '205 N Aztec St', 387, '67867', 37.59757, -100.443)
+('Venture Foods LLC', '803 Main St', 25, '67831', 37.18845, -99.766, 20000),					
+('Main Street Market', '102 N Main St', 68, '67834', 37.54979, -99.6339, 0),				
+('K & J Foods', '101 W Long St', 143, '67839', 38.48235, -100.467, 2500),						 
+('Hometown Pride Grocery', '1002 Elm St', 248, '67850', 38.60095, -100.617, 3500),			 
+('Leoti Foods', '123 N 4th St', 324, '67861', 38.48243, -101.358, 0),						
+('Meade Thriftway', '922 W Carthage St', 371, '67864', 37.28652, -100.352, 36000),				
+('Home Town Market', '135 S Main St', 382, '67865', 37.44305, -100.014, 0),				
+('Satanta Groceries', '109 Comanche St', 515, '67870', 37.43935, -100.984, 0),				
+('Kelly''s Corner Grocery', '301 N Main St', 542, '67876', 37.84905, -99.7563, 8500),			 
+('Venture Foods-Sublette', '101 S Inman St', 551, '67877', 37.48206, -100.844, 0),			 
+('Syracuse Food Center', '301 E US-50', 557, '67878', 37.97958, -101.75, 25000),				 
+('Gooch''s Foods', '503 Broadway Ave', 567, '67879', 38.47002, -101.753, 20000),				 
+('Cimarron Shurfine Foods LLC', '18309 US-50', 102, '67835', 37.80582, -100.335, 0),		 
+('Moore''s Food Pride', '445 Colorado St', 165, '67950', 37.00325, -101.898, 12000),			 
+('Bob''s Affiliated Foods', '710 Tampa St', 303, '67860', 37.94387, -101.264, 9000),			 
+('Harvest Market', '205 N Aztec St', 387, '67867', 37.59757, -100.443, 4500)
 
 GO
 
@@ -1005,6 +1006,7 @@ CREATE TABLE [dbo].[StoreInformationStaging]
   Zip CHAR(5) NOT NULL,
   YLAT DECIMAL(15,10) NOT NULL,
   XLONG DECIMAL(15,10) NOT NULL,
+  WeeklyPurchaseAmount INT NOT NULL,
 );
 
 GO
@@ -1164,7 +1166,6 @@ CREATE TABLE [dbo].[StoreDeliveryInformation]
   DistributorID INT NULL,
 
   WeeklyPurchaseMinRequirement INT NULL,
-  WeeklyPurchaseAmount INT NULL,
   PalletOrderMinimum VARCHAR(10) NULL,
   PalletOrderMaximum VARCHAR(10) NULL,
   SellToBusinesses BIT NULL,
@@ -1184,22 +1185,22 @@ ADD CONSTRAINT StoreDeliveryInformation_StoreID_Unique UNIQUE (StoreID);
 
 INSERT INTO [dbo].[StoreDeliveryInformation]
 VALUES
-(1, 1, 0, 20000, '8', '10', 1, 'Hospital, local restaurants', 1, 'Coldwater, Buffalo, OK' , 'No'),
-(2, 1, 0, 0, '4', '5', 1, 'Senior center, school', 0, 'No', 'No'),
-(3, 1, 0, 2500, '0', '20', 0, 'No', 0, 'No', 'Varies, say 20'),
-(4, 3, 0, 3500, '2', '3', 0, 'No', 1, 'Scott City Heartland?', 'No'),
-(5, 1, 0, 0, '6', '7', 1, 'School, hospital, resturants, other businesses (Christmas dinner)', 1, 'Occasionally with Scott City and Tribune', 'No'),
-(6, 1, 0, 36000, '12', '12', 0, 'No', 0, 'No', 'No'),
-(7, 1, 0, 0, '1', '7', 1, 'Hospital, school', 0, 'No', 'No'),
-(8, 1, 0, 0, '8', '12', 1, 'School, hospital', 0, 'No', 'No'),
-(9, 1, 0, 8500, '4', '6', 1, 'Retirement apartment, restaurants, bar, school', 1, 'Occasionally with Jetmore', 'No'),
-(10, 1, 0, 0, '4-8', '5-10', 1, 'Courhouse, sheriff''s deparment, school', 0, 'No', 'No'),
-(11, 1, 0, 25000, '9', '12', 1, 'Special order - not regular', 1, 'Sometimes Johnson', 'No'),
-(12, 1, 0, 20000, '6', '6', 1, 'School (weekly), hospital (2x/week), resturant (as needed), convenience store (as needed)', 1, 'Leoti foods, Baca County Foods in Springfield, CO (all owned by Gooch''s)', 'No'),
-(13, 1, 0, 0, '10', '12', 0, 'No', 0, 'No', 'No'),
-(14, 1, 0, 12000, '0', '12', 1, 'Special order from schools and hospital', 0, 'No', 'No'),
-(15, 1, 0, 9000, '6', '8', 1, 'Correctional facility, hosptial', 0, 'No', 'No'),
-(16, 1, 0, 4500, '3', '9', 1, 'Schools and nursing home', 0, 'No', 'No')
+(1, 1, 0, '8', '10', 1, 'Hospital, local restaurants', 1, 'Coldwater, Buffalo, OK' , 'No'),
+(2, 1, 0, '4', '5', 1, 'Senior center, school', 0, 'No', 'No'),
+(3, 1, 0, '0', '20', 0, 'No', 0, 'No', 'Varies, say 20'),
+(4, 3, 0, '2', '3', 0, 'No', 1, 'Scott City Heartland?', 'No'),
+(5, 1, 0, '6', '7', 1, 'School, hospital, resturants, other businesses (Christmas dinner)', 1, 'Occasionally with Scott City and Tribune', 'No'),
+(6, 1, 0, '12', '12', 0, 'No', 0, 'No', 'No'),
+(7, 1, 0, '1', '7', 1, 'Hospital, school', 0, 'No', 'No'),
+(8, 1, 0, '8', '12', 1, 'School, hospital', 0, 'No', 'No'),
+(9, 1, 0, '4', '6', 1, 'Retirement apartment, restaurants, bar, school', 1, 'Occasionally with Jetmore', 'No'),
+(10, 1, 0, '4-8', '5-10', 1, 'Courhouse, sheriff''s deparment, school', 0, 'No', 'No'),
+(11, 1, 0, '9', '12', 1, 'Special order - not regular', 1, 'Sometimes Johnson', 'No'),
+(12, 1, 0, '6', '6', 1, 'School (weekly), hospital (2x/week), resturant (as needed), convenience store (as needed)', 1, 'Leoti foods, Baca County Foods in Springfield, CO (all owned by Gooch''s)', 'No'),
+(13, 1, 0, '10', '12', 0, 'No', 0, 'No', 'No'),
+(14, 1, 0, '0', '12', 1, 'Special order from schools and hospital', 0, 'No', 'No'),
+(15, 1, 0, '6', '8', 1, 'Correctional facility, hosptial', 0, 'No', 'No'),
+(16, 1, 0, '3', '9', 1, 'Schools and nursing home', 0, 'No', 'No')
 
 
 /*
@@ -1216,7 +1217,6 @@ CREATE TABLE [dbo].[StoreDeliveryInformationStaging]
   DistributorID INT NULL,
 
   WeeklyPurchaseMinRequirement INT NULL,
-  WeeklyPurchaseAmount INT NULL,
   PalletOrderMinimum VARCHAR(10) NULL,
   PalletOrderMaximum VARCHAR(10) NULL,
   SellToBusinesses BIT NULL,
