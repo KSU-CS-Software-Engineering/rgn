@@ -63,7 +63,7 @@ limitations under the License.
                         <div>
                             <button @onclick="GetRadius">Get Radius</button>
                             <button @onclick="LoadStores">Load All Stores and Distributors</button>
-                            <p style="float: left;">Weekly Purchase Amount</p>
+                            <p style="float: left;">Variable:<br /> Weekly Purchase Amount</p>
                             <label class="switch" style="float: left;">
                                 <input type="checkbox" id="scenario-variable" onclick="updateVariable()">
                                 <span class="slider round"></span>
@@ -71,7 +71,56 @@ limitations under the License.
                             <p style="float: left;">Population</p>
                         </div>
                     </div>
-                    <br /><br /><br /><br />
+                    <p>
+                        <br /><br />
+                        <a onclick="showModal('instruction-modal')" href="javascript:void(0)">Instructions</a>
+                    </p>
+                    <div id="instruction-modal" class="modal">
+                        <div class="modal-content">
+                            <span class="modal-close">&times;</span>
+                            <h3 style="text-align: center;">Instructions for the Scenarios Page</h3>
+                            <h4>Purpose</h4>
+                            <p>The purpose of this page is to be able to see all the stores on a map to create a radius
+                               around an existing store or a future store. From there you can add or subtract stores
+                               within that radius to see if that group of stores meet the minimum amount. There are two
+                               variables that can be used to check the minimum amount: weekly purchase amount and population
+                            </p>
+                            <h4>Adding Stores and Distributors to the Map</h4>
+                            <p>To add stores to the map click the Load All Stores and Distributors button. This will then
+                               add the points of all the stores to the map using the specified variable mentioned below.
+                               In the bottom right there is a key showing what each store color on the map represents</p>
+                            <h4>Changing the Variable</h4>
+                            <p>As mentioned there are two variables that can be used: weekly purchase amount and population.
+                               A lot of stores at this time do not have a weekly purchase amount, so you may want to use
+                               the population variable. To change the variable, toggle the slider to the left to use 
+                               weekly purchase amount and to the right for population. This will change all the points on
+                               the map and the list of stores in a radius to the specified variable.</p>
+                            <h4>Adding a Radius</h4>
+                            <p>
+                                After loading the stores you may click on a store and it will by default create a 25 mile
+                                radius around that store. This can be changed in the first textbox labeled radius. To update
+                                the radius type in the new distance you want and either select the Get Radius button or select
+                                the store you want the radisu around. From there it will create a list of stores in that radius
+                                with the center point first. It will give information for each store including address, the
+                                specified variable amount, and distance to the center store (by car).
+                            </p>
+                            <h4>Summary List</h4>
+                            <p>
+                                The summary list shows the number of stores in the radius, the variable amount for all the stores
+                                in the radius, variable amount for selected stores, the minimum variable about, and if the minimum
+                                amount has been reached. These things will help with determining if the stores selected can work
+                                together to achieve that minimum requirement.
+                            </p>
+                            <h4>Adding Stores to the Summary List</h4>
+                            <p>
+                                In order to add or subtract stores from the amount, to the left of the stores (except the center
+                                store which is automattically included) there is a checkbox. Check the checkbox if you want to
+                                include the store in the calculation or uncheck it to remove it. The amounts in the summary list
+                                will update accordingly and say if you have reached the minimum amount.
+                            </p>
+                        </div>
+                    </div>
+                    <br /><br /><br /><br /><br /><br />
                     <div id="radius-stores"></div>
                     <br />
                 </div>
@@ -133,7 +182,6 @@ limitations under the License.
             </ul>
         </div>
     </div>
-
 </div>
 
 

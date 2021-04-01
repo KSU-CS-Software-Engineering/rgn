@@ -635,3 +635,21 @@ require([
     }
     window.CreateMap = CreateMap;
 });
+
+// This will show a modal(popup) given a specific id
+function showModal(id) {
+    console.log("here")
+    var modal = document.getElementById(id);
+    var span = document.getElementsByClassName("modal-close")[0];
+    modal.style.display = "block";
+
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+}
