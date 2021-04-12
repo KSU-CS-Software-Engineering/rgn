@@ -55,7 +55,9 @@ app {
     }
 
     .sidebar .navbar-brand {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        margin-top: -8px;
+        text-align: center;
     }
 
     .sidebar .oi {
