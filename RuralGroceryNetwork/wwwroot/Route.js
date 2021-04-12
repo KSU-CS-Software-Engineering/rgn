@@ -263,7 +263,7 @@ require([
 
             // Create text to show following statistics
             createAndAppendTo("h3", "Summary", div);
-            createAndAppendTo("p", "Stores in Radius: " + inCircle.length, div)
+            createAndAppendTo("p", "Stores in Radius (including center store): " + inCircle.length, div)
 
             createAndAppendTo("h5", "Weekly Purchase Amount", div, "", "weekly-purchase-summary");
             createAndAppendTo("p", "Amount of All Stores in Radius: $" + weeklyPurchaseAmount, div, "", "weekly-purchase-summary")
