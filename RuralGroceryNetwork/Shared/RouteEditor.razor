@@ -42,6 +42,9 @@ limitations under the License.
 <div class="float-container">
 
     <div class="float-child1">
+        <p>
+            <a onclick="showModal('instruction-modal')" href="javascript:void(0)">Instructions</a>
+        </p>
         <body id="row1" onload="CreateMap()">
             <div>
                 <div id="Fields">
@@ -49,32 +52,29 @@ limitations under the License.
                     <div class="form-field">
                         <label>Radius Size (Miles):</label>
                         <div>
-                            <input id="radius" @bind="RouteState.Radius_Size" />
+                            <input id="radius" @bind="RouteState.Radius_Size" size="8" />
+                            <button @onclick="GetRadius">Get Radius</button>
                         </div>
                     </div>
+                    <br />
 
                     <!-- Route supply field -->
                     <div class="form-field">
-                        <label>Radius Center:</label>
-                        <div>
-                            <input id="x-long-input" @bind="RouteState.Radius_Start_x" />
-                            <input id="y-lat-input" @bind="RouteState.Radius_Start_y" />
+                        <label style="display:none;">Radius Center (Longitude/Latitude):</label>
+                        <div style="display:none;">
+                            <input id="x-long-input" @bind="RouteState.Radius_Start_x" size="8" />
+                            <input id="y-lat-input" @bind="RouteState.Radius_Start_y" size="8" />
                         </div>
                         <div>
-                            <button @onclick="GetRadius">Get Radius</button>
-                            <button @onclick="LoadStores">Load All Stores and Distributors</button>
-                            <p style="float: left;">Variable:<br /> Weekly Purchase Amount</p><br /><br />
-                            <label class="switch" style="float: left;">
-                                <input type="checkbox" id="scenario-variable" onclick="updateVariable()">
-                                <span class="slider round"></span>
-                            </label>
-                            <p style="float: left;">Population</p>
+
+                            <p style="float: left;">Variable:</p>
+                            <select name="scenario-variable" id="scenario-variable" onchange="updateVariable()">
+                                <option value="weeklyPurchaseAmount">Weekly Purchase Amount</option>
+                                <option value="population">Population</option>
+                            </select>
                         </div>
                     </div>
-                    <p>
-                        <br /><br />
-                        <a onclick="showModal('instruction-modal')" href="javascript:void(0)">Instructions</a>
-                    </p>
+
                     <div id="instruction-modal" class="modal">
                         <div class="modal-content">
                             <span class="modal-close">&times;</span>
@@ -85,17 +85,23 @@ limitations under the License.
                                     – or, a location where a wholesale food distributor could deliver the combined orders of
                                     several rural grocery stores. To select a store, click on the point associated with the store
                                 </li>
-                                <li>Select a radius within which potential grocery partners are identified. These are the stores
-                                that could combine orders in order to meet a wholesaler's minimum buying requirement. If no radius
-                                is specified, the default is 25 miles.</li>
+                                <li>
+                                    Select a radius within which potential grocery partners are identified. These are the stores
+                                    that could combine orders in order to meet a wholesaler's minimum buying requirement. If no radius
+                                    is specified, the default is 25 miles.
+                                </li>
                                 <li>Based on these selections, review the map's data outputs:</li>
                                 <ul>
-                                    <li>the distance between the secondary distribution facility and other grocery stores
-                                    captured within the radius;</li>
+                                    <li>
+                                        the distance between the secondary distribution facility and other grocery stores
+                                        captured within the radius;
+                                    </li>
                                     <li>the weekly ordering capacity of each store within the radius;</li>
                                     <li>the aggregated weekly order, if all store orders within the radius combine; and</li>
-                                    <li>whether or not the combined order meets the minimum buying requirement of $25,000
-                                    (minimum buying requirements may vary between wholesalers).</li>
+                                    <li>
+                                        whether or not the combined order meets the minimum buying requirement of $25,000
+                                        (minimum buying requirements may vary between wholesalers).
+                                    </li>
                                 </ul>
                                 <li>
                                     The map can also use the variable of population if the weekly purchase amount is not known. The
@@ -105,62 +111,70 @@ limitations under the License.
                                             Stores in a town with less than 1,000 people are nowhere near meeting the minimum purchase
                                             amount. Generally they are purchasing less than $10,000 per week.
                                         </li>
-                                        <li>Stores in a town between 1,000 and 2,000 people are on the edge with their weekly purchase
-                                        amount. Generally they are purchassing between $10,000 - $25,000 per week and could use a bump
-                                        from other stores</li>
-                                        <li>Stores in a town with more than 2,000 people have no problem meeting the $25,000 weekly
-                                        purchase amount.</li>
+                                        <li>
+                                            Stores in a town between 1,000 and 2,000 people are on the edge with their weekly purchase
+                                            amount. Generally they are purchassing between $10,000 - $25,000 per week and could use a bump
+                                            from other stores
+                                        </li>
+                                        <li>
+                                            Stores in a town with more than 2,000 people have no problem meeting the $25,000 weekly
+                                            purchase amount.
+                                        </li>
                                     </ul>
                                     So the minimum population to best be correlated with the weekly purchase amount would be 2,000 people.
                                     If a combination of store's population reaches 2,000 then they will likely meet the $25,000 purchasing
                                     minimum.
                                 </li>
-                                <li>Alter the scenario either by adding or subtracting stores by checking or unchecking the checkbox
-                                next to the store. At this point if all the stores within the radius do not meet the requirement, try a 
-                                larger radius.</li>
-                                <li>Continue altering until a scenario is identified where combined grocery orders meet the
-                                minimum buying requirement.</li>
+                                <li>
+                                    Alter the scenario either by adding or subtracting stores by checking or unchecking the checkbox
+                                    next to the store. At this point if all the stores within the radius do not meet the requirement, try a
+                                    larger radius.
+                                </li>
+                                <li>
+                                    Continue altering until a scenario is identified where combined grocery orders meet the
+                                    minimum buying requirement.
+                                </li>
                             </ol>
                             <!--<h3 style="text-align: center;">Instructions for the Scenarios Page</h3>
-                            <h4>Purpose</h4>
-                            <p>The purpose of this page is to be able to see all the stores on a map to create a radius
-                               around an existing store or a future store. From there you can add or subtract stores
-                               within that radius to see if that group of stores meet the minimum amount. There are two
-                               variables that can be used to check the minimum amount: weekly purchase amount and population
-                            </p>
-                            <h4>Adding Stores and Distributors to the Map</h4>
-                            <p>To add stores to the map click the Load All Stores and Distributors button. This will then
-                               add the points of all the stores to the map using the specified variable mentioned below.
-                               In the bottom right there is a key showing what each store color on the map represents</p>
-                            <h4>Changing the Variable</h4>
-                            <p>As mentioned there are two variables that can be used: weekly purchase amount and population.
-                               A lot of stores at this time do not have a weekly purchase amount, so you may want to use
-                               the population variable. To change the variable, toggle the slider to the left to use 
-                               weekly purchase amount and to the right for population. This will change all the points on
-                               the map and the list of stores in a radius to the specified variable.</p>
-                            <h4>Adding a Radius</h4>
-                            <p>
-                                After loading the stores you may click on a store and it will by default create a 25 mile
-                                radius around that store. This can be changed in the first textbox labeled radius. To update
-                                the radius type in the new distance you want and either select the Get Radius button or select
-                                the store you want the radisu around. From there it will create a list of stores in that radius
-                                with the center point first. It will give information for each store including address, the
-                                specified variable amount, and distance to the center store (by car).
-                            </p>
-                            <h4>Summary List</h4>
-                            <p>
-                                The summary list shows the number of stores in the radius, the variable amount for all the stores
-                                in the radius, variable amount for selected stores, the minimum variable about, and if the minimum
-                                amount has been reached. These things will help with determining if the stores selected can work
-                                together to achieve that minimum requirement.
-                            </p>
-                            <h4>Adding Stores to the Summary List</h4>
-                            <p>
-                                In order to add or subtract stores from the amount, to the left of the stores (except the center
-                                store which is automattically included) there is a checkbox. Check the checkbox if you want to
-                                include the store in the calculation or uncheck it to remove it. The amounts in the summary list
-                                will update accordingly and say if you have reached the minimum amount.
-                            </p>-->
+            <h4>Purpose</h4>
+            <p>The purpose of this page is to be able to see all the stores on a map to create a radius
+               around an existing store or a future store. From there you can add or subtract stores
+               within that radius to see if that group of stores meet the minimum amount. There are two
+               variables that can be used to check the minimum amount: weekly purchase amount and population
+            </p>
+            <h4>Adding Stores and Distributors to the Map</h4>
+            <p>To add stores to the map click the Load All Stores and Distributors button. This will then
+               add the points of all the stores to the map using the specified variable mentioned below.
+               In the bottom right there is a key showing what each store color on the map represents</p>
+            <h4>Changing the Variable</h4>
+            <p>As mentioned there are two variables that can be used: weekly purchase amount and population.
+               A lot of stores at this time do not have a weekly purchase amount, so you may want to use
+               the population variable. To change the variable, toggle the slider to the left to use
+               weekly purchase amount and to the right for population. This will change all the points on
+               the map and the list of stores in a radius to the specified variable.</p>
+            <h4>Adding a Radius</h4>
+            <p>
+                After loading the stores you may click on a store and it will by default create a 25 mile
+                radius around that store. This can be changed in the first textbox labeled radius. To update
+                the radius type in the new distance you want and either select the Get Radius button or select
+                the store you want the radisu around. From there it will create a list of stores in that radius
+                with the center point first. It will give information for each store including address, the
+                specified variable amount, and distance to the center store (by car).
+            </p>
+            <h4>Summary List</h4>
+            <p>
+                The summary list shows the number of stores in the radius, the variable amount for all the stores
+                in the radius, variable amount for selected stores, the minimum variable about, and if the minimum
+                amount has been reached. These things will help with determining if the stores selected can work
+                together to achieve that minimum requirement.
+            </p>
+            <h4>Adding Stores to the Summary List</h4>
+            <p>
+                In order to add or subtract stores from the amount, to the left of the stores (except the center
+                store which is automattically included) there is a checkbox. Check the checkbox if you want to
+                include the store in the calculation or uncheck it to remove it. The amounts in the summary list
+                will update accordingly and say if you have reached the minimum amount.
+            </p>-->
                         </div>
                     </div>
                     <br />
@@ -178,6 +192,8 @@ limitations under the License.
             <!-- The div that the map get displayed inside of -->
             <div id="viewDiv"></div>
 
+            <!-- A button to reload the stores-->
+            <button @onclick="LoadStores" @onload="LoadStores">Reload All Stores and Distributors</button>
             <!-- Various options for changing the MapBase -->
             <label for="Map" display="float:right">Choose a MapBase:</label>
             <select id="MapBase" @onchange="ChangeMapBase" display="float:right">
@@ -193,8 +209,6 @@ limitations under the License.
                 <option value="streets-night-vector">streets-night-vector</option>
                 <option value="topo-vector">topo-vector</option>
             </select>
-            <br />
-            <label style="font-style: italic;">  Lat / Lon</label>
         </div>
 
         <!-- A summary table for the weekly purchase amounts (added via js)-->
@@ -207,20 +221,26 @@ limitations under the License.
                 <li style="color: #D8BFD8">$1 - $4,999</li>
                 <li style="color: #EE82EE">$5,000 - $9,999</li>
                 <li style="color: #9370DB">$10,000 - $14,999</li>
-                <li style="color: #8A2BE2">$15,000 - $19,999</li>
-                <li style="color: #4B0082">$20,000 - $36,000</li>
+                <li style="color: #8A2BE2">$15,000 - $24,999</li>
+                <li style="color: #4B0082">$25,000+</li>
                 <li style="color: yellow">Distributors</li>
             </ul>
         </div>
         <div id="population-map-legend" style="float:right; width: 40%; display: none;">
             <h4>Population</h4>
+            <p>
+                The approximate correlation:<br />
+                Population &#60; 1,000 is &#60; $10,000 weekly purchase amount<br />
+                Population between 1,000 and 2,000 is between $10,000 and $25,000 weekly purchase amount<br />
+                Population > 2,000 is > $25,000 weekly purchase amount
+            </p>
             <ul style="background-color: black;">
-                <li style="color: #E6E6FA;">1 - 99</li>
-                <li style="color: #D8BFD8">100 - 499</li>
-                <li style="color: #EE82EE">500 - 999</li>
-                <li style="color: #9370DB">1,000 - 1,499</li>
-                <li style="color: #8A2BE2">1,500 - 1,999</li>
-                <li style="color: #4B0082">2,000+</li>
+                <li style="color: #ffbaba;">1 - 99</li>
+                <li style="color: #ff7b7b">100 - 499</li>
+                <li style="color: #ff5252">500 - 999</li>
+                <li style="color: #ff0000">1,000 - 1,499</li>
+                <li style="color: #a70000">1,500 - 1,999</li>
+                <li style="color: #6b0c0c">2,000+</li>
                 <li style="color: yellow">Distributors</li>
             </ul>
         </div>

@@ -274,7 +274,8 @@ require([
             createAndAppendTo("h5", "Population", div, "", "population-summary");
             createAndAppendTo("p", "Town Poulation of All Stores in Radius: " + totalPopulation, div, "", "population-summary")
             createAndAppendTo("p", "Population for Selected Stores: " + inCircle[0].attributes["cityPopulation"], div, "selected-stores-population", "population-summary")
-            createAndAppendTo("p", "Estimated Minimum Population: 2,000", div, "min-population-amount", "population-summary")
+            createAndAppendTo("p", "Estimated Minimum Population*: 2,000", div, "min-population-amount", "population-summary")
+            createAndAppendTo("p", "*There is a correlation that a combination of towns with a population of 2,000 or more will reach the $25,000 minimum buying requirement", div, "", "population-summary")
             createAndAppendTo("p", "Selected Stores Meets Minimum Population: " + meetsMinimum(inCircle[0].attributes["cityPopulation"], 2000), div, "meets-minimum-population", "population-summary")
             updateVariable();
         }
@@ -355,9 +356,8 @@ require([
         window.updateSummary = updateSummary;
 
         function updateVariable() {
-            cbox = document.getElementById("scenario-variable");
-            // population
-            if (cbox.checked) {
+            select = document.getElementById("scenario-variable");
+            if (select.value == "population") {
                 for (let el of document.querySelectorAll('.weekly-purchase-summary')) el.style.display = 'none';
                 for (let el of document.querySelectorAll('.store-weekly-purchase-amount')) el.style.display = 'none';
                 for (let el of document.querySelectorAll('.population-summary')) el.style.display = 'block';
@@ -427,9 +427,8 @@ require([
         };
 
         function addAllStores() {
-            cbox = document.getElementById("scenario-variable");
-            //population
-            if (cbox.checked) {
+            select = document.getElementById("scenario-variable");
+            if (select.value == "population") {
                 for (let store of allStores) addGraphic(store, store.ylat, store.xlong, "", "10px", "population");
                 displayLegend("population");
             }
@@ -473,9 +472,9 @@ require([
                             break;
                         case (s < 15000): color = "#9370DB"
                             break;
-                        case (s < 20000): color = "#8A2BE2"
+                        case (s < 25000): color = "#8A2BE2"
                             break;
-                        case (s < 36001): color = "#4B0082"
+                        case (s >= 25000): color = "#4B0082"
                             break;
                         default:
                             color = "yellow";
@@ -485,17 +484,17 @@ require([
                     const s = store.cityPopulation;
                     // Sets a color based off a stores weekly purchaseing amount
                     switch (true) {
-                        case (s < 100): color = "#E6E6FA"
+                        case (s < 100): color = "#ffbaba"
                             break;
-                        case (s < 500): color = "#D8BFD8"
+                        case (s < 500): color = "#ff7b7b"
                             break;
-                        case (s < 1000): color = "#EE82EE"
+                        case (s < 1000): color = "#ff5252"
                             break;
-                        case (s < 1500): color = "#9370DB"
+                        case (s < 1500): color = "#ff0000"
                             break;
-                        case (s < 2000): color = "#8A2BE2"
+                        case (s < 2000): color = "#a70000"
                             break;
-                        case (s >= 2000): color = "#4B0082"
+                        case (s >= 2000): color = "#6b0c0c"
                             break;
                         default:
                             color = "yellow";
