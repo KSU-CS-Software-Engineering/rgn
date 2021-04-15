@@ -15,9 +15,68 @@ limitations under the License.
 -->
 <!-- Page that displays help for the website -->
 @page "/help"
-
+ 
 <h1>Help</h1>
 
+<h2>Instructions for the Scenarios Page</h2>
+<p><b>Purpose</b><br />The purpose of this page is to be able to view all the stores on a map and to generate radiuses around any existing store or location. From there, you can create and alter a list of stores that are within the radius to see if the group meets either a minimum purchasing amount or population.</p>
+<p>
+    <b>Loading Stores</b><br />
+
+    Clicking the “Reload All Stores and Distributors” button will add all stores and distributers to the map.<br />
+
+    A store color key will appear after loading in stores. Called either “Weekly Purchasing Amount” or “Population” based off of what variable is selected.
+</p>
+<p>
+    <b>Generating a Radius</b>
+
+    Clicking anywhere on the map, including a store, will set that point as the center (or location) of the radius.<br />
+
+    The default radius size is 25 miles. To change this, type desired size in “Radius Size” textbox.<br />
+
+    Click “Generate Radius” to create radius. (Stores must be loaded in)</p>
+
+    <p><u>Notes</u>:</p>
+<ul>
+    <li>There can only be one radius on the map at a time.</li>
+
+    <li>To change radius size or location, “Generate Radius” must be clicked again to create a new one.</li>
+    </ul>
+<p>
+    <b>Changing Variable</b><br />
+
+    There are two variables, Population and Weekly Purchasing Amount, that can be selected in the “Variable” drop down box.
+</p>
+<p>
+    <b>Stores and Scenario Information</b><br />
+
+    Only appears after a radius has been generated.</p>
+
+    <p><u>Main List</u>:
+</p>
+<ul>
+    <li>If a store was selected as the radius center, it is considered the secondary distributer. This store cannot be deselected.</li>
+    <li>All other stores that are within the radius appear in this list.</li>
+    <li>The checkbox next to a store can be checked (or unchecked) to add (or remove) it from the scenario</li>
+</ul
+<p><u>Summary</u>:</p>
+<ul>
+    <li>Number of stores selected is shown on first line.</li>
+    <li>The total population/weekly purchasing amount for all stores in the radius, depending on which variable is selected, is shown on the third line.</li>
+    <li>The total population/weekly purchasing amount for all selected stores, depending on which variable is selected, is shown on the fourth line.</li>
+    <li>The estimated minimum population/purchasing amount, depending on which variable is selected, is shown on the fifth line. This is the suggested goal for a scenario.</li>
+    <li>The last line in summary tells if the selected stores amount hits the minimum.</li>
+</ul>
+
+<h2>Frequently Asked Questions</h2>
+<p>
+    Why are there two different variables?<br />
+
+    Why is there a population variable?
+</p>
+<ul><li>Not all stores have a known have an average weekly purchasing amount, however The Rural Grocery Initiative has found a correlation between city size and their average purchasing amount. This allows stores that don’t have a known average weekly purchasing amount to still find scenarios that might work for them.</li></ul>
+
+<h2>Contact Us</h2>
 <p>
     Please contact the Rural Grocery Initiative at <a href="mailto:rgi@ksu.edu">rgi@ksu.edu.</a>
 </p>
