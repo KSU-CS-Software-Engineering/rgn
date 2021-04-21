@@ -239,7 +239,7 @@ require([
                 createAndAppendTo("h3", inCircle[i].attributes["name"], div);
 
                 if (i == 0)
-                    createAndAppendTo("p", "(Secondary Distributor)", div);
+                    createAndAppendTo("p", "Distribution Drop-Off Site", div);
 
                 createAndAppendTo("p", displayAddress(inCircle[i]), div);
                 createAndAppendTo("p", inCircle[i].attributes["city"] + " Population: " + inCircle[i].attributes["cityPopulation"], div, "", "city-population");
@@ -263,7 +263,7 @@ require([
 
             // Create text to show following statistics
             createAndAppendTo("h3", "Summary", div);
-            createAndAppendTo("p", "Stores in Radius (including center store): " + inCircle.length, div)
+            createAndAppendTo("b", "Stores in Radius (including center store): " + inCircle.length, div)
 
             createAndAppendTo("h5", "Weekly Purchase Amount", div, "", "weekly-purchase-summary");
             createAndAppendTo("p", "Amount of All Stores in Radius: $" + weeklyPurchaseAmount, div, "", "weekly-purchase-summary")
@@ -271,12 +271,12 @@ require([
             createAndAppendTo("p", "Distributor Minimum Amount: $25,000", div, "min-distributor-amount", "weekly-purchase-summary")
             createAndAppendTo("p", "Selected Stores Meets Minimum Amount: " + meetsMinimum(inCircle[0].attributes["weeklyPurchaseAmount"], 25000), div, "meets-minimum", "weekly-purchase-summary")
 
-            createAndAppendTo("h5", "Population", div, "", "population-summary");
-            createAndAppendTo("p", "Town Poulation of All Stores in Radius: " + totalPopulation, div, "", "population-summary")
-            createAndAppendTo("p", "Population for Selected Stores: " + inCircle[0].attributes["cityPopulation"], div, "selected-stores-population", "population-summary")
-            createAndAppendTo("p", "Estimated Minimum Population*: 2,000", div, "min-population-amount", "population-summary")
-            createAndAppendTo("p", "*There is a correlation that a combination of towns with a population of 2,000 or more will reach the $25,000 minimum buying requirement", div, "", "population-summary")
-            createAndAppendTo("p", "Selected Stores Meets Minimum Population: " + meetsMinimum(inCircle[0].attributes["cityPopulation"], 2000), div, "meets-minimum-population", "population-summary")
+            //createAndAppendTo("h5", "Population", div, "", "population-summary");
+            createAndAppendTo("b", "Population of All Towns in the Radius: " + totalPopulation, div, "", "population-summary")
+            createAndAppendTo("b", "Population of Selected Towns: " + inCircle[0].attributes["cityPopulation"], div, "selected-stores-population", "population-summary")
+            //createAndAppendTo("p", "Estimated Minimum Population*: 2,000", div, "min-population-amount", "population-summary")
+            //createAndAppendTo("p", "*There is a correlation that a combination of towns with a population of 2,000 or more will reach the $25,000 minimum buying requirement", div, "", "population-summary")
+            createAndAppendTo("b", "Selected Stores Meets Minimum Population: " + meetsMinimum(inCircle[0].attributes["cityPopulation"], 2000), div, "meets-minimum-population", "population-summary")
             updateVariable();
         }
         window.GetRadius = GetRadius;
