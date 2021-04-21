@@ -19,8 +19,11 @@ limitations under the License.
 
     <h1>Instructions</h1>
 
+    <!--Create TabControl to make tabs for page-->
     <TabControl>
-        <TabPage Text="Instructions for the Scenarios Page">
+        <!--First Tab-->
+        <TabPage Text="Instructions for the Scenarios Page"> 
+            <!--Contants on page in first tab-->
             <h2>Instructions for the Scenarios Page</h2>
             <p><b>Purpose</b><br />The purpose of this page is to be able to view all the stores on a map and to generate radiuses around any existing store or location. From there, you can create and alter a list of stores that are within the radius to see if the group meets either a minimum purchasing amount or population.</p>
             <p>
@@ -74,7 +77,40 @@ limitations under the License.
                 <li>The last line in summary tells if the selected stores amount hits the minimum.</li>
             </ul>
         </TabPage>
+        <!--Second tab-->
+        <TabPage Text="Examples">
+            <!--Contants of page for second tab-->
+            <h2>Examples</h2>
+            <p><b>Example 1:</b></p>
+            <ol>
+                <li>User selects Store A in Northeast Kansas as a secondary distribution facility with a radius of 20 miles.</li>
+                <li>Store B, Store C, and Store D are within the 20 miles radius. This scenario combines their orders.</li>
+                <li>
+                    However, based on the ordering capacity of each store, only Stores A, B, and C need to combine ordersto meet
+                    the minimum buying requirement.
+                </li>
+                <li>Store D is removed from the scenario.</li>
+                <li>The map outputs the distance that Stores B and C must travel to pick up their orders from Store A.</li>
+            </ol>
+
+            <p><b>Example 2:</b></p>
+            <ol>
+                <li>User selects Store E in Southwest Kansas as a secondary distribution facility with a radius of 20 miles.</li>
+                <li>Store F is within the 20 miles radius. This scenario combines their orders.</li>
+                <li>
+                    However, based on the ordering capacity of each store, the combined orders of Stores E and F do not meet the
+                    minimum buying requirement.
+                </li>
+                <li>
+                    User adds Store G, which is outside the 20-mile radius, to the scenario. Now, the combined orders of Stores
+                    E, F, and G meet the minimum buying requirement.
+                </li>
+                <li>The map outputs the distance that Stores F and G must travel to pick up their orders from Store E.</li>
+            </ol>
+        </TabPage>
+        <!--Third tab-->
         <TabPage Text="FAQ">
+            <!--Contants of page for third tab-->
             <h2>Frequently Asked Questions</h2>
             <p>
                 Why are there two different variables?<br />
@@ -83,12 +119,6 @@ limitations under the License.
             </p>
             <ul><li>Not all stores have a known have an average weekly purchasing amount, however The Rural Grocery Initiative has found a correlation between city size and their average purchasing amount. This allows stores that don’t have a known average weekly purchasing amount to still find scenarios that might work for them.</li></ul>
 
-        </TabPage>
-        <TabPage Text="Contact Us">
-            <h2>Contact Us</h2>
-            <p>
-                Please contact the Rural Grocery Initiative at <a href="mailto:rgi@ksu.edu">rgi@ksu.edu.</a>
-            </p>
         </TabPage>
     </TabControl>
 
