@@ -14,69 +14,133 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <!-- Page that displays help for the website -->
-@page "/help"
- 
-<h1>Help</h1>
+@page "/instructions"
+@inject IJSRuntime JS
 
-<h2>Instructions for the Scenarios Page</h2>
-<p><b>Purpose</b><br />The purpose of this page is to be able to view all the stores on a map and to generate radiuses around any existing store or location. From there, you can create and alter a list of stores that are within the radius to see if the group meets either a minimum purchasing amount or population.</p>
-<p>
-    <b>Loading Stores</b><br />
+    <h1>Instructions</h1>
 
-    Clicking the “Reload All Stores and Distributors” button will add all stores and distributers to the map.<br />
+    <!--Create TabControl to make tabs for page-->
+    <TabControl>
+        <!--First Tab-->
+        <TabPage Text="Instructions for the Scenarios Page">
+            <!--Contants on page in first tab-->
+            <h2>Instructions for the Scenarios Page</h2>
+            <p><b>Purpose</b><br /> The purpose of this page is to be able to view all the stores on a map and to generate radiuses around any existing store or location. From there, you can create and alter a list of stores that are within the radius to see if the group meets either a minimum purchasing amount or population.</p>
+            <p>
+                <b>Loading Stores</b><br />
 
-    A store color key will appear after loading in stores. Called either “Weekly Purchasing Amount” or “Population” based off of what variable is selected.
-</p>
-<p>
-    <b>Generating a Radius</b>
+                Clicking the “Reload All Stores and Distributors” button will add all stores and distributers to the map.<br />
 
-    Clicking anywhere on the map, including a store, will set that point as the center (or location) of the radius.<br />
 
-    The default radius size is 25 miles. To change this, type desired size in “Radius Size” textbox.<br />
+                <img src="https://i.postimg.cc/P58j1kSL/Map-And-Button.png" style="width: 60%;" />
+                <br />
 
-    Click “Generate Radius” to create radius. (Stores must be loaded in)</p>
+                A store color key will appear after loading in stores. Called either “Weekly Purchasing Amount” or “Population” based off of what variable is selected. <br />
 
-    <p><u>Notes</u>:</p>
-<ul>
-    <li>There can only be one radius on the map at a time.</li>
+                <div style="width: 100%;">
+                    <img src="https://i.postimg.cc/7ZSRxPBN/Population-Key.png" style="width: 50%;" />
+                    <img src="https://i.postimg.cc/8zv2jmCM/WPAKey.png" style="width: 50%; float: right;" />
+                </div>
 
-    <li>To change radius size or location, “Generate Radius” must be clicked again to create a new one.</li>
-    </ul>
-<p>
-    <b>Changing Variable</b><br />
+            </p>
+        
+            <p>
+                <b>Generating a Radius</b> <br />
 
-    There are two variables, Population and Weekly Purchasing Amount, that can be selected in the “Variable” drop down box.
-</p>
-<p>
-    <b>Stores and Scenario Information</b><br />
+                <img src="https://i.postimg.cc/Vk9KxG6G/Radius.png" style="width: 60%;" />
+                <br />
 
-    Only appears after a radius has been generated.</p>
+                Clicking anywhere on the map, including a store, will set that point as the center (or location) of the radius.<br />
 
-    <p><u>Main List</u>:
-</p>
-<ul>
-    <li>If a store was selected as the radius center, it is considered the secondary distributer. This store cannot be deselected.</li>
-    <li>All other stores that are within the radius appear in this list.</li>
-    <li>The checkbox next to a store can be checked (or unchecked) to add (or remove) it from the scenario</li>
-</ul
-<p><u>Summary</u>:</p>
-<ul>
-    <li>Number of stores selected is shown on first line.</li>
-    <li>The total population/weekly purchasing amount for all stores in the radius, depending on which variable is selected, is shown on the third line.</li>
-    <li>The total population/weekly purchasing amount for all selected stores, depending on which variable is selected, is shown on the fourth line.</li>
-    <li>The estimated minimum population/purchasing amount, depending on which variable is selected, is shown on the fifth line. This is the suggested goal for a scenario.</li>
-    <li>The last line in summary tells if the selected stores amount hits the minimum.</li>
-</ul>
+                The default radius size is 25 miles. To change this, type desired size in “Radius Size” textbox.<br />
 
-<h2>Frequently Asked Questions</h2>
-<p>
-    Why are there two different variables?<br />
+                Click “Generate Radius” to create radius. (Stores must be loaded in) <br />
 
-    Why is there a population variable?
-</p>
-<ul><li>Not all stores have a known have an average weekly purchasing amount, however The Rural Grocery Initiative has found a correlation between city size and their average purchasing amount. This allows stores that don’t have a known average weekly purchasing amount to still find scenarios that might work for them.</li></ul>
+                <img src="https://i.postimg.cc/0y1tHR8K/Radius-Size.png" style="width: 20%;" />
+            </p>
 
-<h2>Contact Us</h2>
-<p>
-    Please contact the Rural Grocery Initiative at <a href="mailto:rgi@ksu.edu">rgi@ksu.edu.</a>
-</p>
+            <p><u>Notes</u>:</p>
+            <ul>
+                <li>There can only be one radius on the map at a time.</li>
+
+                <li>To change radius size or location, “Generate Radius” must be clicked again to create a new one.</li>
+            </ul>
+            <p>
+                <b>Changing Variable</b><br />
+
+                There are two variables, Population and Weekly Purchasing Amount, that can be selected in the “Variable” drop down box. <br />
+
+                <img src="https://i.postimg.cc/jqp0K1xt/Variable.png" style="width: 30%;" />
+            </p>
+            <p>
+                <b>Stores and Scenario Information</b><br />
+
+                Only appears after a radius has been generated.
+            </p>
+
+            <p>
+                <u>Main List</u>: <br />
+                <img src="https://i.postimg.cc/d0xN67Dw/Store-List.png" style="width: 40%;" />
+            </p>
+            <ul>
+                <li>If a store was selected as the radius center, it is considered the secondary distributer. This store cannot be deselected.</li>
+                <li>All other stores that are within the radius appear in this list.</li>
+                <li>The checkbox next to a store can be checked (or unchecked) to add (or remove) it from the scenario</li>
+            </ul>
+            <p><u>Summary</u>:</p>
+            <img src="https://i.postimg.cc/9XTgPQ2H/Summary.png" style="width: 60%;" />
+            <ul>
+                <li>Number of stores selected is shown on first line.</li>
+                <li>The total population/weekly purchasing amount for all stores in the radius, depending on which variable is selected, is shown on the third line.</li>
+                <li>The total population/weekly purchasing amount for all selected stores, depending on which variable is selected, is shown on the fourth line.</li>
+                <li>The estimated minimum population/purchasing amount, depending on which variable is selected, is shown on the fifth line. This is the suggested goal for a scenario.</li>
+                <li>The last line in summary tells if the selected stores amount hits the minimum.</li>
+            </ul>
+        </TabPage>
+        <!--Second tab-->
+        <TabPage Text="Examples">
+            <!--Contants of page for second tab-->
+            <h2>Examples</h2>
+            <p><b>Example 1:</b></p>
+            <ol>
+                <li>User selects Store A in Northeast Kansas as a secondary distribution facility with a radius of 20 miles.</li>
+                <li>Store B, Store C, and Store D are within the 20 miles radius. This scenario combines their orders.</li>
+                <li>
+                    However, based on the ordering capacity of each store, only Stores A, B, and C need to combine ordersto meet
+                    the minimum buying requirement.
+                </li>
+                <li>Store D is removed from the scenario.</li>
+                <li>The map outputs the distance that Stores B and C must travel to pick up their orders from Store A.</li>
+            </ol>
+
+            <p><b>Example 2:</b></p>
+            <ol>
+                <li>User selects Store E in Southwest Kansas as a secondary distribution facility with a radius of 20 miles.</li>
+                <li>Store F is within the 20 miles radius. This scenario combines their orders.</li>
+                <li>
+                    However, based on the ordering capacity of each store, the combined orders of Stores E and F do not meet the
+                    minimum buying requirement.
+                </li>
+                <li>
+                    User adds Store G, which is outside the 20-mile radius, to the scenario. Now, the combined orders of Stores
+                    E, F, and G meet the minimum buying requirement.
+                </li>
+                <li>The map outputs the distance that Stores F and G must travel to pick up their orders from Store E.</li>
+            </ol>
+        </TabPage>
+        <!--Third tab-->
+        <TabPage Text="FAQ">
+            <!--Contants of page for third tab-->
+            <h2>Frequently Asked Questions</h2>
+            <p>
+                Why are there two different variables?<br />
+
+                Why is there a population variable?
+            </p>
+            <ul><li>Not all stores have a known have an average weekly purchasing amount, however The Rural Grocery Initiative has found a correlation between city size and their average purchasing amount. This allows stores that don’t have a known average weekly purchasing amount to still find scenarios that might work for them.</li></ul>
+
+        </TabPage>
+    </TabControl>
+
+
+

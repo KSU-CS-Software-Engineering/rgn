@@ -16,7 +16,7 @@ limitations under the License.
 <!-- Page that displays information on about this website and is the landing page of the website -->
 @page "/"
 
-<h1>About</h1><br />
+<h1>Rural Grocery Connector</h1><br />
 
 <h3>Purpose of the Rural Grocery Distribution Network Simulator</h3>
 <p>
@@ -29,13 +29,13 @@ limitations under the License.
 
 <h3>About the data</h3>
 <p>
-    The distribution simulation map contains data for all independent grocery stores in the state of Kansas,
+    The distribution simulation map contains data for all rural independent grocery stores in the state of Kansas,
     including:
 </p>
 <ol>
-    <li>the name of the store</li>
-    <li>where it is located</li>
-    <li>its estimated weekly ordering capacity.</li>
+    <li>The name of the store</li>
+    <li>Where it is located</li>
+    <li>Its estimated weekly ordering capacity.</li>
 </ol>
 <p>
     Weekly ordering capacity is an indication of a store's ability to meet minimum buying requirements.
@@ -46,25 +46,6 @@ limitations under the License.
     Users may toggle between either variable to create distribution scenarios.
 </p>
 
-<h3>Example 1:</h3>
-<ol>
-    <li>User selects Store A in Northeast Kansas as a secondary distribution facility with a radius of 20 miles.</li>
-    <li>Store B, Store C, and Store D are within the 20 miles radius. This scenario combines their orders.</li>
-    <li>
-        However, based on the ordering capacity of each store, only Stores A, B, and C need to combine ordersto meet
-        the minimum buying requirement.
-    </li>
-    <li>Store D is removed from the scenario.</li>
-    <li>The map outputs the distance that Stores B and C must travel to pick up their orders from Store A.</li>
-</ol>
+<h3>Contact Us</h3>
+<p> Please contact the Rural Grocery Initiative at <a href="mailto:rgi@ksu.edu">rgi@ksu.edu.</a></p>
 
-<h3>Example 2:</h3>
-<ol>
-    <li>User selects Store E in Southwest Kansas as a secondary distribution facility with a radius of 20 miles.</li>
-    <li>Store F is within the 20 miles radius. This scenario combines their orders.</li>
-    <li>However, based on the ordering capacity of each store, the combined orders of Stores E and F do not meet the
-    minimum buying requirement.</li>
-    <li>User adds Store G, which is outside the 20-mile radius, to the scenario. Now, the combined orders of Stores
-    E, F, and G meet the minimum buying requirement.</li>
-    <li>The map outputs the distance that Stores F and G must travel to pick up their orders from Store E.</li>
-</ol>

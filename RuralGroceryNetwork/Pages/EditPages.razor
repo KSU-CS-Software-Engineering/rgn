@@ -1,0 +1,55 @@
+﻿<!--
+Copyright 2020 Kansas State University
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!-- Page that lets admins update the wording on the pages -->
+@page "/pages"
+
+@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <link rel="stylesheet" href="css/Style.css" />
+    <h1>Edit Pages</h1>
+    
+    <!--Check to see if the user is an admin-->
+    @if (IsAdmin(context.User.Identity.Name))
+    {
+        <!--If user is an admin load everything in-->
+        <div class="Nodes-infos">
+            <h3>How this works</h3>
+            <p>
+                Instructions
+            </p>
+        </div>
+    }
+    else
+    {
+        <!--If the user isn't an admin, don't load anything in and show a message stating they're not an admin-->
+        <br />
+        <p>This page is for admins only, you're not logged in as an admin.</p>
+    }
+</AuthorizeView>
+
+@code {
+    /*Creates an AdminCheck object which will be able to tell if the current user
+       is an Admin using the users username that's given to the method. Will return a bool, true if
+       user is an Admin, else false*/
+    private bool IsAdmin(string name)
+    {
+        AdminCheck admin = new AdminCheck();
+        bool b = admin.IsAdmin(name);
+        return b;
+    }
+}
+

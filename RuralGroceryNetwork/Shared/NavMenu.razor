@@ -33,27 +33,25 @@ limitations under the License.
                 </NavLink>
                 <AuthorizeView>
                     <!-- Only available if autheticated -->
-                    <!--<NavLink class="nav-link" href="scenarios" Match="NavLinkMatch.All">
-                        <span class="oi oi-globe" aria-hidden="true"></span> Scenarios
-                    </NavLink>-->
                     <NavLink class="nav-link" href="routes" Match="NavLinkMatch.All">
-                        <span class="oi oi-globe" aria-hidden="true"></span> Distrubution Simulator
+                        <span class="oi oi-globe" aria-hidden="true"></span> Distribution Simulator
                     </NavLink>
                     <NavLink class="nav-link" href="rgi" Match="NavLinkMatch.All">
                         <span class="oi oi-aperture" aria-hidden="true"></span> Rural Grocery Initiative
                     </NavLink>
-                    <!--<NavLink class="nav-link" href="trucks" Match="NavLinkMatch.All">
-                        <span class="oi oi-vertical-align-top" aria-hidden="true"></span> Trucks
-                    </NavLink>-->
-                    <!--Checks to see if the current user is an admin, if not it will not load the Admin tab.
-                    As of right now, files for generating Admin page are labeled  as Store pages (Nodes?)-->
-                    <NavLink class="nav-link" href="help" Match="NavLinkMatch.All">
-                        <span class="oi oi-question-mark" aria-hidden="true"></span> Help
+                    
+                    <NavLink class="nav-link" href="instructions" Match="NavLinkMatch.All">
+                        <span class="oi oi-question-mark" aria-hidden="true"></span> Instructions
                     </NavLink>
+                    <!--Checks to see if the current user is an admin, if not it will not load the Admin tab.
+                    As of right now, files for generating Admin page are labeled as Store pages (Nodes?)-->
                     @if (IsAdmin(context.User.Identity.Name))
                     {
-                        <NavLink class="nav-link" href="nodes" Match="NavLinkMatch.All">
-                            <span class="oi oi-home" aria-hidden="true"></span> Admin
+                        <NavLink class="nav-link" href="admin" Match="NavLinkMatch.All">
+                            <span class="oi oi-person" aria-hidden="true"></span> Admin
+                        </NavLink>
+                        <NavLink class="nav-link" href="pages" Match="NavLinkMatch.All">
+                            <span class="oi oi-file" aria-hidden="true"></span> Edit Pages
                         </NavLink>
                     }
                     
