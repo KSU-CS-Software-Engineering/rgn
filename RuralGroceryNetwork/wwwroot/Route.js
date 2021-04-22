@@ -626,15 +626,15 @@ require([
         }
         window.base64DecToArr = base64DecToArr;
 
-        // Create a simple browser message alert to display messages to the user.
-        function ShowMessage(message) {
-            window.alert(message);
-        }
-        window.ShowMessage = ShowMessage;
+
     }
     window.CreateMap = CreateMap;
 });
-
+// Create a simple browser message alert to display messages to the user.
+function ShowMessage(message) {
+    window.alert(message);
+}
+window.ShowMessage = ShowMessage;
 // This will show a modal(popup) given a specific id
 function showModal(id) {
     console.log("here")
