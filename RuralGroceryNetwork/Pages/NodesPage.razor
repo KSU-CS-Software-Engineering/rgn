@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <!-- Page to display node editor -->
-@page "/nodes"
+@page "/admin"
 
 @inject Node Node
 @inject NavigationManager NavigationManager
@@ -23,8 +23,10 @@ limitations under the License.
     <link rel="stylesheet" href="css/Style.css" />
     <h1>Admin</h1>
 
+    <!--Check to see if the user is an admin-->
     @if (IsAdmin(context.User.Identity.Name))
     {
+        <!--If user is an admin load everything in-->
         <div class="Nodes-infos">
             <!-- Display node editor -->
 
@@ -33,6 +35,7 @@ limitations under the License.
     }
     else
     {
+        <!--If the user isn't an admin, don't load anything in and show a message stating they're not an admin-->
         <br />
         <p>This page is for admins only, you're not logged in as an admin.</p>
     }
