@@ -19,6 +19,7 @@ DROP TABLE IF EXISTS [dbo].[DistributorStaging];
 DROP TABLE IF EXISTS [dbo].[StatesStaging];
 DROP TABLE IF EXISTS [dbo].[CitiesStaging];
 DROP TABLE IF EXISTS [dbo].[StoreDeliveryInformationStaging];
+DROP TABLE IF EXISTS [dbo].[Pages];
 
 
 /*
@@ -1230,3 +1231,55 @@ GO
 
 
 /* ******************************************** END OF STORE DELIVERY INFORMATION TABLE **************************************************** */
+
+CREATE TABLE [dbo].[Pages]
+(
+  [Page] VARCHAR(10) NOT NULL,
+  ParagraphNumber SMALLINT NOT NULL,
+  Header VARCHAR(100) NULL,
+  Content VARCHAR(5000) NULL
+)
+
+INSERT INTO [dbo].Pages
+VALUES
+('About', 1, 'Purpose of the Rural Grocery Distribution Network Simulator','Many rural grocery stores have limited ordering capacity due to the size of the communities they serve. This makes it difficult for some rural grocery stores to meet minimum buying requirements from wholesale food distributors.
+This distribution simulation map identifies potential partnerships between rural grocery stores that could combine orders to meet minimum buying requirements. The map creates various distribution scenarios.'),
+('About', 2, 'About the data', 'The distribution simulation map contains data for all independent grocery stores in the state of Kansas, including:
+1. the name of the store
+2. where it is located
+3. its estimated weekly ordering capacity.
+Weekly ordering capacity is an indication of a store''s ability to meet minimum buying requirements. The map uses two sets of data to calculate weekly ordering capacity: 1) weekly purchase amount, obtained from existing RGI survey data when available, and 2) population, obtained from the census bureau. Population provides a rough estimate of a store’s weekly purchase amount.
+Users may toggle between either variable to create distribution scenarios.'),
+('About', 3, 'Example 1:', '1. User selects Store A in Northeast Kansas as a secondary distribution facility with a radius of 20 miles.
+2. Store B, Store C, and Store D are within the 20 miles radius. This scenario combines their orders.
+3. However, based on the ordering capacity of each store, only Stores A, B, and C need to combine ordersto meet the minimum buying requirement.
+4. Store D is removed from the scenario.
+5. The map outputs the distance that Stores B and C must travel to pick up their orders from Store A.'),
+('About', 4, 'Example 2:', 'Example 2:
+1. User selects Store E in Southwest Kansas as a secondary distribution facility with a radius of 20 miles.
+2. Store F is within the 20 miles radius. This scenario combines their orders.
+3. However, based on the ordering capacity of each store, the combined orders of Stores E and F do not meet the minimum buying requirement.
+4. User adds Store G, which is outside the 20-mile radius, to the scenario. Now, the combined orders of Stores E, F, and G meet the minimum buying requirement.
+5. The map outputs the distance that Stores F and G must travel to pick up their orders from Store E.'),
+('Simulator', 1, 'Using the map to create distribution scenarios', 'Select an independent rural grocery store as a hypothetical secondary distribution facility – or, a location where a wholesale food distributor could deliver the combined orders of several rural grocery stores. To select a store, click on the point associated with the store
+1. Select a radius within which potential grocery partners are identified. These are the stores that could combine orders in order to meet a wholesaler''s minimum buying requirement. If no radius is specified, the default is 25 miles.
+2. Based on these selections, review the map''s data outputs:
+  - the distance between the secondary distribution facility and other grocery stores captured within the radius;
+  - the weekly ordering capacity of each store within the radius;
+  - the aggregated weekly order, if all store orders within the radius combine; and
+  - whether or not the combined order meets the minimum buying requirement of $25,000 (minimum buying requirements may vary between wholesalers).
+4. The map can also use the variable of population if the weekly purchase amount is not known. The correlation is approximately:
+  - Stores in a town with less than 1,000 people are nowhere near meeting the minimum purchase amount. Generally they are purchasing less than $10,000 per week.
+  - Stores in a town between 1,000 and 2,000 people are on the edge with their weekly purchase amount. Generally they are purchassing between $10,000 - $25,000 per week and could use a bump from other stores
+  - Stores in a town with more than 2,000 people have no problem meeting the $25,000 weekly purchase amount.
+So the minimum population to best be correlated with the weekly purchase amount would be 2,000 people. If a combination of store''s population reaches 2,000 then they will likely meet the $25,000 purchasing minimum.
+5. Alter the scenario either by adding or subtracting stores by checking or unchecking the checkbox next to the store. At this point if all the stores within the radius do not meet the requirement, try a larger radius.
+6. Continue altering until a scenario is identified where combined grocery orders meet the minimum buying requirement.'),
+('Simulator', 2, NULL, 'The approximate correlation:
+Population < 1,000 is < $10,000 weekly purchase amount
+Population between 1,000 and 2,000 is between $10,000 and $25,000 weekly purchase amount
+Population > 2,000 is > $25,000 weekly purchase amount'),
+('RGI', 1, NULL, 'The mission of the Rural Grocery Initiative (RGI) is to provide resources to help sustain and enhance independently-owned rural grocery stores. RGI, a program supported by K-State Research and Extension, assists communities and citizens to strengthen rural grocery operations and improve access to healthy foods.
+'),
+('RGI', 2, NULL, 'https://www.communications.k-state.edu/images/ksre-stuff/KSRE_textonly_268%20CORRECT.png'),
+('RGI', 3, NULL, 'https://www.ruralgrocery.org/images/Untitled%20design.jpg')

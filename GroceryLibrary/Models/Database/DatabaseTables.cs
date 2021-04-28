@@ -37,5 +37,7 @@ namespace GroceryLibrary.Models.Database
         public const string STORE_EQUIPMENT_INFORMATION = "[dbo].[StoreEquipmentInformation] SEI ";
 
         public const string STORE_INFORMATION = "[dbo].[StoreInformation] SI ";
+
+        public const string PAGES = "[dbo].[Pages] P ";
     }
 }

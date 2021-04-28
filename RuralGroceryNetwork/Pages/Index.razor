@@ -14,12 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <!-- Page that displays information on about this website and is the landing page of the website -->
+@using GroceryLibrary
+@using GroceryLibrary.Models
+@using Microsoft.AspNetCore.Mvc.Razor
 @page "/"
+@model RuralGroceryNetwork.Pages.About
 
-<h1>About</h1><br />
+<h1>About</h1>
 
 <h3>Purpose of the Rural Grocery Distribution Network Simulator</h3>
+
 <p>
+    @Html.DisplayName(model => model.Page[0].Content)
     Many rural grocery stores have limited ordering capacity due to the size of the communities they serve.
     This makes it difficult for some rural grocery stores to meet minimum buying requirements from wholesale
     food distributors.<br />
@@ -62,9 +68,14 @@ limitations under the License.
 <ol>
     <li>User selects Store E in Southwest Kansas as a secondary distribution facility with a radius of 20 miles.</li>
     <li>Store F is within the 20 miles radius. This scenario combines their orders.</li>
-    <li>However, based on the ordering capacity of each store, the combined orders of Stores E and F do not meet the
-    minimum buying requirement.</li>
-    <li>User adds Store G, which is outside the 20-mile radius, to the scenario. Now, the combined orders of Stores
-    E, F, and G meet the minimum buying requirement.</li>
+    <li>
+        However, based on the ordering capacity of each store, the combined orders of Stores E and F do not meet the
+        minimum buying requirement.
+    </li>
+    <li>
+        User adds Store G, which is outside the 20-mile radius, to the scenario. Now, the combined orders of Stores
+        E, F, and G meet the minimum buying requirement.
+    </li>
     <li>The map outputs the distance that Stores F and G must travel to pick up their orders from Store E.</li>
 </ol>
+
