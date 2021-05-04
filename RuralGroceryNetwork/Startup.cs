@@ -89,6 +89,7 @@ namespace RuralGroceryNetwork
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapRazorPages();
             });
 
             //Migrates databases

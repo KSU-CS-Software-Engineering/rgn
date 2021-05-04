@@ -944,6 +944,51 @@ namespace GroceryLibrary
             return allDist;
         }
 
+        public static List<Page> getPageContent(String page)
+        {
+            List<Page> allParagraphs = new List<Page>();
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("SELECT * ");
+            sb.Append("FROM " + DatabaseTables.PAGES);
+            sb.Append("WHERE [Page] = '" + page + "'");
+            sb.Append("ORDER BY ParagraphNumber");
+
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Page tempPage = new Page();
+                                tempPage.PageName = reader["Page"].ToString();
+                                tempPage.ParagraphNumber = Convert.ToInt32(reader["ParagraphNumber"]);
+                                tempPage.HeaderName = reader["Header"].ToString();
+                                tempPage.Content = reader["Content"].ToString();
+
+                                allParagraphs.Add(tempPage);
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (SqlException sqle)
+            {
+                /* Error Handling Here */
+            }
+
+            return allParagraphs;
+        }
+
 
         // STARTING THE SECTION OF FUNCTIONS REQUIRED FOR DOWNLOADING/UPLOADING THE DATABASE
 
