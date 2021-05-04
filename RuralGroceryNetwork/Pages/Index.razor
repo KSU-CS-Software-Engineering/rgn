@@ -19,13 +19,15 @@ limitations under the License.
 @using GroceryLibrary.Models
 @using Microsoft.AspNetCore.Mvc.Razor
 
-<h1>Rural Grocery Connector</h1>
+<h1>@pageContent[0].HeaderName<!--Rural Grocery Connector--></h1>
 <br />
 
-<h3>@pageContent[0].HeaderName<!--Purpose of the Rural Grocery Distribution Network Simulator--></h3>
+<h3>@pageContent[1].HeaderName<!--Purpose of the Rural Grocery Connector--></h3>
 
 <p>
-    @pageContent[0].Content
+    @pageContent[1].Content
+    <br />
+    @pageContent[2].Content
     <!--Many rural grocery stores have limited ordering capacity due to the size of the communities they serve.
     This makes it difficult for some rural grocery stores to meet minimum buying requirements from wholesale
     food distributors.<br />
@@ -33,43 +35,38 @@ limitations under the License.
     combine orders to meet minimum buying requirements. The map creates various distribution scenarios.-->
 </p>
 
-<h3>@pageContent[1].HeaderName<!--About the data--></h3>
+<h3>@pageContent[3].HeaderName<!--About the data--></h3>
 <p>
-    @pageContent[1].Content
+    @pageContent[3].Content
     <!--The distribution simulation map contains data for all rural independent grocery stores in the state of Kansas,
     including:-->
 </p>
-<!--<ol>
-    <li>The name of the store</li>
-    <li>Where it is located</li>
-    <li>Its estimated weekly ordering capacity.</li>
-</ol>-->
-<!--<p>
-    Weekly ordering capacity is an indication of a store's ability to meet minimum buying requirements.
-    The map uses two sets of data to calculate weekly ordering capacity: 1) weekly purchase amount, obtained
-    from existing RGI survey data when available, and 2) population, obtained from the census bureau.
-    Population provides a rough estimate of a store’s weekly purchase amount.
+<ol>
+    <li>@pageContent[4].Content<!--The name of the store--></li>
+    <li>@pageContent[5].Content<!--Where it is located--></li>
+    <li>@pageContent[6].Content<!--Its estimated weekly ordering capacity--></li>
+</ol>
+<p>
+    @pageContent[7].Content
     <br />
-    Users may toggle between either variable to create distribution scenarios.
-</p>-->
+    @pageContent[8].Content
+    <!--Weekly ordering capacity is an indication of a store's ability to meet minimum buying requirements.
+    The map uses two sets of data to calculate weekly ordering capacity: 1) population, obtained from the census bureau.
+    Population provides a rough estimate of a store’s weekly purchase amount. and 2) Weekly purchase amount, obtained
+    from existing RGI survey data when available.
+    <br />
+    Users may toggle between either variable to create distribution scenarios.-->
+</p>
 
-<h3>@pageContent[2].HeaderName<!--Contact Us--></h3>
-<p>@pageContent[2].Content <!--Please contact the Rural Grocery Initiative at <a href="mailto:rgi@ksu.edu">rgi@ksu.edu.</a>--></p>
+<h3>@pageContent[9].HeaderName<!--Join the Rural Grocery Network--></h3>
 
-<h3>@pageContent[3].HeaderName<!--Example 2:--></h3>
-<p>@pageContent[3].Content</p>
-<!--<ol>
-    <li>User selects Store E in Southwest Kansas as a secondary distribution facility with a radius of 20 miles.</li>
-    <li>Store F is within the 20 miles radius. This scenario combines their orders.</li>
-    <li>
-        However, based on the ordering capacity of each store, the combined orders of Stores E and F do not meet the
-        minimum buying requirement.
-    </li>
-    <li>
-        User adds Store G, which is outside the 20-mile radius, to the scenario. Now, the combined orders of Stores
-        E, F, and G meet the minimum buying requirement.
-    </li>
-    <li>The map outputs the distance that Stores F and G must travel to pick up their orders from Store E.</li>
-</ol>-->
+<p>
+    @pageContent[9].Content
+</p>
+
+<h3>@pageContent[10].HeaderName</h3>
+
+<p>@pageContent[10].Content <a href="mailto:@pageContent[11].Content">@pageContent[11].Content</a></p>
+
 
 @code { List<Page> pageContent = SqlDataAccess.getPageContent("About"); }
