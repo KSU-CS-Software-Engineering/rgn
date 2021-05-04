@@ -20,6 +20,7 @@ DROP TABLE IF EXISTS [dbo].[StatesStaging];
 DROP TABLE IF EXISTS [dbo].[CitiesStaging];
 DROP TABLE IF EXISTS [dbo].[StoreDeliveryInformationStaging];
 DROP TABLE IF EXISTS [dbo].[Pages];
+DROP TABLE IF EXISTS [dbo].[VariablePreference];
 
 
 /*
@@ -1231,6 +1232,16 @@ GO
 
 
 /* ******************************************** END OF STORE DELIVERY INFORMATION TABLE **************************************************** */
+
+CREATE TABLE [dbo].[VariablePreference]
+(
+	PurchasePreference VARCHAR(3) NOT NULL
+)
+
+INSERT INTO [dbo].[VariablePreference]
+VALUES ('No');
+
+GO
 
 CREATE TABLE [dbo].[Pages]
 (

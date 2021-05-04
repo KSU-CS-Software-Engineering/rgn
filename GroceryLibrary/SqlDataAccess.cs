@@ -989,6 +989,49 @@ namespace GroceryLibrary
             return allParagraphs;
         }
 
+        
+        public static List<Page> GetPages()
+        {
+            List<Page> allPages = new List<Page>();
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("SELECT * ");
+            sb.Append("FROM " + DatabaseTables.PAGES);
+
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Page tempPage = new Page();
+                                tempPage.PageName = reader["Page"].ToString();
+                                tempPage.ParagraphNumber = Convert.ToInt32(reader["ParagraphNumber"]);
+                                tempPage.HeaderName = reader["Header"].ToString();
+                                tempPage.Content = reader["Content"].ToString();
+
+                                allPages.Add(tempPage);
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (SqlException sqle)
+            {
+                /* Error Handling Here */
+            }
+
+            return allPages;
+        }
 
         // STARTING THE SECTION OF FUNCTIONS REQUIRED FOR DOWNLOADING/UPLOADING THE DATABASE
 
@@ -1308,6 +1351,63 @@ namespace GroceryLibrary
                     "SOURCE.PalletOrderMaximum, SOURCE.SellToBusinesses, SOURCE.OtherBusinesses, SOURCE.SplitWithGroceryStore, SOURCE.OtherGroceryStore, SOURCE.DeliveryNotes)");
                 sb.Append(" WHEN NOT MATCHED BY SOURCE THEN DELETE;");
 
+                ExecuteNonQuery(sb.ToString(), connection);
+            }
+        }
+
+        /// <summary>
+        /// This function gets the option to display/not display the weekly purchase amount variable
+        /// </summary>
+        /// <returns>a string containing the desired option</returns>
+        public static string GetPurchaseVariablePreference()
+        {
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+
+            StringBuilder sb = new StringBuilder();
+            
+            sb.Append("SELECT * FROM [dbo].[VariablePreference]; ");
+            string option = "";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                option = reader["PurchasePreference"].ToString();
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (SqlException sqle)
+            {
+                /* Error Handling Here */
+            }
+
+            return option;
+        }
+
+        /// <summary>
+        /// Updates the preferenc in the database regarding whether or not to show the weekly purchase variable
+        /// </summary>
+        /// <param name="option">the string containing the option</param>
+        public static void UpdatePurchaseVariablePreference(string option)
+        {
+            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("UPDATE [dbo].[VariablePreference] SET PurchasePreference = '" + option + "'; ");
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
                 ExecuteNonQuery(sb.ToString(), connection);
             }
         }

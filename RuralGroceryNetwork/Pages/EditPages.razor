@@ -15,13 +15,16 @@ limitations under the License.
 -->
 <!-- Page that lets admins update the wording on the pages -->
 @page "/pages"
+@using GroceryLibrary
+@using GroceryLibrary.Models
 
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JS
 
 <AuthorizeView>
     <link rel="stylesheet" href="css/Style.css" />
     <h1>Edit Pages</h1>
-    
+
     <!--Check to see if the user is an admin-->
     @if (IsAdmin(context.User.Identity.Name))
     {
@@ -32,6 +35,63 @@ limitations under the License.
                 Instructions
             </p>
         </div>
+
+        <div>
+            @foreach (Page p in allPages)
+            {
+            <div class="menu-accordion">
+                <h2 @onclick="e => this.collapsedOne = !this.collapsedOne">Test</h2>
+                <div class="store-element @( this.collapsedOne ? "collapse" : "")">
+                    <div>
+                        <label>PageName: </label>
+                        @if (!propertiesEdit)
+                        {
+                            <label>@p.PageName</label>
+                        }
+                        else
+                        {
+                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.PageName" @bind="@p.PageName" />
+                        }
+                    </div>
+                    <div>
+                        <label>ParagraphNumber: </label>
+                        @if (!propertiesEdit)
+                        {
+                            <label>@p.ParagraphNumber</label>
+                        }
+                        else
+                        {
+                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.ParagraphNumber" @bind="@p.ParagraphNumber" />
+                        }
+                    </div>
+                    <div>
+                        <label>HeaderName: </label>
+                        @if (!propertiesEdit)
+                        {
+                            <label>@p.HeaderName</label>
+                        }
+                        else
+                        {
+                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                        }
+                    </div>
+                    <div>
+                        <label>Content: </label>
+                        @if (!propertiesEdit)
+                        {
+                            <label>@p.Content</label>
+                        }
+                        else
+                        {
+                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.Content" @bind="@p.Content" />
+                        }
+                    </div>
+                </div>
+            </div>
+            }
+            <button class="btn-primary" @onclick="e => this.propertiesEdit = !this.propertiesEdit">Edit</button>
+            <button class="btn-primary"> Save</button>               
+        </div>
     }
     else
     {
@@ -41,7 +101,13 @@ limitations under the License.
     }
 </AuthorizeView>
 
+
 @code {
+    private bool propertiesEdit { get; set; } = false;
+    private bool collapsedOne { get; set; } = false;
+
+    List<Page> allPages = SqlDataAccess.GetPages();
+
     /*Creates an AdminCheck object which will be able to tell if the current user
        is an Admin using the users username that's given to the method. Will return a bool, true if
        user is an Admin, else false*/

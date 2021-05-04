@@ -69,8 +69,11 @@ limitations under the License.
 
                             <p style="float: left;">Variable:</p>
                             <select name="scenario-variable" id="scenario-variable" onchange="updateVariable()">
-                                <option value="weeklyPurchaseAmount">Weekly Purchase Amount</option>
                                 <option value="population">Population</option>
+                                @if (PurchasePreference == "Yes")
+                                {
+                                    <option value="weeklyPurchaseAmount">Weekly Purchase Amount</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -255,6 +258,8 @@ limitations under the License.
     /// Stores the state of the Route
     /// </summary>
     [Parameter] public RouteState RouteState { get; set; }
+
+    string PurchasePreference = SqlDataAccess.GetPurchaseVariablePreference();
 
     /// <summary>
     /// Change the Base Map Style for the Arcgis Map

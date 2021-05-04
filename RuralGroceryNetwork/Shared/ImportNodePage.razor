@@ -137,7 +137,7 @@ limitations under the License.
     /// Imports data from file and creates nodes
     /// </summary>
     async Task ImportFile()
-    {
+    {       
         try
         {
             string allInfo = "";
@@ -164,8 +164,7 @@ limitations under the License.
         catch (Exception exc)
         {
             await JS.InvokeVoidAsync("ShowMessage", "There was an issue processing the file.");
-        }
-
+        }     
     }
 
 
