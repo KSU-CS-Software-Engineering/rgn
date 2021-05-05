@@ -1305,4 +1305,13 @@ VALUES
 ('RGI', 3, NULL, '(RGI) is to provide resources to help sustain and enhance independently-owned rural grocery stores. RGI, a program supported by K-State Research and Extension,
 assists communities and citizens to strengthen rural grocery operations and improve access to healthy foods.'),
 ('RGI', 4, 'KSRE Logo Link', 'https://www.communications.k-state.edu/images/ksre-stuff/KSRE_textonly_268%20CORRECT.png'),
-('RGI', 5, 'RGI Logo Link', 'https://www.ruralgrocery.org/images/Untitled%20design.jpg')
+('RGI', 5, 'RGI Logo Link', 'https://www.ruralgrocery.org/images/Untitled%20design.jpg'),
+
+('Menu', 1, 'Rural Grocery Distribution', NULL),
+('Menu', 2, 'Network Simulator', NULL),
+('Menu', 3, 'About', NULL),
+('Menu', 4, 'Distribution Simulator', NULL),
+('Menu', 5, 'Rural Grocery Initiative', NULL),
+('Menu', 6, 'Instructions', NULL),
+('Menu', 7, 'Admin', NULL),
+('Menu', 8, 'Edit Pages', NULL)

@@ -13,72 +13,75 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-
 <!-- MainLayout.razor file calls this to creates the navigation bar on the left side of site. -->
+@using GroceryLibrary
+@using GroceryLibrary.Models
 
-    <div class="top-row pl-4 navbar navbar-dark">
-        ﻿<!-- Upper Portion of the Nav Menu -->
-        <a class="navbar-brand" href="">Rural Grocery Distribution<br /> Network Simulator </a>
-        <button class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
+<div class="top-row pl-4 navbar navbar-dark">
+    ﻿<!-- Upper Portion of the Nav Menu -->
+    <a class="navbar-brand" href="">@pageContent[0].HeaderName <br /> @pageContent[1].HeaderName</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
 
-    <!-- Bottom Portion of Nav Menu -->
-    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-        <ul class="nav flex-column">
-            <li class="nav-item px-3">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="oi oi-info" aria-hidden="true"></span> About
+<!-- Bottom Portion of Nav Menu -->
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-info" aria-hidden="true"></span> @pageContent[2].HeaderName
+            </NavLink>
+            <NavLink class="nav-link" href="routes" Match="NavLinkMatch.All">
+                <span class="oi oi-globe" aria-hidden="true"></span> @pageContent[3].HeaderName
+            </NavLink>
+            <NavLink class="nav-link" href="rgi" Match="NavLinkMatch.All">
+                <span class="oi oi-aperture" aria-hidden="true"></span> @pageContent[4].HeaderName
+            </NavLink>
+            <NavLink class="nav-link" href="instructions" Match="NavLinkMatch.All">
+                <span class="oi oi-question-mark" aria-hidden="true"></span> @pageContent[5].HeaderName
+            </NavLink>
+            <AuthorizeView>
+                <!-- Only available if autheticated -->
+                <!--Checks to see if the current user is an admin, if not it will not load the Admin tab.
+                As of right now, files for generating Admin page are labeled as Store pages (Nodes?)-->
+                @if (IsAdmin(context.User.Identity.Name))
+                {
+                <NavLink class="nav-link" href="admin" Match="NavLinkMatch.All">
+                    <span class="oi oi-person" aria-hidden="true"></span> @pageContent[6].HeaderName
                 </NavLink>
-                <NavLink class="nav-link" href="routes" Match="NavLinkMatch.All">
-                    <span class="oi oi-globe" aria-hidden="true"></span> Distribution Simulator
+                <NavLink class="nav-link" href="pages" Match="NavLinkMatch.All">
+                    <span class="oi oi-file" aria-hidden="true"></span> @pageContent[7].HeaderName
                 </NavLink>
-                <NavLink class="nav-link" href="rgi" Match="NavLinkMatch.All">
-                    <span class="oi oi-aperture" aria-hidden="true"></span> Rural Grocery Initiative
-                </NavLink>
-                <NavLink class="nav-link" href="instructions" Match="NavLinkMatch.All">
-                    <span class="oi oi-question-mark" aria-hidden="true"></span> Instructions
-                </NavLink>
-                <AuthorizeView>
-                    <!-- Only available if autheticated -->
-                    <!--Checks to see if the current user is an admin, if not it will not load the Admin tab.
-        As of right now, files for generating Admin page are labeled as Store pages (Nodes?)-->
-                    @if (IsAdmin(context.User.Identity.Name))
-                    {
-                        <NavLink class="nav-link" href="admin" Match="NavLinkMatch.All">
-                            <span class="oi oi-person" aria-hidden="true"></span> Admin
-                        </NavLink>
-                        <NavLink class="nav-link" href="pages" Match="NavLinkMatch.All">
-                            <span class="oi oi-file" aria-hidden="true"></span> Edit Pages
-                        </NavLink>
-                    }
+                }
 
 
-                </AuthorizeView>
-            </li>
-        </ul>
-    </div>
+            </AuthorizeView>
+        </li>
+    </ul>
+</div>
 
-    @code {
+@code {
 
-        private bool collapseNavMenu = true;
+    private bool collapseNavMenu = true;
 
-        private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-        //Toggles whether the nav menu is collapsed or not
-        private void ToggleNavMenu()
-        {
-            collapseNavMenu = !collapseNavMenu;
-        }
+    List<Page> pageContent = SqlDataAccess.getPageContent("Menu");
 
-        /*Creates an AdminCheck object which will be able to tell if the current user
-        is an Admin using the users username that's given to the method. Will return a bool, true if 
-        user is an Admin, else false*/ 
-        private bool IsAdmin (string name)
-        {
-            AdminCheck admin = new AdminCheck();
-            bool b = admin.IsAdmin(name);
-            return b;
-        }
+    //Toggles whether the nav menu is collapsed or not
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
     }
+
+    /*Creates an AdminCheck object which will be able to tell if the current user
+    is an Admin using the users username that's given to the method. Will return a bool, true if
+    user is an Admin, else false*/
+    private bool IsAdmin(string name)
+    {
+        AdminCheck admin = new AdminCheck();
+        bool b = admin.IsAdmin(name);
+        return b;
+    }
+}

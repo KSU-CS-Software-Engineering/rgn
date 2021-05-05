@@ -59,7 +59,7 @@ limitations under the License.
                                 else
                                 {
                                     <input type="text" name="ContentEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
-                                }                                
+                                }
                             </div>
                             <br />
                         }
@@ -181,6 +181,27 @@ limitations under the License.
                     <button class="btn-primary" @onclick="e => this.adminEdit = !this.adminEdit">Edit</button>
                     <button class="btn-primary" @onclick="updateAdminPage">Save</button>
                 </TabPage>
+                <TabPage Text="Side Menu">
+                    <div>
+                        @foreach (Page p in menuPages)
+                        {
+                            <div>
+                                <b>HeaderName: </b>
+                                @if (!menuEdit)
+                                {
+                                    <label>@p.HeaderName</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="HeaderNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                }
+                            </div>
+                            <br />
+                        }
+                    </div>
+                    <button class="btn-primary" @onclick="e => this.menuEdit = !this.menuEdit">Edit</button>
+                    <button class="btn-primary" @onclick="updateMenu">Save</button>
+                </TabPage>
             </TabControl>
         </div>
 
@@ -201,11 +222,13 @@ limitations under the License.
     private bool instructionEdit { get; set; } = false;
     private bool adminEdit { get; set; } = false;
     private bool simulatorEdit { get; set; } = false;
+    private bool menuEdit { get; set; } = false;
 
     List<Page> aboutPages = SqlDataAccess.getPageContent("About");
     List<Page> rgiPages = SqlDataAccess.getPageContent("RGI");
     List<Page> instructionPages = SqlDataAccess.getPageContent("Instructions");
     List<Page> adminPages = SqlDataAccess.getPageContent("Admin");
+    List<Page> menuPages = SqlDataAccess.getPageContent("Menu");
 
     string PurchasePreference = SqlDataAccess.GetPurchaseVariablePreference();
 
@@ -290,6 +313,22 @@ limitations under the License.
             }
             //reset edit state
             simulatorEdit = !simulatorEdit;
+        }
+    }
+
+    /// <summary>
+    /// Updates Items on the Side Menu
+    /// </summary>
+    private void updateMenu()
+    {
+        if (menuEdit)
+        {
+            foreach (Page p in menuPages)
+            {
+                SqlDataAccess.updatePageContent(p);
+            }
+            //reset edit state
+            menuEdit = !menuEdit;
         }
     }
 
