@@ -35,71 +35,77 @@ limitations under the License.
                 Instructions
             </p>
             <TabControl>
-                <TabPage Text="About">
+                <TabPage Text="About Page">
+                    <div>
+                        @foreach (Page p in allPages)
+                        {
+                            <div class="menu-accordion">
+                                <h2 @onclick="e => this.collapsedOne = !this.collapsedOne">Test</h2>
+                                <div class="store-element @( this.collapsedOne ? "collapse" : "")">
+                                    <div>
+                                        <label>PageName: </label>
+                                        @if (!propertiesEdit)
+                                        {
+                                            <label>@p.PageName</label>
+                                        }
+                                        else
+                                        {
+                                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.PageName" @bind="@p.PageName" />
+                                        }
+                                    </div>
+                                    <div>
+                                        <label>ParagraphNumber: </label>
+                                        @if (!propertiesEdit)
+                                        {
+                                            <label>@p.ParagraphNumber</label>
+                                        }
+                                        else
+                                        {
+                                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.ParagraphNumber" @bind="@p.ParagraphNumber" />
+                                        }
+                                    </div>
+                                    <div>
+                                        <label>HeaderName: </label>
+                                        @if (!propertiesEdit)
+                                        {
+                                            <label>@p.HeaderName</label>
+                                        }
+                                        else
+                                        {
+                                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                        }
+                                    </div>
+                                    <div>
+                                        <label>Content: </label>
+                                        @if (!propertiesEdit)
+                                        {
+                                            <label>@p.Content</label>
+                                        }
+                                        else
+                                        {
+                                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.Content" @bind="@p.Content" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <button class="btn-primary" @onclick="e => this.propertiesEdit = !this.propertiesEdit">Edit</button>
+                        <button class="btn-primary"> Save</button>
+                    </div>
+                </TabPage>
+                <TabPage Text="RGI Page">
 
                 </TabPage>
-                <TabPage Text="">
+                <TabPage Text="Instructions Page">
+
+                </TabPage>
+                <TabPage Text="Admin Page">
 
                 </TabPage>
             </TabControl>
         </div>
 
-        <div>
-            @foreach (Page p in allPages)
-            {
-            <div class="menu-accordion">
-                <h2 @onclick="e => this.collapsedOne = !this.collapsedOne">Test</h2>
-                <div class="store-element @( this.collapsedOne ? "collapse" : "")">
-                    <div>
-                        <label>PageName: </label>
-                        @if (!propertiesEdit)
-                        {
-                            <label>@p.PageName</label>
-                        }
-                        else
-                        {
-                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.PageName" @bind="@p.PageName" />
-                        }
-                    </div>
-                    <div>
-                        <label>ParagraphNumber: </label>
-                        @if (!propertiesEdit)
-                        {
-                            <label>@p.ParagraphNumber</label>
-                        }
-                        else
-                        {
-                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.ParagraphNumber" @bind="@p.ParagraphNumber" />
-                        }
-                    </div>
-                    <div>
-                        <label>HeaderName: </label>
-                        @if (!propertiesEdit)
-                        {
-                            <label>@p.HeaderName</label>
-                        }
-                        else
-                        {
-                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
-                        }
-                    </div>
-                    <div>
-                        <label>Content: </label>
-                        @if (!propertiesEdit)
-                        {
-                            <label>@p.Content</label>
-                        }
-                        else
-                        {
-                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.Content" @bind="@p.Content" />
-                        }
-                    </div>
-                </div>
-            </div>
-            }
-            <button class="btn-primary" @onclick="e => this.propertiesEdit = !this.propertiesEdit">Edit</button>
-            <button class="btn-primary"> Save</button>               
-        </div>
+        
     }
     else
     {
