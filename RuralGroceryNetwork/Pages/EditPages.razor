@@ -47,7 +47,7 @@ limitations under the License.
                                 }
                                 else
                                 {
-                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                    <input type="text" name="HeaderNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
                                 }
                             </div>
                             <div>
@@ -58,7 +58,7 @@ limitations under the License.
                                 }
                                 else
                                 {
-                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
+                                    <input type="text" name="ContentEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
                                 }                                
                             </div>
                             <br />
@@ -66,6 +66,24 @@ limitations under the License.
                     </div>
                     <button class="btn-primary" @onclick="e => this.aboutEdit = !this.aboutEdit">Edit</button>
                     <button class="btn-primary" @onclick="updateAboutPage">Save</button>
+                </TabPage>
+                <TabPage Text="Distribution Simulator">
+                    <div>
+                        <br />
+                        <p>Please only use "Yes" or "No" for entering the Preference. Anything else will be considered "No".</p>
+                        <br />
+                        <b>Weekly Purchase Amount Variable Preference: </b>
+                        @if (!simulatorEdit)
+                        {
+                            <label>@PurchasePreference</label>
+                        }
+                        else
+                        {
+                            <input type="text" name="PreferenceEdit" class="text-align-right" placeholder="@PurchasePreference" @bind="@PurchasePreference" />
+                        }
+                    </div>
+                    <button class="btn-primary" @onclick="e => this.simulatorEdit = !this.simulatorEdit">Edit</button>
+                    <button class="btn-primary" @onclick="updatePurchasePreference">Save</button>
                 </TabPage>
                 <TabPage Text="RGI Page">
                     <div>
@@ -79,7 +97,7 @@ limitations under the License.
                                 }
                                 else
                                 {
-                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                    <input type="text" name="HeaderNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
                                 }
                             </div>
                             <div>
@@ -90,7 +108,7 @@ limitations under the License.
                                 }
                                 else
                                 {
-                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
+                                    <input type="text" name="ContentEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
                                 }
                             </div>
                             <br />
@@ -111,7 +129,7 @@ limitations under the License.
                                 }
                                 else
                                 {
-                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                    <input type="text" name="HeaderNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
                                 }
                             </div>
                             <div>
@@ -122,7 +140,7 @@ limitations under the License.
                                 }
                                 else
                                 {
-                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
+                                    <input type="text" name="ContentEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
                                 }
                             </div>
                             <br />
@@ -143,7 +161,7 @@ limitations under the License.
                                 }
                                 else
                                 {
-                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                    <input type="text" name="HeaderNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
                                 }
                             </div>
                             <div>
@@ -154,7 +172,7 @@ limitations under the License.
                                 }
                                 else
                                 {
-                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
+                                    <input type="text" name="ContentEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
                                 }
                             </div>
                             <br />
@@ -182,18 +200,29 @@ limitations under the License.
     private bool rgiEdit { get; set; } = false;
     private bool instructionEdit { get; set; } = false;
     private bool adminEdit { get; set; } = false;
+    private bool simulatorEdit { get; set; } = false;
 
     List<Page> aboutPages = SqlDataAccess.getPageContent("About");
     List<Page> rgiPages = SqlDataAccess.getPageContent("RGI");
     List<Page> instructionPages = SqlDataAccess.getPageContent("Instructions");
     List<Page> adminPages = SqlDataAccess.getPageContent("Admin");
 
+    string PurchasePreference = SqlDataAccess.GetPurchaseVariablePreference();
+
     /// <summary>
     /// Updates the given information when saving the about page
     /// </summary>
     private void updateAboutPage()
     {
-
+        if (aboutEdit)
+        {
+            foreach(Page p in aboutPages)
+            {
+                SqlDataAccess.updatePageContent(p);
+            }
+            //reset edit state
+            aboutEdit = !aboutEdit;
+        }
     }
 
     /// <summary>
@@ -201,7 +230,15 @@ limitations under the License.
     /// </summary>
     private void updateRGIPage()
     {
-
+        if (rgiEdit)
+        {
+            foreach (Page p in rgiPages)
+            {
+                SqlDataAccess.updatePageContent(p);
+            }
+            //reset edit state
+            rgiEdit = !rgiEdit;
+        }
     }
 
     /// <summary>
@@ -209,7 +246,15 @@ limitations under the License.
     /// </summary>
     private void updateInstructionPage()
     {
-
+        if (instructionEdit)
+        {
+            foreach (Page p in instructionPages)
+            {
+                SqlDataAccess.updatePageContent(p);
+            }
+            //reset edit state
+            instructionEdit = !instructionEdit;
+        }
     }
 
     /// <summary>
@@ -217,7 +262,35 @@ limitations under the License.
     /// </summary>
     private void updateAdminPage()
     {
+        if (adminEdit)
+        {
+            foreach (Page p in adminPages)
+            {
+                SqlDataAccess.updatePageContent(p);
+            }
+            //reset edit state
+            adminEdit = !adminEdit;
+        }
+    }
 
+    /// <summary>
+    /// Updates the weekly purchase preference 
+    /// </summary>
+    private void updatePurchasePreference()
+    {
+        if (simulatorEdit)
+        {
+            if (PurchasePreference == "Yes")
+            {
+                SqlDataAccess.UpdatePurchaseVariablePreference("Yes");
+            }
+            else
+            {
+                SqlDataAccess.UpdatePurchaseVariablePreference("No");
+            }
+            //reset edit state
+            simulatorEdit = !simulatorEdit;
+        }
     }
 
     /*Creates an AdminCheck object which will be able to tell if the current user

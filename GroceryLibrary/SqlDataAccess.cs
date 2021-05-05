@@ -854,7 +854,7 @@ namespace GroceryLibrary
             sb.Append("INNER JOIN " + DatabaseTables.STATES + "ON S.StateID = C.StateID ");
             //sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "ON SDI.StoreID = SI.StoreID ");   
 
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
             //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
 
             try
@@ -911,7 +911,7 @@ namespace GroceryLibrary
 
             sb.Append("SELECT *");
             sb.Append("FROM " + DatabaseTables.DISTRIBUTOR);
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
             //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
 
             try
@@ -992,6 +992,31 @@ namespace GroceryLibrary
         }
 
 
+        public static void updatePageContent(Page p)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("UPDATE [dbo].[Pages] ");
+            sb.Append("SET Pages.Header = '" + p.HeaderName + "', Pages.Content = '" + p.Content + "' ");
+            sb.Append("WHERE Pages.[Page] = '" + p.PageName + "' AND Pages.ParagraphNumber = " + p.ParagraphNumber + "; ");
+
+
+            builder.ConnectionString = ConnectionString;
+            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    ExecuteNonQuery(sb.ToString(), connection);
+                }
+            }
+            catch (SqlException sqle)
+            {
+                /* Error Handling Here */
+            }
+        }
+
         // STARTING THE SECTION OF FUNCTIONS REQUIRED FOR DOWNLOADING/UPLOADING THE DATABASE
 
 
@@ -1008,7 +1033,7 @@ namespace GroceryLibrary
 
             sb.Append("SELECT *");
             sb.Append("FROM " + dbTable);
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
             //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
 
             try
@@ -1069,7 +1094,7 @@ namespace GroceryLibrary
         /// <param name="data">the datatable parsed from a csv file</param>
         public static void InsertNewStoreInformation(DataTable data)
         {
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
 
             StringBuilder sb = new StringBuilder();
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
@@ -1120,7 +1145,7 @@ namespace GroceryLibrary
         /// <param name="data">the datatable parsed from a csv file</param>
         public static void InsertNewDistributorInformation(DataTable data)
         {
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
 
             StringBuilder sb = new StringBuilder();
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
@@ -1171,7 +1196,7 @@ namespace GroceryLibrary
         /// <param name="data">the datatable parsed from a csv file</param>
         public static void InsertNewCityInformation(DataTable data)
         {
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
 
             StringBuilder sb = new StringBuilder();
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
@@ -1220,7 +1245,7 @@ namespace GroceryLibrary
         /// <param name="data">the datatable parsed from a csv file</param>
         public static void InsertNewStateInformation(DataTable data)
         {
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
 
             StringBuilder sb = new StringBuilder();
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
@@ -1265,7 +1290,7 @@ namespace GroceryLibrary
 
         public static void InsertNewStoreDeliveryInformation(DataTable data)
         {
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
 
             StringBuilder sb = new StringBuilder();
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
@@ -1320,7 +1345,7 @@ namespace GroceryLibrary
         /// <returns>a string containing the desired option</returns>
         public static string GetPurchaseVariablePreference()
         {
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
 
             StringBuilder sb = new StringBuilder();
             
@@ -1359,7 +1384,7 @@ namespace GroceryLibrary
         /// <param name="option">the string containing the option</param>
         public static void UpdatePurchaseVariablePreference(string option)
         {
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
 
             StringBuilder sb = new StringBuilder();
 
