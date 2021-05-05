@@ -15,18 +15,23 @@ limitations under the License.
 -->
 <!-- Page that displays information on the RGI -->
 @page "/rgi"
+@using GroceryLibrary
+@using GroceryLibrary.Models
 
-<h1>Rural Grocery Initiative</h1>
+<h1>@pageContent[0].HeaderName</h1>
 
 <p>
     <br />
-    The mission of the <a href="https://www.ruralgrocery.org/" target="_blank">Rural Grocery Initiative</a> (RGI) is to provide resources
-    to help sustain and enhance independently-owned rural grocery stores. RGI, a program supported by K-State Research and
-    Extension, assists communities and citizens to strengthen rural grocery operations and improve access to healthy foods.
+    @pageContent[0].Content <a href="@pageContent[1].Content" target="_blank">@pageContent[1].HeaderName</a>
+    @pageContent[2].Content
 </p>
 
 <br />
 <div style="width: 40%;">
-    <img src="https://www.communications.k-state.edu/images/ksre-stuff/KSRE_textonly_268%20CORRECT.png" style="width: 40%;"/>
-    <img src="https://www.ruralgrocery.org/images/Untitled%20design.jpg" style="width: 35%; float: right;"/>
+    <img src="@pageContent[3].Content" style="width: 40%;" />
+    <img src="@pageContent[4].Content" style="width: 35%; float: right;" />
 </div>
+
+@code {
+    List<Page> pageContent = SqlDataAccess.getPageContent("RGI");
+}

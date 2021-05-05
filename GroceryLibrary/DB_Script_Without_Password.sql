@@ -1271,4 +1271,38 @@ VALUES
 ('About', 9, NULL,'Users may toggle between either variable to create distribution scenarios.'),
 ('About', 10, 'Join the Rural Grocery Network',''),
 ('About', 11, 'Contact Us', 'Please contact the Rural Grocery Initiative at:'),
-('About', 12, NULL , 'rgi@ksu.edu')
+('About', 12, 'RGI Email', 'rgi@ksu.edu'),
+
+('Simulator', 1, 'Distribution Simulator', NULL),
+('Simulator', 2, 'Using the map to create distribution scenarios', 'Select an independent rural grocery store as a hypothetical secondary distribution facility
+ – or, a location where a wholesale food distributor could deliver the combined orders of
+ several rural grocery stores. To select a store, click on the point associated with the store'),
+('Simulator', 3, NULL, 'Select a radius within which potential grocery partners are identified. These are the stores
+ that could combine orders in order to meet a wholesaler''s minimum buying requirement. If no radius
+ is specified, the default is 25 miles.'),
+('Simulator', 4, NULL, 'Based on these selections, review the map''s data outputs:'),
+('Simulator', 5, NULL, 'the distance between the secondary distribution facility and other grocery stores captured within the radius;'),
+('Simulator', 6, NULL, 'the weekly ordering capacity of each store within the radius;'),
+('Simulator', 7, NULL, 'the aggregated weekly order, if all store orders within the radius combine; and'),
+('Simulator', 8, NULL, 'whether or not the combined order meets the minimum buying requirement of $25,000 (minimum buying requirements may vary between wholesalers).'),
+('Simulator', 9, NULL, 'The map can also use the variable of population if the weekly purchase amount is not known. The correlation is approximately:'),
+('Simulator', 10, NULL, 'Stores in a town with less than 1,000 people are nowhere near meeting the minimum purchase amount. Generally they are purchasing less than $10,000 per week.'),
+('Simulator', 11, NULL, 'Stores in a town between 1,000 and 2,000 people are on the edge with their weekly purchase
+ amount. Generally they are purchassing between $10,000 - $25,000 per week and could use a bump from other stores'),
+('Simulator', 12, NULL, 'Stores in a town with more than 2,000 people have no problem meeting the $25,000 weekly purchase amount.'),
+('Simulator', 13, NULL, 'So the minimum population to best be correlated with the weekly purchase amount would be 2,000 people.
+ If a combination of store''s population reaches 2,000 then they will likely meet the $25,000 purchasing minimum.'),
+('Simulator', 14, NULL, 'Alter the scenario either by adding or subtracting stores by checking or unchecking the checkbox
+ next to the store. At this point if all the stores within the radius do not meet the requirement, try a larger radius.'),
+('Simulator', 15, NULL, 'Continue altering until a scenario is identified where combined grocery orders meet the minimum buying requirement.'),
+('Simulator', 16, 'Poulation Description above Key', 'Population provides a rough estimate of a store''s weekly purchase amount.'),
+('Simulator', 17, NULL, '< 1,000 people correlates to < $10,000 weekly purchases'),
+('Simulator', 18, NULL, '1,000 - 2,000 correlates to $10,000 - $25,000 weekly purchases'),
+('Simulator', 19, NULL, '> 2,000 correlates to > $25,000 weekly purchases'),
+
+('RGI', 1, 'Rural Grocery Initiative', 'The mission of the '),
+('RGI', 2, 'Rural Grocery Initative ', 'https://www.ruralgrocery.org/ '),
+('RGI', 3, NULL, '(RGI) is to provide resources to help sustain and enhance independently-owned rural grocery stores. RGI, a program supported by K-State Research and Extension,
+assists communities and citizens to strengthen rural grocery operations and improve access to healthy foods.'),
+('RGI', 4, 'KSRE Logo Link', 'https://www.communications.k-state.edu/images/ksre-stuff/KSRE_textonly_268%20CORRECT.png'),
+('RGI', 5, 'RGI Logo Link', 'https://www.ruralgrocery.org/images/Untitled%20design.jpg')

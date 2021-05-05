@@ -17,45 +17,31 @@ limitations under the License.
 @page "/"
 @using GroceryLibrary
 @using GroceryLibrary.Models
-@using Microsoft.AspNetCore.Mvc.Razor
 
-<h1>@pageContent[0].HeaderName<!--Rural Grocery Connector--></h1>
+<h1>@pageContent[0].HeaderName</h1>
 <br />
 
-<h3>@pageContent[1].HeaderName<!--Purpose of the Rural Grocery Connector--></h3>
+<h3>@pageContent[1].HeaderName</h3>
 
 <p>
     @pageContent[1].Content
     <br />
     @pageContent[2].Content
-    <!--Many rural grocery stores have limited ordering capacity due to the size of the communities they serve.
-    This makes it difficult for some rural grocery stores to meet minimum buying requirements from wholesale
-    food distributors.<br />
-    This distribution simulation map identifies potential partnerships between rural grocery stores that could
-    combine orders to meet minimum buying requirements. The map creates various distribution scenarios.-->
 </p>
 
-<h3>@pageContent[3].HeaderName<!--About the data--></h3>
+<h3>@pageContent[3].HeaderName</h3>
 <p>
     @pageContent[3].Content
-    <!--The distribution simulation map contains data for all rural independent grocery stores in the state of Kansas,
-    including:-->
 </p>
 <ol>
-    <li>@pageContent[4].Content<!--The name of the store--></li>
-    <li>@pageContent[5].Content<!--Where it is located--></li>
-    <li>@pageContent[6].Content<!--Its estimated weekly ordering capacity--></li>
+    <li>@pageContent[4].Content</li>
+    <li>@pageContent[5].Content</li>
+    <li>@pageContent[6].Content</li>
 </ol>
 <p>
     @pageContent[7].Content
     <br />
     @pageContent[8].Content
-    <!--Weekly ordering capacity is an indication of a store's ability to meet minimum buying requirements.
-    The map uses two sets of data to calculate weekly ordering capacity: 1) population, obtained from the census bureau.
-    Population provides a rough estimate of a store’s weekly purchase amount. and 2) Weekly purchase amount, obtained
-    from existing RGI survey data when available.
-    <br />
-    Users may toggle between either variable to create distribution scenarios.-->
 </p>
 
 <h3>@pageContent[9].HeaderName<!--Join the Rural Grocery Network--></h3>
