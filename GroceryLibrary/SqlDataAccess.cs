@@ -42,6 +42,8 @@ namespace GroceryLibrary
         /// </summary>
         private static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
 
+        private static string ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+
         /// <summary>
         /// This method is responsible for populating the lists that are used for editing account information
         /// </summary>
@@ -954,7 +956,7 @@ namespace GroceryLibrary
             sb.Append("WHERE [Page] = '" + page + "'");
             sb.Append("ORDER BY ParagraphNumber");
 
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+            builder.ConnectionString = ConnectionString;
             //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
 
             try
@@ -989,49 +991,6 @@ namespace GroceryLibrary
             return allParagraphs;
         }
 
-        
-        public static List<Page> GetPages()
-        {
-            List<Page> allPages = new List<Page>();
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append("SELECT * ");
-            sb.Append("FROM " + DatabaseTables.PAGES);
-
-            builder.ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
-            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                {
-                    connection.Open();
-                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
-                    {
-                        using (var reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                Page tempPage = new Page();
-                                tempPage.PageName = reader["Page"].ToString();
-                                tempPage.ParagraphNumber = Convert.ToInt32(reader["ParagraphNumber"]);
-                                tempPage.HeaderName = reader["Header"].ToString();
-                                tempPage.Content = reader["Content"].ToString();
-
-                                allPages.Add(tempPage);
-                            }
-                        }
-                    }
-                    connection.Close();
-                }
-            }
-            catch (SqlException sqle)
-            {
-                /* Error Handling Here */
-            }
-
-            return allPages;
-        }
 
         // STARTING THE SECTION OF FUNCTIONS REQUIRED FOR DOWNLOADING/UPLOADING THE DATABASE
 

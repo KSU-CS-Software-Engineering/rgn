@@ -37,70 +37,131 @@ limitations under the License.
             <TabControl>
                 <TabPage Text="About Page">
                     <div>
-                        @foreach (Page p in allPages)
+                        @foreach (Page p in aboutPages)
                         {
-                            <div class="menu-accordion">
-                                <h2 @onclick="e => this.collapsedOne = !this.collapsedOne">Test</h2>
-                                <div class="store-element @( this.collapsedOne ? "collapse" : "")">
-                                    <div>
-                                        <label>PageName: </label>
-                                        @if (!propertiesEdit)
-                                        {
-                                            <label>@p.PageName</label>
-                                        }
-                                        else
-                                        {
-                                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.PageName" @bind="@p.PageName" />
-                                        }
-                                    </div>
-                                    <div>
-                                        <label>ParagraphNumber: </label>
-                                        @if (!propertiesEdit)
-                                        {
-                                            <label>@p.ParagraphNumber</label>
-                                        }
-                                        else
-                                        {
-                                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.ParagraphNumber" @bind="@p.ParagraphNumber" />
-                                        }
-                                    </div>
-                                    <div>
-                                        <label>HeaderName: </label>
-                                        @if (!propertiesEdit)
-                                        {
-                                            <label>@p.HeaderName</label>
-                                        }
-                                        else
-                                        {
-                                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
-                                        }
-                                    </div>
-                                    <div>
-                                        <label>Content: </label>
-                                        @if (!propertiesEdit)
-                                        {
-                                            <label>@p.Content</label>
-                                        }
-                                        else
-                                        {
-                                            <input type="text" name="PageNameEdit" class="text-align-right @( !this.propertiesEdit ? "collapse" : "")" placeholder="@p.Content" @bind="@p.Content" />
-                                        }
-                                    </div>
-                                </div>
+                            <div>
+                                <b>HeaderName: </b>
+                                @if (!aboutEdit)
+                                {
+                                    <label>@p.HeaderName</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                }
                             </div>
+                            <div>
+                                <b>Content: </b>
+                                @if (!aboutEdit)
+                                {
+                                    <label>@p.Content</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
+                                }                                
+                            </div>
+                            <br />
                         }
-                        <button class="btn-primary" @onclick="e => this.propertiesEdit = !this.propertiesEdit">Edit</button>
-                        <button class="btn-primary"> Save</button>
                     </div>
+                    <button class="btn-primary" @onclick="e => this.aboutEdit = !this.aboutEdit">Edit</button>
+                    <button class="btn-primary" @onclick="updateAboutPage">Save</button>
                 </TabPage>
                 <TabPage Text="RGI Page">
-
+                    <div>
+                        @foreach (Page p in rgiPages)
+                        {
+                            <div>
+                                <b>HeaderName: </b>
+                                @if (!rgiEdit)
+                                {
+                                    <label>@p.HeaderName</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                }
+                            </div>
+                            <div>
+                                <b>Content: </b>
+                                @if (!rgiEdit)
+                                {
+                                    <label>@p.Content</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
+                                }
+                            </div>
+                            <br />
+                        }
+                    </div>
+                    <button class="btn-primary" @onclick="e => this.rgiEdit = !this.rgiEdit">Edit</button>
+                    <button class="btn-primary" @onclick="updateRGIPage">Save</button>
                 </TabPage>
                 <TabPage Text="Instructions Page">
-
+                    <div>
+                        @foreach (Page p in instructionPages)
+                        {
+                            <div>
+                                <b>HeaderName: </b>
+                                @if (!instructionEdit)
+                                {
+                                    <label>@p.HeaderName</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                }
+                            </div>
+                            <div>
+                                <b>Content: </b>
+                                @if (!instructionEdit)
+                                {
+                                    <label>@p.Content</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
+                                }
+                            </div>
+                            <br />
+                        }
+                    </div>
+                    <button class="btn-primary" @onclick="e => this.instructionEdit = !this.instructionEdit">Edit</button>
+                    <button class="btn-primary" @onclick="updateInstructionPage">Save</button>
                 </TabPage>
                 <TabPage Text="Admin Page">
-
+                    <div>
+                        @foreach (Page p in adminPages)
+                        {
+                            <div>
+                                <b>HeaderName: </b>
+                                @if (!adminEdit)
+                                {
+                                    <label>@p.HeaderName</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                }
+                            </div>
+                            <div>
+                                <b>Content: </b>
+                                @if (!adminEdit)
+                                {
+                                    <label>@p.Content</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="PageNameEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
+                                }
+                            </div>
+                            <br />
+                        }
+                    </div>
+                    <button class="btn-primary" @onclick="e => this.adminEdit = !this.adminEdit">Edit</button>
+                    <button class="btn-primary" @onclick="updateAdminPage">Save</button>
                 </TabPage>
             </TabControl>
         </div>
@@ -117,10 +178,47 @@ limitations under the License.
 
 
 @code {
-    private bool propertiesEdit { get; set; } = false;
-    private bool collapsedOne { get; set; } = false;
+    private bool aboutEdit { get; set; } = false;
+    private bool rgiEdit { get; set; } = false;
+    private bool instructionEdit { get; set; } = false;
+    private bool adminEdit { get; set; } = false;
 
-    List<Page> allPages = SqlDataAccess.GetPages();
+    List<Page> aboutPages = SqlDataAccess.getPageContent("About");
+    List<Page> rgiPages = SqlDataAccess.getPageContent("RGI");
+    List<Page> instructionPages = SqlDataAccess.getPageContent("Instructions");
+    List<Page> adminPages = SqlDataAccess.getPageContent("Admin");
+
+    /// <summary>
+    /// Updates the given information when saving the about page
+    /// </summary>
+    private void updateAboutPage()
+    {
+
+    }
+
+    /// <summary>
+    /// Updates the given information when saving the RGI page
+    /// </summary>
+    private void updateRGIPage()
+    {
+
+    }
+
+    /// <summary>
+    /// Updates the given information when saving the Instruction Page
+    /// </summary>
+    private void updateInstructionPage()
+    {
+
+    }
+
+    /// <summary>
+    /// Updates the given information when saving the Admin Page
+    /// </summary>
+    private void updateAdminPage()
+    {
+
+    }
 
     /*Creates an AdminCheck object which will be able to tell if the current user
        is an Admin using the users username that's given to the method. Will return a bool, true if
