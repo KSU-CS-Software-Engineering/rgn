@@ -953,7 +953,7 @@ namespace GroceryLibrary
 
             sb.Append("SELECT * ");
             sb.Append("FROM " + DatabaseTables.PAGES);
-            sb.Append("WHERE [Page] = '" + page + "'");
+            sb.Append("WHERE [Page] = '" + page + "' ");
             sb.Append("ORDER BY ParagraphNumber");
 
             builder.ConnectionString = ConnectionString;

@@ -30,12 +30,15 @@ limitations under the License.
     {
         <!--If user is an admin load everything in-->
         <div class="Nodes-infos">
-            <h3>How this works</h3>
+            <h3>Instructions</h3>
             <p>
-                Instructions
+                Click on the Page that you are wanting to change and click edit at the bottom of the page.<br />
+                Make the changes needed then at the bottom of the page click save.<br />
+                Note some textboxes are left blank intentionally and don't show up on the page.<br />
+                You may need to refresh the page for the change to take effect.
             </p>
             <TabControl>
-                <TabPage Text="About Page">
+                <TabPage Text="@pageContent[2].HeaderName">
                     <div>
                         @foreach (Page p in aboutPages)
                         {
@@ -67,11 +70,10 @@ limitations under the License.
                     <button class="btn-primary" @onclick="e => this.aboutEdit = !this.aboutEdit">Edit</button>
                     <button class="btn-primary" @onclick="updateAboutPage">Save</button>
                 </TabPage>
-                <TabPage Text="Distribution Simulator">
+                <TabPage Text="@pageContent[3].HeaderName">
                     <div>
                         <br />
-                        <p>Please only use "Yes" or "No" for entering the Preference. Anything else will be considered "No".</p>
-                        <br />
+                        <p style="margin-bottom: 0;">Please only use "Yes" or "No" for entering the Preference. Anything else will be considered "No".</p>
                         <b>Weekly Purchase Amount Variable Preference: </b>
                         @if (!simulatorEdit)
                         {
@@ -81,11 +83,38 @@ limitations under the License.
                         {
                             <input type="text" name="PreferenceEdit" class="text-align-right" placeholder="@PurchasePreference" @bind="@PurchasePreference" />
                         }
+                        <br /><br />
+                        @foreach (Page p in simulatorPages)
+                        {
+                            <div>
+                                <b>HeaderName: </b>
+                                @if (!simulatorEdit)
+                                {
+                                    <label>@p.HeaderName</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="HeaderNameEdit" class="text-align-right" placeholder="@p.HeaderName" @bind="@p.HeaderName" />
+                                }
+                            </div>
+                            <div>
+                                <b>Content: </b>
+                                @if (!simulatorEdit)
+                                {
+                                    <label>@p.Content</label>
+                                }
+                                else
+                                {
+                                    <input type="text" name="ContentEdit" class="text-align-right" placeholder="@p.Content" @bind="@p.Content" />
+                                }
+                            </div>
+                            <br />
+                        }
                     </div>
                     <button class="btn-primary" @onclick="e => this.simulatorEdit = !this.simulatorEdit">Edit</button>
-                    <button class="btn-primary" @onclick="updatePurchasePreference">Save</button>
+                    <button class="btn-primary" @onclick="updateSimulatorPage">Save</button>
                 </TabPage>
-                <TabPage Text="RGI Page">
+                <TabPage Text="@pageContent[4].HeaderName">
                     <div>
                         @foreach (Page p in rgiPages)
                         {
@@ -117,7 +146,7 @@ limitations under the License.
                     <button class="btn-primary" @onclick="e => this.rgiEdit = !this.rgiEdit">Edit</button>
                     <button class="btn-primary" @onclick="updateRGIPage">Save</button>
                 </TabPage>
-                <TabPage Text="Instructions Page">
+                <TabPage Text="@pageContent[5].HeaderName">
                     <div>
                         @foreach (Page p in instructionPages)
                         {
@@ -149,7 +178,7 @@ limitations under the License.
                     <button class="btn-primary" @onclick="e => this.instructionEdit = !this.instructionEdit">Edit</button>
                     <button class="btn-primary" @onclick="updateInstructionPage">Save</button>
                 </TabPage>
-                <TabPage Text="Admin Page">
+                <TabPage Text="@pageContent[6].HeaderName">
                     <div>
                         @foreach (Page p in adminPages)
                         {
@@ -205,7 +234,7 @@ limitations under the License.
             </TabControl>
         </div>
 
-        
+
     }
     else
     {
@@ -217,6 +246,8 @@ limitations under the License.
 
 
 @code {
+    List<Page> pageContent = SqlDataAccess.getPageContent("Menu");
+
     private bool aboutEdit { get; set; } = false;
     private bool rgiEdit { get; set; } = false;
     private bool instructionEdit { get; set; } = false;
@@ -228,6 +259,7 @@ limitations under the License.
     List<Page> rgiPages = SqlDataAccess.getPageContent("RGI");
     List<Page> instructionPages = SqlDataAccess.getPageContent("Instructions");
     List<Page> adminPages = SqlDataAccess.getPageContent("Admin");
+    List<Page> simulatorPages = SqlDataAccess.getPageContent("Simulator");
     List<Page> menuPages = SqlDataAccess.getPageContent("Menu");
 
     string PurchasePreference = SqlDataAccess.GetPurchaseVariablePreference();
@@ -239,7 +271,7 @@ limitations under the License.
     {
         if (aboutEdit)
         {
-            foreach(Page p in aboutPages)
+            foreach (Page p in aboutPages)
             {
                 SqlDataAccess.updatePageContent(p);
             }
@@ -296,8 +328,22 @@ limitations under the License.
         }
     }
 
+    private void updateSimulatorPage()
+    {
+        if (simulatorEdit)
+        {
+            foreach (Page p in simulatorPages)
+            {
+                SqlDataAccess.updatePageContent(p);
+            }
+            //reset edit state
+            adminEdit = !adminEdit;
+            updatePurchasePreference();
+        }
+    }
+
     /// <summary>
-    /// Updates the weekly purchase preference 
+    /// Updates the weekly purchase preference
     /// </summary>
     private void updatePurchasePreference()
     {

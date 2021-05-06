@@ -17,53 +17,40 @@ limitations under the License.
 @using GroceryLibrary
 @using GroceryLibrary.Models.Database
 @using System.Text
+@using GroceryLibrary.Models
 
 @inject IJSRuntime JS
 <!-- Javascript ArcGIS map Div setup -->
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>ArcGIS</title>
-<!--
-<style onload="CreateMap()">
 
-    #viewDiv {
-        padding: 0;
-        margin: 5px;
-        height: 475px;
-        width: 800px;
-    }
-</style>
+<div>
 
-
-<link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css">
--->
-<!-- The Main Div that contains everything in the map; used in this way to display the map components next to eachothers.-->
-
-<div >
-
-    <div >
+    <div>
         <body id="row1">
             <div>
-               <p>This page is for maintaining the elements inside of the database. To begin, click on the "Download Tables" button to download the current elements in 
-               the tables. It works best to open this file in Excel to make changes to the database. From here, you can add, delete, or update data for stores, cities, or states.
-                    </p>  
-                <h4>To Add:</h4>
-                <p> To add a new item to the database, first find the correct table within the .csv file you downloaded. Go to the bottom of that table and add a new row after the last element.
-                The first column is the column id, which you should make 1 larger than the existing final element. After that, fill in the information appropriately in each column.
-                To get the X and Y coordinates, it works well to go to Google Maps and search for the store, then in the URL there will be the coordinates for the store.</p>
-                <h4>To Update:</h4>
-                <p>To update any store in the database, simply find the row in the table that has its information, and make whatever changes are necessary.</p>
-                <h4>To Delete:</h4>
-                <p>To delete any row from the database, all you have to do is remove it from the .csv file. However, there are a few catches to that. If you delete a city, you will have
-                to update the store that was in that city to have a new city, or delete that store. (You can find this by matching the "CityId" columns in each table. The same goes for
-                deleting a store from the table, then you must delete its matching StoreInformation item (some stores won't have this).</p>
-                <h4>To Upload:</h4>
-                <p>To upload the changes, simply click the "Import Stores from .csv" button then choose your updated and saved file.</p>
-                <h4>Other Important Notes:</h4>
-                <p>First, it is important that when entering any information in the .csv file, you do not use a comma (,) anywhere within the file.</p>
-                <p>Second, please enter information in every column if you are adding any new rows (no blank entries). If you don't know/have the information,
-                just enter 0 if its a number, or "None" if its a description.</p>
-                <p>Third, please keep the "|" characters between each table.</p>
+                <p>
+                    @pageContent[0].Content
+                </p>
+                <h4>@pageContent[1].HeaderName</h4>
+                <p>
+                    @pageContent[1].Content
+                </p>
+                <h4>@pageContent[2].HeaderName</h4>
+                <p>@pageContent[2].Content</p>
+                <h4>@pageContent[3].HeaderName</h4>
+                <p>
+                    @pageContent[3].Content
+                </p>
+                <h4>@pageContent[4].HeaderName</h4>
+                <p>@pageContent[4].Content</p>
+                <h4>@pageContent[5].HeaderName</h4>
+                <p>@pageContent[5].Content</p>
+                <p>
+                    @pageContent[6].Content
+                </p>
+                <p>@pageContent[7].Content</p>
                 <div id="Btnz">
                     <!-- button for opening the import page -->
                     <br />
@@ -96,6 +83,7 @@ limitations under the License.
 
 @code {
 
+    List<Page> pageContent = SqlDataAccess.getPageContent("Admin");
 
     /// <summary>
     /// List of nodes

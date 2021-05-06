@@ -18,10 +18,12 @@ limitations under the License.
 
 @inject Node Node
 @inject NavigationManager NavigationManager
+@using GroceryLibrary
+@using GroceryLibrary.Models
 
 <AuthorizeView>
     <link rel="stylesheet" href="css/Style.css" />
-    <h1>Admin</h1>
+    <h1>@pageContent[0].HeaderName</h1>
 
     <!--Check to see if the user is an admin-->
     @if (IsAdmin(context.User.Identity.Name))
@@ -51,4 +53,6 @@ limitations under the License.
         bool b = admin.IsAdmin(name);
         return b;
     }
+
+    List<Page> pageContent = SqlDataAccess.getPageContent("Admin");
 }

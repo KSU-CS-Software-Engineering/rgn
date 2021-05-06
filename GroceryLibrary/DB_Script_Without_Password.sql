@@ -1245,7 +1245,7 @@ GO
 
 CREATE TABLE [dbo].[Pages]
 (
-  [Page] VARCHAR(10) NOT NULL,
+  [Page] VARCHAR(20) NOT NULL,
   ParagraphNumber SMALLINT NOT NULL,
   Header VARCHAR(100) NULL,
   Content VARCHAR(5000) NULL
@@ -1307,11 +1307,62 @@ assists communities and citizens to strengthen rural grocery operations and impr
 ('RGI', 4, 'KSRE Logo Link', 'https://www.communications.k-state.edu/images/ksre-stuff/KSRE_textonly_268%20CORRECT.png'),
 ('RGI', 5, 'RGI Logo Link', 'https://www.ruralgrocery.org/images/Untitled%20design.jpg'),
 
+('Instructions', 1,'Instructions',NULL),
+('Instructions', 2,'Instructions for the Scenarios Page','Video Walk-through'),
+('Instructions', 3,'Purpose','The Distribution Simulator Map allows users to view independent grocery stores in rural Kansas and select any existing store or location as a
+ distribution drop-off site. The drop-off site is a location where a wholesale distributor could, hypothetically, deliver the combined order of several grocery stores.
+ The map outputs a list of stores within a specific radius surrounding the selected drop-off site, which users can alter in order to find a scenario in which a group of stores
+ can meet the wholesaler''s minimum buying requirement by combining orders. For simplicity, this map automatically assumes $25,00 is the weekly minimum buying requirement.'),
+('Instructions', 4,'Loading Stores','Click the "Load All Stores and Distributors" button to add all independent rural grocery stores and distributers to the map.'),
+('Instructions', 5,NULL,'A store color key will appear after loading the stores.'),
+('Instructions', 6,NULL,'This map uses population as a proxy for the store’s weekly purchasing capacity. It assumes that a store located within a community of less than
+ 1,000 people will have a weekly purchase amount less than $10,000; a store located within a community of between 1,000 and 2,000 people will have a weekly purchase amount
+ between $10,000 and $25,000; and a store located within a community of more than 2,000 people will have a weekly purchase amount greater than $25,000.'),
+('Instructions', 7,'Generating a Radius','Click anywhere on the map to set that point as the center of the radius. The center indicates the hypothetical distribution drop-off site.'),
+('Instructions', 8, NULL, 'The default radius size is 25 miles. To change this, type the desired size in "Radius Size" textbox.'),
+('Instructions', 9,NULL,'Click "Get Radius" to create radius.'),
+('Instructions', 10,'Notes:','There can only be one radius on the map at a time.'),
+('Instructions', 11,NULL,'To change radius size or location, "Generate Radius" must be clicked again to create a new one.'),
+('Instructions', 12,'Store List and Summary','After selecting the distribution drop-off site and radius, the map generates a list of stores captured within the radius.
+ These stores could potentially partner to combine orders to meet a wholesaler’s minimum buying requirement.'),
+('Instructions', 13,NULL,'The store at the center of the radius is the hypothetical distribution drop-off site. It cannot be deselected.'),
+('Instructions', 14,NULL,'All other stores within the radius appear in this list.'),
+('Instructions', 15,NULL,'The box next to a store can be checked or unchecked to either add or remove it from the scenario.'),
+('Instructions', 16,NULL,'The map then creates a summary of the stores captured within the radius. This summary indicates whether or not the stores in the list can meet
+ the minimum buying requirement by combining orders.'),
+('Instructions', 17,'Examples',NULL),
+('Instructions', 18,'Removing a store from the scenario:','User selects Store A in Northeast Kansas as a secondary distribution facility with a radius of 20 miles.'),
+('Instructions', 19,NULL,'Store B, Store C, and Store D are within the 20 miles radius. This scenario combines their orders.'),
+('Instructions', 20,NULL,'However, based on the ordering capacity of each store, only Stores A, B, and C need to combine ordersto meet the minimum buying requirement.'),
+('Instructions', 21,NULL,'Store D is removed from the scenario.'),
+('Instructions', 22,NULL,'The map outputs the distance that Stores B and C must travel to pick up their orders from Store A.'),
+('Instructions', 23,'Adding a store to the scenario:','User selects Store E in Southwest Kansas as a secondary distribution facility with a radius of 20 miles.'),
+('Instructions', 24,NULL,'Store F is within the 20 miles radius. This scenario combines their orders.'),
+('Instructions', 25,NULL,'However, based on the ordering capacity of each store, the combined orders of Stores E and F do not meet the minimum buying requirement.'),
+('Instructions', 26,NULL,'User adds Store G, which is outside the 20-mile radius, to the scenario. Now, the combined orders of Stores E, F, and G meet the minimum buying requirement.'),
+('Instructions', 27,NULL,'The map outputs the distance that Stores F and G must travel to pick up their orders from Store E.'),
+('Instructions', 28,'FAQ','Why does this map use population to determine a store’s weekly purchase amount?'),
+('Instructions', 29,NULL,'There is little data on the average weekly purchase amount for individual grocery stores in Kansas. However, based on independent surveys and itnerviews,
+ the Rural Grocery Initiative has found a correlation between city size and the average purchasing amount of rural grocery stores in the state.'),
+
+('Admin', 1, 'Admin','This page is for maintaining the elements inside of the database. To begin, click on the "Download Tables" button to download the current elements in the tables.
+ It works best to open this file in Excel to make changes to the database. From here, you can add, delete, or update data for stores, cities, or states.'),
+('Admin', 2, 'To Add:','To add a new item to the database, first find the correct table within the .csv file you downloaded. Go to the bottom of that table and add a new row after the
+ last element. The first column is the column id, which you should make 1 larger than the existing final element. After that, fill in the information appropriately in each column.
+ To get the X and Y coordinates, it works well to go to Google Maps and search for the store, then in the URL there will be the coordinates for the store.'),
+('Admin', 3, 'To Update:','To update any store in the database, simply find the row in the table that has its information, and make whatever changes are necessary.'),
+('Admin', 4, 'To Delete:','To delete any row from the database, all you have to do is remove it from the .csv file. However, there are a few catches to that. If you delete a city,
+ you will have to update the store that was in that city to have a new city, or delete that store. (You can find this by matching the "CityId" columns in each table. The same goes
+ for deleting a store from the table, then you must delete its matching StoreInformation item (some stores won''t have this).'),
+('Admin', 5, 'To Upload:','To upload the changes, simply click the "Import Stores from .csv" button then choose your updated and saved file.'),
+('Admin', 6, 'Other Important Notes:','First, it is important that when entering any information in the .csv file, you do not use a comma (,) anywhere within the file.'),
+('Admin', 7, NULL,'Second, please enter information in every column if you are adding any new rows (no blank entries). If you don''t know/have the information, just enter 0 if its a number, or "None" if its a description.'),
+('Admin', 8, NULL,'Third, please keep the "|" characters between each table.'),
+
 ('Menu', 1, 'Rural Grocery Distribution', NULL),
 ('Menu', 2, 'Network Simulator', NULL),
 ('Menu', 3, 'About', NULL),
 ('Menu', 4, 'Distribution Simulator', NULL),
 ('Menu', 5, 'Rural Grocery Initiative', NULL),
 ('Menu', 6, 'Instructions', NULL),
-('Menu', 7, 'Admin', NULL),
-('Menu', 8, 'Edit Pages', NULL)
+('Menu', 7, 'Admin', NULL)
