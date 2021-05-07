@@ -1269,9 +1269,11 @@ VALUES
     Population provides a rough estimate of a store’s weekly purchase amount. and 2) Weekly purchase amount, obtained
     from existing RGI survey data when available.'),
 ('About', 9, NULL,'Users may toggle between either variable to create distribution scenarios.'),
-('About', 10, 'Join the Rural Grocery Network',''),
-('About', 11, 'Contact Us', 'Please contact the Rural Grocery Initiative at:'),
-('About', 12, 'RGI Email', 'rgi@ksu.edu'),
+('About', 10, 'Join the Rural Grocery Network','The Rural Grocery Network is a platform for rural grocers across America to network, communicate ideas, and share
+ lessons learned. Membership to this group is for those who currently own, operate or manage a grocery store. Find the Facebook group'),
+('About', 11, 'here.', 'https://www.facebook.com/groups/ruralgrocerynetwork'),
+('About', 12, 'Contact Us', 'Please contact the Rural Grocery Initiative at:'),
+('About', 13, 'RGI Email', 'rgi@ksu.edu'),
 
 ('Simulator', 1, 'Distribution Simulator', NULL),
 ('Simulator', 2, 'Using the map to create distribution scenarios', 'Select an independent rural grocery store as a hypothetical secondary distribution facility
@@ -1365,4 +1367,5 @@ assists communities and citizens to strengthen rural grocery operations and impr
 ('Menu', 4, 'Distribution Simulator', NULL),
 ('Menu', 5, 'Rural Grocery Initiative', NULL),
 ('Menu', 6, 'Instructions', NULL),
-('Menu', 7, 'Admin', NULL)
+('Menu', 7, 'Admin', NULL),
+('Menu', 8, 'Edit Pages', NULL)

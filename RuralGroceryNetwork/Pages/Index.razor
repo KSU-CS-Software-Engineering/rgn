@@ -47,12 +47,12 @@ limitations under the License.
 <h3>@pageContent[9].HeaderName<!--Join the Rural Grocery Network--></h3>
 
 <p>
-    @pageContent[9].Content
+    @pageContent[9].Content <a href="@pageContent[10].Content" target="_blank">@pageContent[10].HeaderName</a>
 </p>
 
-<h3>@pageContent[10].HeaderName</h3>
+<h3>@pageContent[11].HeaderName</h3>
 
-<p>@pageContent[10].Content <a href="mailto:@pageContent[11].Content">@pageContent[11].Content</a></p>
+<p>@pageContent[11].Content <a href="mailto:@pageContent[12].Content">@pageContent[12].Content</a></p>
 
 
 @code { List<Page> pageContent = SqlDataAccess.getPageContent("About"); }
