@@ -855,7 +855,7 @@ namespace GroceryLibrary
             //sb.Append("INNER JOIN " + DatabaseTables.STORE_DELIVERY_INFORMATION + "ON SDI.StoreID = SI.StoreID ");   
 
             builder.ConnectionString = ConnectionString;
-            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+            
 
             try
             {
@@ -912,7 +912,7 @@ namespace GroceryLibrary
             sb.Append("SELECT *");
             sb.Append("FROM " + DatabaseTables.DISTRIBUTOR);
             builder.ConnectionString = ConnectionString;
-            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+            
 
             try
             {
@@ -957,7 +957,7 @@ namespace GroceryLibrary
             sb.Append("ORDER BY ParagraphNumber");
 
             builder.ConnectionString = ConnectionString;
-            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+            
 
             try
             {
@@ -985,7 +985,7 @@ namespace GroceryLibrary
             }
             catch (SqlException sqle)
             {
-                /* Error Handling Here */
+                throw sqle;
             }
 
             return allParagraphs;
@@ -1002,7 +1002,7 @@ namespace GroceryLibrary
 
 
             builder.ConnectionString = ConnectionString;
-            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+            
 
             try
             {
@@ -1013,7 +1013,7 @@ namespace GroceryLibrary
             }
             catch (SqlException sqle)
             {
-                /* Error Handling Here */
+                throw sqle;
             }
         }
 
@@ -1034,7 +1034,7 @@ namespace GroceryLibrary
             sb.Append("SELECT *");
             sb.Append("FROM " + dbTable);
             builder.ConnectionString = ConnectionString;
-            //builder.ConnectionString = "SERVER=23.99.140.241;DATABASE=master;UID=sa;PWD=Testpassword1!";
+            
 
             try
             {
@@ -1083,7 +1083,7 @@ namespace GroceryLibrary
             }
             catch(SqlException sqle)
             {
-
+                throw sqle;
             }
             return csv;
         }
