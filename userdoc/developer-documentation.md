@@ -105,7 +105,7 @@ And some javascript and css files in the RuralGroceryNetwork/wwwroot directory. 
 
 We also implemented some Database Interaction thorugh a separate project within our solution. Here is where you can find the table models and data layouts. These things can be found in the GroceryLibrary directory:
 
-![Grocery Library](img/directory-GroceryLibrary.PNG)
+![Grocery Library](img/ModelFolder.PNG)
 
 ### Data Binding and Event Handling:
 
