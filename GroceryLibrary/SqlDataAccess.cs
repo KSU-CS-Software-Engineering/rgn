@@ -1013,7 +1013,7 @@ namespace GroceryLibrary
             }
             catch (SqlException sqle)
             {
-                throw sqle;
+                
             }
         }
 
