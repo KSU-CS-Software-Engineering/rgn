@@ -1266,7 +1266,7 @@ VALUES
 ('About', 7, NULL,'Its estimated weekly ordering capacity'),
 ('About', 8, NULL,'Weekly ordering capacity is an indication of a store''s ability to meet minimum buying requirements.
     The map uses two sets of data to calculate weekly ordering capacity: 1) population, obtained from the census bureau.
-    Population provides a rough estimate of a store’s weekly purchase amount. and 2) Weekly purchase amount, obtained
+    Population provides a rough estimate of a storeÂ’s weekly purchase amount. and 2) Weekly purchase amount, obtained
     from existing RGI survey data when available.'),
 ('About', 9, NULL,'Users may toggle between either variable to create distribution scenarios.'),
 ('About', 10, 'Join the Rural Grocery Network','The Rural Grocery Network is a platform for rural grocers across America to network, communicate ideas, and share
@@ -1277,7 +1277,7 @@ VALUES
 
 ('Simulator', 1, 'Distribution Simulator', NULL),
 ('Simulator', 2, 'Using the map to create distribution scenarios', 'Select an independent rural grocery store as a hypothetical secondary distribution facility
- – or, a location where a wholesale food distributor could deliver the combined orders of
+ Â– or, a location where a wholesale food distributor could deliver the combined orders of
  several rural grocery stores. To select a store, click on the point associated with the store'),
 ('Simulator', 3, NULL, 'Select a radius within which potential grocery partners are identified. These are the stores
  that could combine orders in order to meet a wholesaler''s minimum buying requirement. If no radius
@@ -1310,14 +1310,14 @@ assists communities and citizens to strengthen rural grocery operations and impr
 ('RGI', 5, 'RGI Logo Link', 'https://www.ruralgrocery.org/images/Untitled%20design.jpg'),
 
 ('Instructions', 1,'Instructions',NULL),
-('Instructions', 2,'Instructions for the Scenarios Page','Video Walk-through'),
+('Instructions', 2,'Instructions for the Distribution Simulator Page','Video Walk-through'),
 ('Instructions', 3,'Purpose','The Distribution Simulator Map allows users to view independent grocery stores in rural Kansas and select any existing store or location as a
  distribution drop-off site. The drop-off site is a location where a wholesale distributor could, hypothetically, deliver the combined order of several grocery stores.
  The map outputs a list of stores within a specific radius surrounding the selected drop-off site, which users can alter in order to find a scenario in which a group of stores
  can meet the wholesaler''s minimum buying requirement by combining orders. For simplicity, this map automatically assumes $25,00 is the weekly minimum buying requirement.'),
 ('Instructions', 4,'Loading Stores','Click the "Load All Stores and Distributors" button to add all independent rural grocery stores and distributers to the map.'),
 ('Instructions', 5,NULL,'A store color key will appear after loading the stores.'),
-('Instructions', 6,NULL,'This map uses population as a proxy for the store’s weekly purchasing capacity. It assumes that a store located within a community of less than
+('Instructions', 6,NULL,'This map uses population as a proxy for the store''s weekly purchasing capacity. It assumes that a store located within a community of less than
  1,000 people will have a weekly purchase amount less than $10,000; a store located within a community of between 1,000 and 2,000 people will have a weekly purchase amount
  between $10,000 and $25,000; and a store located within a community of more than 2,000 people will have a weekly purchase amount greater than $25,000.'),
 ('Instructions', 7,'Generating a Radius','Click anywhere on the map to set that point as the center of the radius. The center indicates the hypothetical distribution drop-off site.'),
@@ -1326,7 +1326,7 @@ assists communities and citizens to strengthen rural grocery operations and impr
 ('Instructions', 10,'Notes:','There can only be one radius on the map at a time.'),
 ('Instructions', 11,NULL,'To change radius size or location, "Generate Radius" must be clicked again to create a new one.'),
 ('Instructions', 12,'Store List and Summary','After selecting the distribution drop-off site and radius, the map generates a list of stores captured within the radius.
- These stores could potentially partner to combine orders to meet a wholesaler’s minimum buying requirement.'),
+ These stores could potentially partner to combine orders to meet a wholesalerÂ’s minimum buying requirement.'),
 ('Instructions', 13,NULL,'The store at the center of the radius is the hypothetical distribution drop-off site. It cannot be deselected.'),
 ('Instructions', 14,NULL,'All other stores within the radius appear in this list.'),
 ('Instructions', 15,NULL,'The box next to a store can be checked or unchecked to either add or remove it from the scenario.'),
@@ -1343,7 +1343,7 @@ assists communities and citizens to strengthen rural grocery operations and impr
 ('Instructions', 25,NULL,'However, based on the ordering capacity of each store, the combined orders of Stores E and F do not meet the minimum buying requirement.'),
 ('Instructions', 26,NULL,'User adds Store G, which is outside the 20-mile radius, to the scenario. Now, the combined orders of Stores E, F, and G meet the minimum buying requirement.'),
 ('Instructions', 27,NULL,'The map outputs the distance that Stores F and G must travel to pick up their orders from Store E.'),
-('Instructions', 28,'FAQ','Why does this map use population to determine a store’s weekly purchase amount?'),
+('Instructions', 28,'FAQ','Why does this map use population to determine a storeÂ’s weekly purchase amount?'),
 ('Instructions', 29,NULL,'There is little data on the average weekly purchase amount for individual grocery stores in Kansas. However, based on independent surveys and itnerviews,
  the Rural Grocery Initiative has found a correlation between city size and the average purchasing amount of rural grocery stores in the state.'),
 
