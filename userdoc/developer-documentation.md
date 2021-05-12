@@ -65,7 +65,7 @@ Next, let us look at our NavMenu Component in NavMenu.Razor:
 This component builds the Navigation Menu for our site, which allows us to view the different pages without memorizing the page routes. Here we can see that it Utilizes "AuthorizeView" tags to hide it from unauthorized users, and also another new feature called NavLink which is a tag that allows us to link an element to one of the other pages on the website, using the route name for that page (the element defined in @page). IsAdmin() is also called here. This is to check to make sure the user is an admin. If not, the pages within the if statement will not have a navigation tab loaded in. This Component also has C# in the @code section in order to control the Nav Menu from expanding and collapsing. It also controls the IsAdmin() method, utilizing the AdminCheck object.
 
 The nav menu ends up looking like the following when an admin is logged on:
-![Nav Menu](img/AdminNavMenu)
+![Nav Menu](img/AdminNavMenu.PNG)
 
 The Admin and Edit Pages tabs wont be visable if an admin isn't logged in.
 
