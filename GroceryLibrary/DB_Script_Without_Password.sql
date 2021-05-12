@@ -1343,7 +1343,7 @@ assists communities and citizens to strengthen rural grocery operations and impr
 ('Instructions', 25,NULL,'However, based on the ordering capacity of each store, the combined orders of Stores E and F do not meet the minimum buying requirement.'),
 ('Instructions', 26,NULL,'User adds Store G, which is outside the 20-mile radius, to the scenario. Now, the combined orders of Stores E, F, and G meet the minimum buying requirement.'),
 ('Instructions', 27,NULL,'The map outputs the distance that Stores F and G must travel to pick up their orders from Store E.'),
-('Instructions', 28,'FAQ','Why does this map use population to determine a stores weekly purchase amount?'),
+('Instructions', 28,'FAQ','Why does this map use population to determine a store''s weekly purchase amount?'),
 ('Instructions', 29,NULL,'There is little data on the average weekly purchase amount for individual grocery stores in Kansas. However, based on independent surveys and itnerviews,
  the Rural Grocery Initiative has found a correlation between city size and the average purchasing amount of rural grocery stores in the state.'),
 
