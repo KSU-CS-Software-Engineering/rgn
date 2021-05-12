@@ -59,13 +59,15 @@ while utilizing a built-in Blazor feature called 'AuthorizeView', which is a bla
 depending on if a user is authenticated/authorized on that page or not.
 
 Next, let us look at our NavMenu Component in NavMenu.Razor:
-![NavMenu1](img/nav-menu-code-1.PNG)
-![NavMenu2](img/nav-menu-code-2.PNG)
+![NavMenu1](img/NavMenu.PNG)
+![NavMenu2](img/NavMenuCode.PNG)
 
 This component builds the Navigation Menu for our site, which allows us to view the different pages without memorizing the page routes. Here we can see that it Utilizes "AuthorizeView" tags to hide it from unauthorized users, and also another new feature called NavLink which is a tag that allows us to link an element to one of the other pages on the website, using the route name for that page (the element defined in @page). IsAdmin() is also called here. This is to check to make sure the user is an admin. If not, the pages within the if statement will not have a navigation tab loaded in. This Component also has C# in the @code section in order to control the Nav Menu from expanding and collapsing. It also controls the IsAdmin() method, utilizing the AdminCheck object.
 
-This page ends up looking like this:
-![Scenarios Page](img/scenarios-page.PNG)
+The nav menu ends up looking like the following when an admin is logged on:
+![Nav Menu](img/AdminNavMenu)
+
+The Admin and Edit Pages tabs wont be visable if an admin isn't logged in.
 
 More info. on Blazor web components: https://docs.microsoft.com/en-us/aspnet/core/blazor/components?view=aspnetcore-3.1
 
@@ -75,27 +77,27 @@ More info. On Razor syntax: https://docs.microsoft.com/en-us/aspnet/core/mvc/vie
 A major focus of this project is the individual pages, as well as the Components and Data that is associated with those pages.
 The pages can be accessed from the RuralGroceryNetwork/Pages directory:
 
-![Pages Directory](img/directory-pages.PNG)
+![Pages Directory](img/ImportantFiles.PNG)
 
 This directory contains 6 razor pages, along with an Error Page for when the pages don't work properly and a .cshtml for styling these pages. 
 The pages we currently have are:
+- EditPages.razor
+- Help.razor
 - Index.razor
 - NodesPage.razor
 - RoutesPage.razor
+- RuralGroceryInitiative.razor
 - ScenariosPage.razor
-- StoreInformationPage.razor
-- TrucksPage.razor
 
-Our pages also integrate other components within them. Some examples of these kinds of components include the Website's Navigation Menu, 
-The website's main layout, among other things. These components can be found in the RuralGroceryNetwork/Shared Directory:
+Our pages also integrate other components, from other folders, within them. Some examples of these kinds of components include the Website's Navigation Menu and The website's main layout, among other things. Some of these components can be found in the RuralGroceryNetwork/Shared Directory:
 
-![Shared Directory](img/SharedFolderNew.PNG)
+![Shared Directory](img/SharedFiles.PNG)
 
 AdminCheck.cs is also found in the shared folder, where SQL commands are used to discover if the given user is actually an admin. This file is used for protecting admin privileges, preventing non-admins from views admin only pages and changing data.
 
 We have also defined a few classes for keeping track of data in the RuralGroceryNetwork/Data directory. They consist of State.cs classes and .cs classes for Nodes, Routes, Scenario, StoreInformation, and Trucks pages. The .cs file stores the state of the node and the State.cs file stores the informtion for that page:
 
-![Data Directory](img/DataFolderNew.PNG)
+![Data Directory](img/DataFolder.PNG)
 
 And some javascript and css files in the RuralGroceryNetwork/wwwroot directory. The Route.js file is the new file that controls the map on the pages that have one. The methods in this file are also the ones called to do varius things on the map for the diffrent pages. The RouteOld.js file is the old version of the Route.js file:
 
