@@ -111,3 +111,15 @@ Here, any frequently asked questions that are asked are listed and answered.
 
 IMAGE
 
+### Admin
+
+If the user is logged in as an admin then the Edit Pages and Admin pages will appear. 
+IMAGE
+
+#### Admin
+Here, admins can download current store information or upload new store data. The upload and download buttons are used to do this here. Instructions are given on how to do so on this page as well. 
+IMAGE
+
+#### Edit Pages
+This page allows admins to edit the text on each page, but itself, along with the side navigation menu. These different pages can be selected in the tab and the Edit and save buttons are used to edit or save the changes. 
+IMAGE
