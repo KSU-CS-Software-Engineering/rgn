@@ -21,9 +21,11 @@ using System.Data;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using MySql.Data;
 
 using GroceryLibrary.Models;
 using GroceryLibrary.Models.Database;
+using MySql.Data.MySqlClient;
 
 namespace GroceryLibrary
 {
@@ -40,9 +42,11 @@ namespace GroceryLibrary
         /// <summary>
         /// Used to initialize connections to the database
         /// </summary>
-        private static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+        //private static SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
 
-        private static string ConnectionString = "Data Source = (local); Initial Catalog = RuralGrocery; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False";
+        private static MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder();
+
+        private static string ConnectionString = "SERVER=mysql.cs.ksu.edu;DATABASE=ruralgrocery;UID=ruralgrocery;PWD=insecurepassword";
 
         /// <summary>
         /// This method is responsible for populating the lists that are used for editing account information
@@ -59,7 +63,7 @@ namespace GroceryLibrary
             List<string> SFCatNames = new List<string>();
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     /* This part gets the city names from the DB
                      *      Populates the cityNameList List
@@ -71,9 +75,9 @@ namespace GroceryLibrary
                     sb.Append("ORDER BY " + CitiesTable.CITY_ID + "ASC");
 
                     sqlCommand = sb.ToString();
-                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    using (MySqlCommand command = new MySqlCommand(sqlCommand, connection))
                     {
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
                             {
@@ -97,9 +101,9 @@ namespace GroceryLibrary
                     sb.Append("ORDER BY " + DistributorTable.DISTRIBUTOR_ID + "ASC");
 
                     sqlCommand = sb.ToString();
-                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    using (MySqlCommand command = new MySqlCommand(sqlCommand, connection))
                     {
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
                             {
@@ -123,9 +127,9 @@ namespace GroceryLibrary
                     sb.Append("ORDER BY " + SquareFootageCategoriesTable.SQUARE_FOOTAGE_CATEGORIES_ID + "ASC");
 
                     sqlCommand = sb.ToString();
-                    using (SqlCommand command = new SqlCommand(sqlCommand, connection))
+                    using (MySqlCommand command = new MySqlCommand(sqlCommand, connection))
                     {
-                        using (SqlDataReader reader = command.ExecuteReader())
+                        using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.HasRows)
                             {
@@ -153,6 +157,7 @@ namespace GroceryLibrary
             return names;
         }
 
+        /*
         /// <summary>
         /// This method will run on initialization of the StoreInformation.razor page
         /// </summary>
@@ -177,7 +182,7 @@ namespace GroceryLibrary
 
             try
             { 
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     connection.Open();
                     getStoreInformation(connection);
@@ -194,7 +199,7 @@ namespace GroceryLibrary
             }
             return store;
         }
-
+        */
 
         /// <summary>
         /// Creates entries for users that are not currently in the database.
@@ -203,7 +208,7 @@ namespace GroceryLibrary
         /// </summary>
         /// <param name="conn">The database connection, it is already open</param>
         /// <param name="email">The client's email. Used for initialization of the entries</param>
-        private static void CreateNewDatabaseEntries(SqlConnection conn)
+        private static void CreateNewDatabaseEntries(MySqlConnection conn)
         {
             int StoreID = 0;
             StringBuilder sb = new StringBuilder();
@@ -227,9 +232,9 @@ namespace GroceryLibrary
             sb.Append("FROM " + DatabaseTables.STORE_INFORMATION);
             sb.Append("WHERE " + StoreInformationTable.STORE_EMAIL_ADDRESS + "='" + store.StoreEmail + "';");
 
-            using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
+            using (MySqlCommand command = new MySqlCommand(sb.ToString(), conn))
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
@@ -305,7 +310,7 @@ namespace GroceryLibrary
         /// Get the information for the StoreInformation table
         /// </summary>
         /// <param name="conn">The database connection</param>
-        private static void getStoreInformation(SqlConnection conn)
+        private static void getStoreInformation(MySqlConnection conn)
         {
             bool hasRows = false;
             StringBuilder sb = new StringBuilder();
@@ -321,9 +326,9 @@ namespace GroceryLibrary
             sb.Append("INNER JOIN " + DatabaseTables.SQUARE_FOOTAGE_CATEGORIES + "ON SFC." + SquareFootageCategoriesTable.SQUARE_FOOTAGE_CATEGORIES_ID + " = SI." + StoreInformationTable.SQUARE_FOOTAGE_CATEGORIES_ID);
             sb.Append("WHERE " + StoreInformationTable.STORE_EMAIL_ADDRESS + "= '" + store.StoreEmail + "'");
 
-            using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
+            using (MySqlCommand command = new MySqlCommand(sb.ToString(), conn))
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     if (hasRows = reader.HasRows)
                     {
@@ -378,7 +383,7 @@ namespace GroceryLibrary
         ///     variable accordingly
         /// </summary>
         /// <param name="conn">The database connection</param>
-        private static void getStoreDeliveryInformation(SqlConnection conn)
+        private static void getStoreDeliveryInformation(MySqlConnection conn)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -391,9 +396,9 @@ namespace GroceryLibrary
             sb.Append("FROM " + DatabaseTables.STORE_DELIVERY_INFORMATION);
             sb.Append("WHERE " + StoreDeliveryInformationTable.STORE_ID + "= " + store.StoreID);
 
-            using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
+            using (MySqlCommand command = new MySqlCommand(sb.ToString(), conn))
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
@@ -439,7 +444,7 @@ namespace GroceryLibrary
         ///     variable accordingly
         /// </summary>
         /// <param name="conn">The database connection</param>
-        private static void getStoreDeliverySchedule(SqlConnection conn)
+        private static void getStoreDeliverySchedule(MySqlConnection conn)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -454,9 +459,9 @@ namespace GroceryLibrary
             sb.Append("FROM " + DatabaseTables.STORE_DELIVERY_SCHEDULE);
             sb.Append("WHERE " + StoreDeliveryScheduleTable.STORE_ID + "= " + store.StoreID);
 
-            using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
+            using (MySqlCommand command = new MySqlCommand(sb.ToString(), conn))
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
@@ -515,7 +520,7 @@ namespace GroceryLibrary
         ///     variable accordingly
         /// </summary>
         /// <param name="conn">The database connection</param>
-        private static void getStoreEquipmentInformation(SqlConnection conn)
+        private static void getStoreEquipmentInformation(MySqlConnection conn)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -526,9 +531,9 @@ namespace GroceryLibrary
             sb.Append("FROM " + DatabaseTables.STORE_EQUIPMENT_INFORMATION);
             sb.Append("WHERE " + StoreDeliveryScheduleTable.STORE_ID + "= " + store.StoreID);
 
-            using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
+            using (MySqlCommand command = new MySqlCommand(sb.ToString(), conn))
             {
-                using (SqlDataReader reader = command.ExecuteReader())
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
                     if (reader.HasRows)
                     {
@@ -562,7 +567,7 @@ namespace GroceryLibrary
         /// Used to get the actual city name and distributor name given they have selected one
         /// </summary>
         /// <param name="conn">The database connection</param>
-        private static void getRestOfInfo(SqlConnection conn)
+        private static void getRestOfInfo(MySqlConnection conn)
         {
             if (store.CityName != "Not yet assigned" || store.DistributorID != -1)
             {
@@ -602,9 +607,9 @@ namespace GroceryLibrary
 
                 sb.Append("WHERE S." + StoreInformationTable.STORE_ID + "= " + store.StoreID.ToString());
 
-                using (SqlCommand command = new SqlCommand(sb.ToString(), conn))
+                using (MySqlCommand command = new MySqlCommand(sb.ToString(), conn))
                 {
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.HasRows)
                         {
@@ -665,7 +670,7 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     ExecuteNonQuery(sb.ToString(), connection);
                 }
@@ -685,7 +690,7 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     ExecuteNonQuery(sb.ToString(), connection);
                 }
@@ -713,7 +718,7 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     ExecuteNonQuery(sb.ToString(), connection);
                 }
@@ -753,7 +758,7 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     ExecuteNonQuery(sb.ToString(), connection);
                 }
@@ -785,7 +790,7 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     ExecuteNonQuery(sb.ToString(), connection);
                 }
@@ -815,7 +820,7 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     ExecuteNonQuery(sb.ToString(), connection);
                 }
@@ -831,10 +836,10 @@ namespace GroceryLibrary
         /// </summary>
         /// <param name="sqlCommand">The command that needs to be executed</param>
         /// <param name="conn">The database connection</param>
-        private static void ExecuteNonQuery(string sqlCommand, SqlConnection conn)
+        private static void ExecuteNonQuery(string sqlCommand, MySqlConnection conn)
         {
             conn.Open();
-            using (SqlCommand command = new SqlCommand(sqlCommand, conn))
+            using (MySqlCommand command = new MySqlCommand(sqlCommand, conn))
             {
                 int result = command.ExecuteNonQuery();
                 if (result < 0)
@@ -859,10 +864,10 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    using (MySqlCommand command = new MySqlCommand(sb.ToString(), connection))
                     {
                         using (var reader = command.ExecuteReader())
                         {
@@ -916,10 +921,10 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    using (MySqlCommand command = new MySqlCommand(sb.ToString(), connection))
                     {
                         using (var reader = command.ExecuteReader())
                         {
@@ -961,10 +966,10 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    using (MySqlCommand command = new MySqlCommand(sb.ToString(), connection))
                     {
                         using (var reader = command.ExecuteReader())
                         {
@@ -1006,7 +1011,7 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     ExecuteNonQuery(sb.ToString(), connection);
                 }
@@ -1038,15 +1043,15 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    using (MySqlCommand command = new MySqlCommand(sb.ToString(), connection))
                     {
                         // Most of the code from this section is from: https://www.aspsnippets.com/Articles/Export-data-from-SQL-Server-to-CSV-file-in-ASPNet-using-C-and-VBNet.aspx
                         // Adapter to fill a datatable
 
-                        using (SqlDataAdapter sda = new SqlDataAdapter())
+                        using (MySqlDataAdapter sda = new MySqlDataAdapter())
                         {
                             command.Connection = connection;
                             sda.SelectCommand = command;
@@ -1088,6 +1093,7 @@ namespace GroceryLibrary
             return csv;
         }
 
+        /*
         /// <summary>
         /// Bulk insert data from a given datatable into the store information table
         /// </summary>
@@ -1100,7 +1106,7 @@ namespace GroceryLibrary
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
             sb.Append("DELETE FROM [dbo].[StoreInformationStaging]; ");
 
-            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
             {
 
                 // Delete any existing entries from the staging table
@@ -1108,7 +1114,7 @@ namespace GroceryLibrary
 
                 connection.Open();
                 // bulk copy the data from the csv into the staging table
-                using (SqlBulkCopy s = new SqlBulkCopy(connection))
+                using (MySqlBulkLoader s = new MySqlBulkLoader(connection))
                 {
                     // define target table name
                     s.DestinationTableName = "[dbo].[StoreInformationStaging]";
@@ -1151,15 +1157,15 @@ namespace GroceryLibrary
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
             sb.Append("DELETE FROM [dbo].[DistributorStaging]; ");
 
-            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
             {
-
+                
                 // Delete any existing entries from the staging table
                 ExecuteNonQuery(sb.ToString(), connection);
 
                 connection.Open();
                 // bulk copy the data from the csv into the staging table
-                using (SqlBulkCopy s = new SqlBulkCopy(connection))
+                using (MySqlBulkLoader s = new MySqlBulkLoader(connection))
                 {
                     // define target table name
                     s.DestinationTableName = "[dbo].[DistributorStaging]";
@@ -1202,7 +1208,7 @@ namespace GroceryLibrary
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
             sb.Append("DELETE FROM [dbo].[CitiesStaging]; ");
 
-            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
             {
 
                 // Delete any existing entries from the staging table
@@ -1210,7 +1216,7 @@ namespace GroceryLibrary
 
                 connection.Open();
                 // bulk copy the data from the csv into the staging table
-                using (SqlBulkCopy s = new SqlBulkCopy(connection))
+                using (MySqlBulkLoader s = new MySqlBulkLoader(connection))
                 {
                     // define target table name
                     s.DestinationTableName = "[dbo].[CitiesStaging]";
@@ -1251,7 +1257,7 @@ namespace GroceryLibrary
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
             sb.Append("DELETE FROM [dbo].[StatesStaging]; ");
 
-            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
             {
 
                 // Delete any existing entries from the staging table
@@ -1259,7 +1265,7 @@ namespace GroceryLibrary
 
                 connection.Open();
                 // bulk copy the data from the csv into the staging table
-                using (SqlBulkCopy s = new SqlBulkCopy(connection))
+                using (MySqlBulkLoader s = new MySqlBulkLoader(connection))
                 {
                     // define target table name
                     s.DestinationTableName = "[dbo].[StatesStaging]";
@@ -1296,7 +1302,7 @@ namespace GroceryLibrary
             // Want to switch to TRUNCATE TABLE to reset Primary key as well, but there are the foreign keys stopping me right now.
             sb.Append("DELETE FROM [dbo].[StoreDeliveryInformationStaging]; ");
 
-            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
             {
 
                 // Delete any existing entries from the staging table
@@ -1304,7 +1310,7 @@ namespace GroceryLibrary
 
                 connection.Open();
                 // bulk copy the data from the csv into the staging table
-                using (SqlBulkCopy s = new SqlBulkCopy(connection))
+                using (MySqlBulkLoader s = new MySqlBulkLoader(connection))
                 {
                     // define target table name
                     s.DestinationTableName = "[dbo].[StoreDeliveryInformationStaging]";
@@ -1338,7 +1344,7 @@ namespace GroceryLibrary
                 ExecuteNonQuery(sb.ToString(), connection);
             }
         }
-
+        */
         /// <summary>
         /// This function gets the option to display/not display the weekly purchase amount variable
         /// </summary>
@@ -1354,10 +1360,10 @@ namespace GroceryLibrary
 
             try
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
                 {
                     connection.Open();
-                    using (SqlCommand command = new SqlCommand(sb.ToString(), connection))
+                    using (MySqlCommand command = new MySqlCommand(sb.ToString(), connection))
                     {
                         using (var reader = command.ExecuteReader())
                         {
@@ -1390,7 +1396,7 @@ namespace GroceryLibrary
 
             sb.Append("UPDATE [dbo].[VariablePreference] SET PurchasePreference = '" + option + "'; ");
 
-            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            using (MySqlConnection connection = new MySqlConnection(builder.ConnectionString))
             {
                 ExecuteNonQuery(sb.ToString(), connection);
             }
